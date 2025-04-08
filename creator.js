@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function addCreatorCredit() {
     // Create the creator credit element
     const creatorCredit = document.createElement('div');
-    creatorCredit.textContent = 'Website made by Gregg - CS';
+    creatorCredit.textContent = 'Website made by WHBC Definition Contest Committe';
     creatorCredit.style.position = 'absolute';
     creatorCredit.style.top = '10px';
     creatorCredit.style.right = '10px';
