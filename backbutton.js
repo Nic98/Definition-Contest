@@ -1,5 +1,6 @@
 // Add this to your existing DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
+    calculateAnswerWordCount();
     
     // Add Back to Home button if it doesn't exist
     const backButton = document.createElement('button');
@@ -11,4 +12,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Insert at the top of the body
     document.body.insertBefore(backButton, document.body.firstChild);
+
 });
