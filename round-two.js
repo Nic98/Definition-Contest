@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     // List of all subject HTML files
     const subjectFiles = [
@@ -13,10 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'physics.html',
     ];
 
-    // document.getElementById('shuffle-button').addEventListener('click', function() {
-    //         displayQuestions();
-    // });
-
     // Fetch all questions from all subjects
     Promise.all(subjectFiles.map(fetchQuestionsFromFile))
         .then(allQuestions => {
@@ -31,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Display the selected questions
             displayQuestions(selectedQuestions);
+            document.getElementById('shuffle-button').addEventListener('click', function() {
+                displayQuestions();
+            });
         })
         .catch(error => {
             console.error('Error loading questions:', error);
