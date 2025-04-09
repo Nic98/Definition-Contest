@@ -1,35 +1,64 @@
 // Round Two functionality - randomly selects 30 questions from all subject files
 document.addEventListener('DOMContentLoaded', function() {
-    // Function to extract questions from HTML string
-    function extractQuestionsFromHTML(htmlString, subjectName) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlString, 'text/html');
-        const questionElements = doc.querySelectorAll('.question');
-        
-        const questions = [];
-        questionElements.forEach((questionElement) => {
-            const questionText = questionElement.querySelector('p').textContent;
-            const answerElement = questionElement.querySelector('.answer');
-            const answerText = answerElement ? answerElement.textContent : '';
-            
-            questions.push({
-                subject: subjectName,
-                questionText: questionText,
-                answerText: answerText
-            });
-        });
-        
-        return questions;
-    }
+    // List of all subject HTML files
+    const subjectFiles = [
+        'art-design.html',
+        'biology.html',
+        'business.html',
+        'chemistry.html',
+        'EAP.html',
+        'chinese.html',
+        'CS.html',
+        'math.html',
+        'economics.html',
+        'physics.html'
+        // Add other subjects when available
+    ];
 
-    // Function to shuffle array (Fisher-Yates algorithm)
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
+    // Fetch all questions from all subjects
+    Promise.all(subjectFiles.map(fetchQuestionsFromFile))
+        .then(allQuestions => {
+            // Flatten the array of arrays into a single array of questions
+            const combinedQuestions = [].concat(...allQuestions);
+            
+            // Shuffle the combined questions array
+            const shuffledQuestions = shuffleArray(combinedQuestions);
+            
+            // Select the first 30 questions
+            const selectedQuestions = shuffledQuestions.slice(0, 30);
+            
+            // Display the selected questions
+            displayQuestions(selectedQuestions);
+            
+            // Calculate word counts after questions are displayed
+            calculateAnswerWordCount();
+        })
+        .catch(error => {
+            console.error('Error loading questions:', error);
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '<p>Error loading questions. Please try again later.</p>';
+        });
+});
+
+function fetchQuestionsFromFile(file) {
+    return fetch(file)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const questions = Array.from(doc.querySelectorAll('.question'));
+            return questions.map(q => q.outerHTML);
+        });
+}
+
+function shuffleArray(array) {
+    // Fisher-Yates shuffle algorithm
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+}
 
     // Function to display questions in the round two container
     function displayRoundTwoQuestions() {
