@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'economics.html',
         'math.html',
         'physics.html',
-        // Add other subjects when available
     ];
 
     // Fetch all questions from all subjects
@@ -28,9 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Display the selected questions
             displayQuestions(selectedQuestions);
-            
-            // Calculate word counts after questions are displayed
-            // calculateAnswerWordCount();
         })
         .catch(error => {
             console.error('Error loading questions:', error);
@@ -68,10 +64,13 @@ function displayQuestions(questions) {
         const questionDiv = document.createElement('div');
         questionDiv.innerHTML = questionHtml;
         
-        // Update the question number
+        // Update the question number while preserving HTML tags
         const questionText = questionDiv.querySelector('p:first-of-type');
         if (questionText) {
-            questionText.textContent = questionText.textContent.replace(/^\d+\./, `${index + 1}.`);
+            // Get the inner HTML to preserve <strong> tags
+            const innerHtml = questionText.innerHTML;
+            // Replace the number at the start while keeping the rest
+            questionText.innerHTML = innerHtml.replace(/^\d+\./, `${index + 1}.`);
         }
         
         // Update answer IDs to prevent conflicts
