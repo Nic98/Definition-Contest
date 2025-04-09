@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
         'chemistry.html',
         'EAP.html',
         'chinese.html',
-        'CS.html'
+        'CS.html',
+        'economics.html',
+        'math.html',
+        'physics.html',
         // Add other subjects when available
     ];
 
@@ -27,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             displayQuestions(selectedQuestions);
             
             // Calculate word counts after questions are displayed
-            calculateAnswerWordCount();
+            // calculateAnswerWordCount();
         })
         .catch(error => {
             console.error('Error loading questions:', error);
