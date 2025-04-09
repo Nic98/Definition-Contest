@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
         'math.html',
         'physics.html',
     ];
+    
+    document.getElementById('shuffle-button').addEventListener('click', function() {
+            displayQuestions();
+    });
 
     // Fetch all questions from all subjects
     Promise.all(subjectFiles.map(fetchQuestionsFromFile))
