@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Display the selected questions
             displayQuestions(selectedQuestions);
-            document.getElementById('shuffle-button').addEventListener('click', function() {
-                displayQuestions();
-            });
+            // document.getElementById('shuffle-button').addEventListener('click', function() {
+            //     displayQuestions(selectedQuestions);
+            // });
         })
         .catch(error => {
             console.error('Error loading questions:', error);
