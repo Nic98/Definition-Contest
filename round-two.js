@@ -216,5 +216,4 @@ function shuffleArray(array) {
     // If we're on the index page with the round-two-container, display questions
     if (document.getElementById('round-two-container')) {
         displayRoundTwoQuestions();
-    }
-});
+    };
