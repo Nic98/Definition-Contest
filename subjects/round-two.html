@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Definition Contest - Round Two</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="toggleAnswer.js"></script>
-  <script src="backbutton.js"></script>
-  <script src="countword.js"></script>
+  <script src="../components/toggleAnswer.js"></script>
+  <script src="../components/backbutton.js"></script>
+  <script src="../components/countword.js"></script>
 </head>
 <body>
   <h1>Definition Contest - Round Two</h1>
@@ -18,7 +18,7 @@
 
   <!-- ✅ 加载题库模块，并动态渲染 -->
   <script type="module">
-    import allQuestions from './extractor/allQuestions.js';
+    import allQuestions from '../extractor/allQuestions.js';
 
     function shuffleArray(array) {
       const newArray = [...array];

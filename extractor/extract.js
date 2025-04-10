@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');
 
-const questionsDir = path.join(__dirname, '../');
+const questionsDir = path.join(__dirname, '../subjects');
 const outputPath = path.join(__dirname, 'allQuestions.js');
 const excludeFiles = ['round-two.html', 'template.html'];
 
@@ -31,7 +31,9 @@ files.forEach(file => {
     // 获取题干文本
     const pTags = div.querySelectorAll('p');
     if (pTags.length > 0) {
-      questionObj.text = pTags[0].textContent.trim();
+      // 移除题目前的编号，例如 "28. "
+      const rawText = pTags[0].textContent.trim();
+      questionObj.text = rawText.replace(/^\d+[\.\s\-:、]+/, '');
     }
 
     // 获取答案

@@ -1,4 +1,149 @@
-const allQuestions = [
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definition Contest - Round Two</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="../components/toggleAnswer.js"></script>
+    <script src="../components/backbutton.js"></script>
+    <script src="../components/countword.js"></script>
+</head>
+<body>
+    <h1>Definition Contest - Round Two</h1>
+    <!-- <button class="back-button" onclick="window.location.href='index.html'">Back to Home</button> -->
+    <button id="shuffle-button" class="shuffle-button">Shuffle Questions</button>
+    
+    <div id="questions-container">
+        <p>Loading questions...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Store all questions from all subjects
+            let allSubjectQuestions = [];
+            
+            // Function to shuffle array (Fisher-Yates algorithm)
+            function shuffleArray(array) {
+                const newArray = [...array]; // Create a copy to avoid modifying the original
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+
+            // Function to display questions in the container
+            function displayQuestions() {
+                const questionsContainer = document.getElementById('questions-container');
+                questionsContainer.innerHTML = '';
+                
+                // If no questions loaded yet, show loading message
+                if (allSubjectQuestions.length === 0) {
+                    questionsContainer.innerHTML = '<p>No questions available. Please check your connection.</p>';
+                    return;
+                }
+                
+                // Shuffle and select 30 random questions
+                const shuffledQuestions = shuffleArray(allSubjectQuestions);
+                const numQuestions = Math.min(30, shuffledQuestions.length);
+                const selectedQuestions = shuffledQuestions.slice(0, numQuestions);
+                
+                // Display the selected questions
+                selectedQuestions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    
+                    const questionNumber = index + 1;
+                    const questionPara = document.createElement('p');
+                    
+                    // Format the question text with subject
+                    if (question.isMultipleChoice) {
+                        questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
+                    } else {
+                        // For fill-in-the-blank questions, add word count if available
+                        questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
+                        if (question.wordCount) {
+                            const wordCountSpan = document.createElement('span');
+                            wordCountSpan.className = 'word-count';
+                            wordCountSpan.textContent = ` (words:${question.wordCount})`;
+                            questionPara.appendChild(wordCountSpan);
+                        }
+                    }
+                    
+                    // Add MCQ options if it's a multiple choice question
+                    if (question.isMultipleChoice && question.options) {
+                        const mcqOptionsDiv = document.createElement('div');
+                        mcqOptionsDiv.className = 'mcq-options';
+                        
+                        const optionsList = document.createElement('ul');
+                        question.options.forEach(option => {
+                            const optionItem = document.createElement('li');
+                            optionItem.textContent = option;
+                            optionsList.appendChild(optionItem);
+                        });
+                        
+                        mcqOptionsDiv.appendChild(optionsList);
+                        questionDiv.appendChild(questionPara);
+                        questionDiv.appendChild(mcqOptionsDiv);
+                    } else {
+                        questionDiv.appendChild(questionPara);
+                    }
+                    
+                    // Add image if present
+                    if (question.image) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = "../" + question.image;
+                        imgElement.style.width = '70%';
+                        imgElement.style.maxWidth = '400px';
+                        questionDiv.appendChild(imgElement);
+                        
+                        // Add empty div after image (as in original structure)
+                        const emptyDiv = document.createElement('div');
+                        questionDiv.appendChild(emptyDiv);
+                    }
+                    
+                    const showButton = document.createElement('button');
+                    showButton.textContent = 'Show Answer';
+                    showButton.onclick = function() {
+                        toggleRoundTwoAnswer(questionNumber);
+                    };
+                    
+                    const answerDiv = document.createElement('div');
+                    answerDiv.className = 'answer';
+                    answerDiv.id = `round-two-answer${questionNumber}`;
+                    answerDiv.textContent = question.answer;
+                    answerDiv.style.display = 'none';
+                    
+                    questionDiv.appendChild(showButton);
+                    questionDiv.appendChild(answerDiv);
+                    
+                    questionsContainer.appendChild(questionDiv);
+                });
+                
+                // Calculate word counts for answers
+                calculateAnswerWordCount();
+            }
+
+            // Function to toggle answer visibility
+            function toggleRoundTwoAnswer(questionNumber) {
+                const answer = document.getElementById(`round-two-answer${questionNumber}`);
+                if (!answer) return;
+                
+                const button = answer.previousElementSibling;
+                
+                if (answer.style.display === 'block') {
+                    answer.style.display = 'none';
+                    button.textContent = 'Show Answer';
+                } else {
+                    answer.style.display = 'block';
+                    button.textContent = 'Hide Answer';
+                }
+            }
+
+            // Hard-coded questions from all subjects to avoid CORS issues
+            // CS questions
+            allSubjectQuestions = [
   {
     "subject": "CS",
     "text": "Binary number system is a base _____ system",
@@ -1089,7 +1234,7 @@ const allQuestions = [
     "subject": "Biology",
     "text": "The following phenomenon in plant cells is _____",
     "answer": "plasmolysis",
-    "image": "../Biology/q5.png"
+    "image": "./Biology/q5.png"
   },
   {
     "subject": "Biology",
@@ -1238,7 +1383,7 @@ const allQuestions = [
       "C. Sensory neurone",
       "D. Synapse"
     ],
-    "image": "../Biology/q29.png"
+    "image": "./Biology/q29.png"
   },
   {
     "subject": "Biology",
@@ -1335,7 +1480,7 @@ const allQuestions = [
       "C. To make sure the blood flows to the brain",
       "D. To make sure the blood flows to the lungs"
     ],
-    "image": "../Biology/q37.png"
+    "image": "./Biology/q37.png"
   },
   {
     "subject": "Biology",
@@ -1384,18 +1529,6 @@ const allQuestions = [
       "C. Pancreas",
       "D. Testis"
     ]
-  },
-  {
-    "subject": "Biology",
-    "text": "The diagram represents processes in sexual reproduction. Which processes are represented by the letters P, Q and R?",
-    "answer": "B",
-    "image": "../Biology/q42.png"
-  },
-  {
-    "subject": "Biology",
-    "text": "Letters H, J, K and L show the organisms that make up a simple food web. Which row identifies the types of organism shown in the food web?",
-    "answer": "C",
-    "image": "../Biology/q43.png"
   },
   {
     "subject": "Biology",
@@ -1538,7 +1671,7 @@ const allQuestions = [
       "C. C",
       "D. D"
     ],
-    "image": "../Busniess/q5.png"
+    "image": "Busniess/q5.png"
   },
   {
     "subject": "Business",
@@ -1551,7 +1684,7 @@ const allQuestions = [
       "C. C",
       "D. D"
     ],
-    "image": "../Busniess/q5.png"
+    "image": "Busniess/q5.png"
   },
   {
     "subject": "Business",
@@ -1564,7 +1697,7 @@ const allQuestions = [
       "C. C",
       "D. D"
     ],
-    "image": "../Busniess/q5.png"
+    "image": "Busniess/q5.png"
   },
   {
     "subject": "Business",
@@ -1666,7 +1799,7 @@ const allQuestions = [
       "C. 4",
       "D. 6"
     ],
-    "image": "../Busniess/q171819.png"
+    "image": "Busniess/q171819.png"
   },
   {
     "subject": "Business",
@@ -1679,7 +1812,7 @@ const allQuestions = [
       "C. 9",
       "D. 15"
     ],
-    "image": "../Busniess/q171819.png"
+    "image": "Busniess/q171819.png"
   },
   {
     "subject": "Business",
@@ -1692,13 +1825,13 @@ const allQuestions = [
       "C. 5",
       "D. 15"
     ],
-    "image": "../Busniess/q171819.png"
+    "image": "Busniess/q171819.png"
   },
   {
     "subject": "Business",
     "text": "The gross profit margin was _____",
     "answer": "33%",
-    "image": "../Busniess/q20.png"
+    "image": "Busniess/q20.png"
   },
   {
     "subject": "Business",
@@ -2039,13 +2172,13 @@ const allQuestions = [
     "subject": "Chemistry",
     "text": "Which diagram represents the outer-shell electron arrangement in a nitrogen molecule?",
     "answer": "Key: D",
-    "image": "../Chemistry/q34.png"
+    "image": "Chemistry/q34.png"
   },
   {
     "subject": "Chemistry",
     "text": "Which diagram represents the arrangement of the outer-shell electrons of a noble gas?",
     "answer": "Key: A",
-    "image": "../Chemistry/q35.png"
+    "image": "Chemistry/q35.png"
   },
   {
     "subject": "Chemistry",
@@ -2799,7 +2932,7 @@ const allQuestions = [
       "C. 3-6",
       "D. 3-19"
     ],
-    "image": "../Math/q6.png"
+    "image": "./Math/q6.png"
   },
   {
     "subject": "Math",
@@ -2875,7 +3008,7 @@ const allQuestions = [
       "C. perimeter",
       "D. arc"
     ],
-    "image": "../Math/q14.png"
+    "image": "./Math/q14.png"
   },
   {
     "subject": "Math",
@@ -3236,4 +3369,19 @@ const allQuestions = [
   }
 ];
 
-export default allQuestions;
+            // Add more subjects and multiple choice questions as needed...
+
+            // Display initial set of questions
+            displayQuestions();
+            
+            // Add event listener for shuffle button
+            document.getElementById('shuffle-button').addEventListener('click', function() {
+                displayQuestions();
+            });
+            
+            // Expose the toggle function globally
+            window.toggleRoundTwoAnswer = toggleRoundTwoAnswer;
+        });
+    </script>
+</body>
+</html>
