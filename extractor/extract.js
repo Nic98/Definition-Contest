@@ -28,18 +28,17 @@ files.forEach(file => {
       answer: '',
     };
 
-    // 获取题干文本
+    // 获取题干文本，保留 HTML 格式（如加粗）
     const pTags = div.querySelectorAll('p');
     if (pTags.length > 0) {
-      // 移除题目前的编号，例如 "28. "
-      const rawText = pTags[0].textContent.trim();
-      questionObj.text = rawText.replace(/^\d+[\.\s\-:、]+/, '');
+      const rawText = pTags[0].innerHTML.trim();  // 使用 innerHTML 以保留 HTML 标签
+      questionObj.text = rawText.replace(/^\d+[\.\s\-:、]+/, '');  // 移除题目前的编号
     }
 
     // 获取答案
     const answerEl = div.querySelector('.answer');
     if (answerEl) {
-      questionObj.answer = answerEl.textContent.trim();
+      questionObj.answer = answerEl.innerHTML.trim();  // 使用 innerHTML 以保留 HTML 格式
     }
 
     // 获取选择题选项（如果有）
@@ -61,12 +60,6 @@ files.forEach(file => {
         questionObj.isMultipleChoice = true;
         questionObj.options = optionsList;
       }
-    }
-
-    // 获取图片（如果有）
-    const imgEl = div.querySelector('img');
-    if (imgEl && imgEl.src) {
-      questionObj.image = imgEl.getAttribute('src');
     }
 
     questionData.push(questionObj);

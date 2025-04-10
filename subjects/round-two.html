@@ -55,7 +55,7 @@
         div.className = 'question';
 
         const p = document.createElement('p');
-        p.textContent = `${number}. [${q.subject}] ${q.text}`;
+        p.innerHTML = `${number}. [${q.subject}] ${q.text}`;  // Use innerHTML to preserve HTML tags
         div.appendChild(p);
 
         // 多项选择题

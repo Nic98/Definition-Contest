@@ -62,13 +62,14 @@
                     // Format the question text with subject
                     if (question.isMultipleChoice) {
                         questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
-                    } else {
-                        // For fill-in-the-blank questions, add word count if available
-                        questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
+                      } else {
+                        // For fill-in-the-blank questions, preserve HTML content and add word count if available
+                        questionPara.innerHTML = `${questionNumber}. [${question.subject}] ${question.text}`;
+                        
                         if (question.wordCount) {
                             const wordCountSpan = document.createElement('span');
                             wordCountSpan.className = 'word-count';
-                            wordCountSpan.textContent = ` (words:${question.wordCount})`;
+                            wordCountSpan.textContent = ` (words: ${question.wordCount})`;
                             questionPara.appendChild(wordCountSpan);
                         }
                     }
@@ -398,7 +399,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The new law aims to _____ wildlife conservation efforts.",
+    "text": "The new law aims to <span class=\"blank\">_____</span> wildlife conservation efforts.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -410,7 +411,7 @@
   },
   {
     "subject": "EAP",
-    "text": "He _____ for the job because he lacked the necessary qualifications.",
+    "text": "He <span class=\"blank\">_____</span> for the job because he lacked the necessary qualifications.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -422,7 +423,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The manager decided to _____ the project deadline due to unforeseen circumstances.",
+    "text": "The manager decided to <span class=\"blank\">_____</span> the project deadline due to unforeseen circumstances.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -434,7 +435,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She expressed _____ about the safety of the new building.",
+    "text": "She expressed <span class=\"blank\">_____</span> about the safety of the new building.",
     "answer": "Key: C",
     "isMultipleChoice": true,
     "options": [
@@ -446,7 +447,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company plans to _____ its operations in the Asia-Pacific region.",
+    "text": "The company plans to <span class=\"blank\">_____</span> its operations in the Asia-Pacific region.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -458,7 +459,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The team's performance was _____ by their recent victories.",
+    "text": "The team's performance was <span class=\"blank\">_____</span> by their recent victories.",
     "answer": "Key: C",
     "isMultipleChoice": true,
     "options": [
@@ -470,7 +471,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The government announced measures to _____ economic growth.",
+    "text": "The government announced measures to <span class=\"blank\">_____</span> economic growth.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -482,7 +483,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The students were _____ with the results of their hard work.",
+    "text": "The students were <span class=\"blank\">_____</span> with the results of their hard work.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -494,7 +495,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The teacher _____ the students' progress regularly.",
+    "text": "The teacher <span class=\"blank\">_____</span> the students' progress regularly.",
     "answer": "Key: B or D",
     "isMultipleChoice": true,
     "options": [
@@ -506,7 +507,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She was _____ by the beauty of the landscape.",
+    "text": "She was <span class=\"blank\">_____</span> by the beauty of the landscape.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -518,7 +519,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The project requires careful _____ of available resources.",
+    "text": "The project requires careful <span class=\"blank\">_____</span> of available resources.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -530,7 +531,7 @@
   },
   {
     "subject": "EAP",
-    "text": "He made an effort to _____ his knowledge of the subject.",
+    "text": "He made an effort to <span class=\"blank\">_____</span> his knowledge of the subject.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -542,7 +543,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company decided to _____ its marketing strategy.",
+    "text": "The company decided to <span class=\"blank\">_____</span> its marketing strategy.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -554,7 +555,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The candidate's performance in the interview was _____.",
+    "text": "The candidate's performance in the interview was <span class=\"blank\">_____</span>.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -566,7 +567,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The government is considering _____ measures to address the issue.",
+    "text": "The government is considering <span class=\"blank\">_____</span> measures to address the issue.",
     "answer": "Key: C",
     "isMultipleChoice": true,
     "options": [
@@ -578,7 +579,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The organization is committed to _____ environmental sustainability.",
+    "text": "The organization is committed to <span class=\"blank\">_____</span> environmental sustainability.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -590,7 +591,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The students _____ their study habits to achieve better results these days.",
+    "text": "The students <span class=\"blank\">_____</span> their study habits to achieve better results these days.",
     "answer": "Key: C or D",
     "isMultipleChoice": true,
     "options": [
@@ -602,7 +603,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The team's success was _____ by their hard work and dedication.",
+    "text": "The team's success was <span class=\"blank\">_____</span> by their hard work and dedication.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -614,7 +615,7 @@
   },
   {
     "subject": "EAP",
-    "text": "Yesterday, the manager _____ the importance of teamwork to the staff.",
+    "text": "Yesterday, the manager <span class=\"blank\">_____</span> the importance of teamwork to the staff.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -626,7 +627,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She expressed _____ about the upcoming exam.",
+    "text": "She expressed <span class=\"blank\">_____</span> about the upcoming exam.",
     "answer": "Key: C",
     "isMultipleChoice": true,
     "options": [
@@ -638,7 +639,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company plans to _____ its product range next year.",
+    "text": "The company plans to <span class=\"blank\">_____</span> its product range next year.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -650,7 +651,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The government's decision to raise taxes was _____ by many citizens.",
+    "text": "The government's decision to raise taxes was <span class=\"blank\">_____</span> by many citizens.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -662,7 +663,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The team needs to _____ their efforts to meet the deadline.",
+    "text": "The team needs to <span class=\"blank\">_____</span> their efforts to meet the deadline.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -674,7 +675,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The teacher _____ the students' performance in the test.",
+    "text": "The teacher <span class=\"blank\">_____</span> the students' performance in the test.",
     "answer": "Key: B or C",
     "isMultipleChoice": true,
     "options": [
@@ -686,7 +687,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company is _____ a new marketing campaign to attract customers.",
+    "text": "The company is <span class=\"blank\">_____</span> a new marketing campaign to attract customers.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -698,7 +699,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The team _____ their victory in the final match last year.",
+    "text": "The team <span class=\"blank\">_____</span> their victory in the final match last year.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -710,7 +711,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She _____ her studies to pursue a career in medicine just now.",
+    "text": "She <span class=\"blank\">_____</span> her studies to pursue a career in medicine just now.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -722,7 +723,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The organization is committed to _____ human rights.",
+    "text": "The organization is committed to <span class=\"blank\">_____</span> human rights.",
     "answer": "Key: C",
     "isMultipleChoice": true,
     "options": [
@@ -734,7 +735,7 @@
   },
   {
     "subject": "EAP",
-    "text": "He _____ his opinion on the matter during the meeting.",
+    "text": "He <span class=\"blank\">_____</span> his opinion on the matter during the meeting.",
     "answer": "Key: B or C",
     "isMultipleChoice": true,
     "options": [
@@ -746,7 +747,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The government plans to _____ stricter regulations to protect the environment.",
+    "text": "The government plans to <span class=\"blank\">_____</span> stricter regulations to protect the environment.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -758,7 +759,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The students were _____ with the results of their hard work.",
+    "text": "The students were <span class=\"blank\">_____</span> with the results of their hard work.",
     "answer": "Key: C",
     "isMultipleChoice": true,
     "options": [
@@ -770,7 +771,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company _____ its workforce to remain competitive this year.",
+    "text": "The company <span class=\"blank\">_____</span> its workforce to remain competitive this year.",
     "answer": "Key: B or D",
     "isMultipleChoice": true,
     "options": [
@@ -782,7 +783,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The teacher _____ the importance of punctuality to the students yesterday.",
+    "text": "The teacher <span class=\"blank\">_____</span> the importance of punctuality to the students yesterday.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -794,7 +795,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The organization is _____ measures to reduce its carbon footprint.",
+    "text": "The organization is <span class=\"blank\">_____</span> measures to reduce its carbon footprint.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -806,7 +807,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company decided to _____ its product line to attract more customers.",
+    "text": "The company decided to <span class=\"blank\">_____</span> its product line to attract more customers.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -818,7 +819,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She _____ the opportunity to study abroad last semester.",
+    "text": "She <span class=\"blank\">_____</span> the opportunity to study abroad last semester.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -830,7 +831,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She was deeply _____ by the novel's tragic ending.",
+    "text": "She was deeply <span class=\"blank\">_____</span> by the novel's tragic ending.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -842,7 +843,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The new policy will have a significant _____ on the economy.",
+    "text": "The new policy will have a significant <span class=\"blank\">_____</span> on the economy.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -854,7 +855,7 @@
   },
   {
     "subject": "EAP",
-    "text": "He tried to _____ his enthusiasm for the project during the meeting.",
+    "text": "He tried to <span class=\"blank\">_____</span> his enthusiasm for the project during the meeting.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -866,7 +867,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The painting _____ a sense of calmness and serenity.",
+    "text": "The painting <span class=\"blank\">_____</span> a sense of calmness and serenity.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -878,7 +879,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She decided to _____ the offer and join the company.",
+    "text": "She decided to <span class=\"blank\">_____</span> the offer and join the company.",
     "answer": "Key: B",
     "isMultipleChoice": true,
     "options": [
@@ -890,7 +891,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The company's decision to downsize will _____ many employees.",
+    "text": "The company's decision to downsize will <span class=\"blank\">_____</span> many employees.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -902,7 +903,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The film's _____ soundtrack added to the overall emotional impact.",
+    "text": "The film's <span class=\"blank\">_____</span> soundtrack added to the overall emotional impact.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -914,7 +915,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The chef's _____ cooking skills impressed the judges.",
+    "text": "The chef's <span class=\"blank\">_____</span> cooking skills impressed the judges.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -926,7 +927,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The _____ of the storm forced many residents to evacuate.",
+    "text": "The <span class=\"blank\">_____</span> of the storm forced many residents to evacuate.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -938,7 +939,7 @@
   },
   {
     "subject": "EAP",
-    "text": "She had a _____ expression on her face as she listened to the news.",
+    "text": "She had a <span class=\"blank\">_____</span> expression on her face as she listened to the news.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -950,7 +951,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The novel's _____ storyline kept readers engaged until the very end.",
+    "text": "The novel's <span class=\"blank\">_____</span> storyline kept readers engaged until the very end.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -962,7 +963,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The _____ artist created stunning works of art that captivated audiences.",
+    "text": "The <span class=\"blank\">_____</span> artist created stunning works of art that captivated audiences.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -974,7 +975,7 @@
   },
   {
     "subject": "EAP",
-    "text": "His _____ knowledge of the subject impressed the interview panel.",
+    "text": "His <span class=\"blank\">_____</span> knowledge of the subject impressed the interview panel.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -986,7 +987,7 @@
   },
   {
     "subject": "EAP",
-    "text": "The car's _____ design made it stand out on the road.",
+    "text": "The car's <span class=\"blank\">_____</span> design made it stand out on the road.",
     "answer": "Key: A",
     "isMultipleChoice": true,
     "options": [
@@ -1235,8 +1236,7 @@
   {
     "subject": "Biology",
     "text": "The following phenomenon in plant cells is _____",
-    "answer": "plasmolysis",
-    "image": "./Biology/q5.png"
+    "answer": "plasmolysis"
   },
   {
     "subject": "Biology",
@@ -1384,8 +1384,7 @@
       "B. Relay neurone",
       "C. Sensory neurone",
       "D. Synapse"
-    ],
-    "image": "./Biology/q29.png"
+    ]
   },
   {
     "subject": "Biology",
@@ -1481,8 +1480,7 @@
       "B. To make sure the blood flows to the kidneys",
       "C. To make sure the blood flows to the brain",
       "D. To make sure the blood flows to the lungs"
-    ],
-    "image": "./Biology/q37.png"
+    ]
   },
   {
     "subject": "Biology",
@@ -1531,6 +1529,16 @@
       "C. Pancreas",
       "D. Testis"
     ]
+  },
+  {
+    "subject": "Biology",
+    "text": "The diagram represents processes in sexual reproduction. Which processes are represented by the letters P, Q and R?",
+    "answer": "B"
+  },
+  {
+    "subject": "Biology",
+    "text": "Letters H, J, K and L show the organisms that make up a simple food web. Which row identifies the types of organism shown in the food web?",
+    "answer": "C"
   },
   {
     "subject": "Biology",
@@ -1672,8 +1680,7 @@
       "B. B",
       "C. C",
       "D. D"
-    ],
-    "image": "Busniess/q5.png"
+    ]
   },
   {
     "subject": "Business",
@@ -1685,8 +1692,7 @@
       "B. B",
       "C. C",
       "D. D"
-    ],
-    "image": "Busniess/q5.png"
+    ]
   },
   {
     "subject": "Business",
@@ -1698,8 +1704,7 @@
       "B. B",
       "C. C",
       "D. D"
-    ],
-    "image": "Busniess/q5.png"
+    ]
   },
   {
     "subject": "Business",
@@ -1800,8 +1805,7 @@
       "B. 2",
       "C. 4",
       "D. 6"
-    ],
-    "image": "Busniess/q171819.png"
+    ]
   },
   {
     "subject": "Business",
@@ -1813,8 +1817,7 @@
       "B. 6",
       "C. 9",
       "D. 15"
-    ],
-    "image": "Busniess/q171819.png"
+    ]
   },
   {
     "subject": "Business",
@@ -1826,14 +1829,12 @@
       "B. (5)",
       "C. 5",
       "D. 15"
-    ],
-    "image": "Busniess/q171819.png"
+    ]
   },
   {
     "subject": "Business",
     "text": "The gross profit margin was _____",
-    "answer": "33%",
-    "image": "Busniess/q20.png"
+    "answer": "33%"
   },
   {
     "subject": "Business",
@@ -2008,7 +2009,7 @@
   },
   {
     "subject": "Chemistry",
-    "text": "2311Na nucleon number is _____",
+    "text": "<sup>23</sup><sub>11</sub>Na nucleon number is _____",
     "answer": "23"
   },
   {
@@ -2092,27 +2093,27 @@
   },
   {
     "subject": "Chemistry",
-    "text": "Write down the electronic configuration of Chloride ions (Cl-): _____",
+    "text": "Write down the electronic configuration of Chloride ions (Cl<sup>-</sup>): _____",
     "answer": "2,8,8"
   },
   {
     "subject": "Chemistry",
-    "text": "What is meant by the term acid? _____",
+    "text": "What is meant by the term <strong>acid</strong>? _____",
     "answer": "Proton donor"
   },
   {
     "subject": "Chemistry",
-    "text": "What is meant by the term strong acid: an acid that is _____ dissociated in aqueous solution",
+    "text": "What is meant by the term <strong>strong acid</strong>: an acid that is _____ dissociated in aqueous solution",
     "answer": "completely"
   },
   {
     "subject": "Chemistry",
-    "text": "What is meant by the term weak acid: an acid that is _____ dissociated in aqueous solution",
+    "text": "What is meant by the term <strong>weak acid</strong>: an acid that is _____ dissociated in aqueous solution",
     "answer": "partially"
   },
   {
     "subject": "Chemistry",
-    "text": "Al2O3 and ZnO are examples of _____ oxides.",
+    "text": "Al<sub>2</sub>O<sub>3</sub> and ZnO are examples of _____ oxides.",
     "answer": "amphoteric"
   },
   {
@@ -2148,7 +2149,7 @@
   {
     "subject": "Chemistry",
     "text": "Write down equation represents photosynthesis.",
-    "answer": "Key: 6CO2 + 6H2O → C6H12O6 + 6O2"
+    "answer": "Key: 6CO<sub>2</sub> + 6H<sub>2</sub>O → C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>"
   },
   {
     "subject": "Chemistry",
@@ -2173,14 +2174,12 @@
   {
     "subject": "Chemistry",
     "text": "Which diagram represents the outer-shell electron arrangement in a nitrogen molecule?",
-    "answer": "Key: D",
-    "image": "Chemistry/q34.png"
+    "answer": "Key: D"
   },
   {
     "subject": "Chemistry",
     "text": "Which diagram represents the arrangement of the outer-shell electrons of a noble gas?",
-    "answer": "Key: A",
-    "image": "Chemistry/q35.png"
+    "answer": "Key: A"
   },
   {
     "subject": "Chemistry",
@@ -2239,7 +2238,7 @@
   },
   {
     "subject": "Chemistry",
-    "text": "In a _____ one atom or group of atoms is replaced by another atom or group of atoms.",
+    "text": "In a _____ <strong>one atom or group of atoms</strong> is replaced by another atom or group of atoms.",
     "answer": "substitution reaction"
   },
   {
@@ -2259,222 +2258,222 @@
   },
   {
     "subject": "Chinese",
-    "text": "久之，文备坐事下狱。（可提示 文甫：人名）",
-    "answer": "Key: 因为译文：过了很久，皇甫文备因为出事被打入监狱。"
+    "text": "久之，文备<strong>坐</strong>事下狱。（可提示 文甫：人名）",
+    "answer": "Key: 因为<br>译文：过了很久，皇甫文备因为出事被打入监狱。"
   },
   {
     "subject": "Chinese",
-    "text": "而二三子者，以为己力，不亦诬乎？",
-    "answer": "Key: 欺骗译文：而他们二三个人却把它作为自己的功劳，不是在骗人吗？"
+    "text": "而二三子者，以为己力，不亦<strong>诬</strong>乎？",
+    "answer": "Key: 欺骗<br>译文：而他们二三个人却把它作为自己的功劳，不是在骗人吗？"
   },
   {
     "subject": "Chinese",
-    "text": "尤而效之，罪又甚焉。",
-    "answer": "Key: 差错，过失，犯错译文：知道这是过错却又去效仿，那么罪过就更严重。"
+    "text": "<strong>尤</strong>而效之，罪又甚焉。",
+    "answer": "Key: 差错，过失，犯错<br>译文：知道这是过错却又去效仿，那么罪过就更严重。"
   },
   {
     "subject": "Chinese",
-    "text": "吾自有目，乌用镜为？",
-    "answer": "Key: 乌：怎么，哪里。为：呢译文：我自己拥有眼睛，怎么还要用镜子呢？还见\"何辞为\"\"奚以之九万里而南为\""
+    "text": "吾自有目，<strong>乌</strong>用镜<strong>为</strong>？",
+    "answer": "Key: 乌：怎么，哪里。为：呢<br>译文：我自己拥有眼睛，怎么还要用镜子呢？<br>还见\"何辞为\"\"奚以之九万里而南为\""
   },
   {
     "subject": "Chinese",
-    "text": "视世所称美人，鲜当意者。",
-    "answer": "Key: 少译文：放眼世上那些称为美人的，很少有称心如意的。还见\"既无伯叔，终鲜兄弟\"。"
+    "text": "视世所称美人，<strong>鲜</strong>当意者。",
+    "answer": "Key: 少<br>译文：放眼世上那些称为美人的，很少有称心如意的。<br>还见\"既无伯叔，终鲜兄弟\"。"
   },
   {
     "subject": "Chinese",
-    "text": "冯异为人谦退不伐。",
-    "answer": "Key: 夸耀、自夸译文：冯异为人谦恭退让不喜夸耀。"
+    "text": "冯异为人谦退不<strong>伐</strong>。",
+    "answer": "Key: 夸耀、自夸<br>译文：冯异为人谦恭退让不喜夸耀。"
   },
   {
     "subject": "Chinese",
-    "text": "光武以此多之。",
-    "answer": "Key: 赞美译文：光武因为这个称赞他。"
+    "text": "光武以此<strong>多</strong>之。",
+    "answer": "Key: 赞美<br>译文：光武因为这个称赞他。"
   },
   {
     "subject": "Chinese",
-    "text": "左次泉州，成功复取南靖。",
-    "answer": "Key: 驻扎。左:撤兵译文：撤兵驻扎在泉州，郑成功又攻取了南靖。"
+    "text": "左<strong>次</strong>泉州，成功复取南靖。",
+    "answer": "Key: 驻扎。左:撤兵<br>译文：撤兵驻扎在泉州，郑成功又攻取了南靖。"
   },
   {
     "subject": "Chinese",
-    "text": "列坐其次",
-    "answer": "Key: 处所、旁边译文：一一排列坐在水边。"
+    "text": "列坐其<strong>次</strong>",
+    "answer": "Key: 处所、旁边<br>译文：一一排列坐在水边。"
   },
   {
     "subject": "Chinese",
-    "text": "成功谋举兵，兵寡，如南澳募兵。",
-    "answer": "Key: 往、到译文：郑成功谋划起兵举事，兵员不足，便到南澳去招募兵丁。"
+    "text": "成功谋举兵，兵寡，<strong>如</strong>南澳募兵。",
+    "answer": "Key: 往、到<br>译文：郑成功谋划起兵举事，兵员不足，便到南澳去招募兵丁。"
   },
   {
     "subject": "Chinese",
-    "text": "乘彼垝垣",
-    "answer": "Key: 登上译文：登上那矮墙"
+    "text": "<strong>乘</strong>彼垝垣",
+    "answer": "Key: 登上<br>译文：登上那矮墙"
   },
   {
     "subject": "Chinese",
-    "text": "将子无怒",
-    "answer": "Key: 请译文：请你不要发怒"
+    "text": "<strong>将</strong>子无怒",
+    "answer": "Key: 请<br>译文：请你不要发怒"
   },
   {
     "subject": "Chinese",
-    "text": "以我贿迁",
-    "answer": "Key: 财物，嫁妆译文：把我的嫁妆带走"
+    "text": "以我<strong>贿</strong>迁",
+    "answer": "Key: 财物，嫁妆<br>译文：把我的嫁妆带走"
   },
   {
     "subject": "Chinese",
-    "text": "靡使归聘",
-    "answer": "Key: 探问译文：没有使者回去探问家人"
+    "text": "靡使归<strong>聘</strong>",
+    "answer": "Key: 探问<br>译文：没有使者回去探问家人"
   },
   {
     "subject": "Chinese",
-    "text": "忧心孔疚",
-    "answer": "Key: 很译文：心里忧虑很是纠结痛苦"
+    "text": "忧心<strong>孔</strong>疚",
+    "answer": "Key: 很<br>译文：心里忧虑很是纠结痛苦"
   },
   {
     "subject": "Chinese",
-    "text": "枉用相存",
-    "answer": "Key: 问候译文：枉驾车马来问候我"
+    "text": "枉用相<strong>存</strong>",
+    "answer": "Key: 问候<br>译文：枉驾车马来问候我"
   },
   {
     "subject": "Chinese",
-    "text": "始入门，夜被劫",
-    "answer": "Key: 刚译文：刚入家门，晚上就被劫掠。"
+    "text": "<strong>始</strong>入门，夜被劫",
+    "answer": "Key: 刚<br>译文：刚入家门，晚上就被劫掠。"
   },
   {
     "subject": "Chinese",
-    "text": "唐浮图慧褒始舍于其址，而卒葬之",
+    "text": "唐浮图慧褒<strong>始</strong>舍于其址，而卒葬之",
     "answer": "Key: 最初"
   },
   {
     "subject": "Chinese",
-    "text": "逖居京口，纠合骁健",
-    "answer": "Key: 集合译文：祖逖居住在京口，集合骁勇健将。"
+    "text": "逖居京口，<strong>纠</strong>合骁健",
+    "answer": "Key: 集合<br>译文：祖逖居住在京口，集合骁勇健将。"
   },
   {
     "subject": "Chinese",
-    "text": "尤工画马",
-    "answer": "Key: 精于译文：尤其精于画马。"
+    "text": "尤<strong>工</strong>画马",
+    "answer": "Key: 精于<br>译文：尤其精于画马。"
   },
   {
     "subject": "Chinese",
-    "text": "书，足以记名姓而已。",
-    "answer": "Key: 写字译文：写字只足以记记名姓罢了。"
+    "text": "<strong>书</strong>，足以记名姓而已。",
+    "answer": "Key: 写字<br>译文：写字只足以记记名姓罢了。"
   },
   {
     "subject": "Chinese",
-    "text": "即坊肆中发书而熟复之",
-    "answer": "Key: 就到译文：到街坊店铺里打开书来仔细复习它。"
+    "text": "<strong>即</strong>坊肆中发书而熟复之",
+    "answer": "Key: 就到<br>译文：到街坊店铺里打开书来仔细复习它。"
   },
   {
     "subject": "Chinese",
-    "text": "间有意欲起，而乱书围之",
-    "answer": "Key: 偶尔译文：偶尔有意想起身，但房中散乱之书包围着起不来。"
+    "text": "<strong>间</strong>有意欲起，而乱书围之",
+    "answer": "Key: 偶尔<br>译文：偶尔有意想起身，但房中散乱之书包围着起不来。"
   },
   {
     "subject": "Chinese",
-    "text": "切须常加简束",
-    "answer": "Key: 检查译文：切须经常对之加以检查约束。"
+    "text": "切须常加<strong>简</strong>束",
+    "answer": "Key: 检查<br>译文：切须经常对之加以检查约束。"
   },
   {
     "subject": "Chinese",
-    "text": "客请予与对局，予颇易之。",
-    "answer": "Key: 轻视译文：客人请我和他一起对战下棋，我非常轻视他。"
+    "text": "客请予与对局，予颇<strong>易</strong>之。",
+    "answer": "Key: 轻视<br>译文：客人请我和他一起对战下棋，我非常轻视他。"
   },
   {
     "subject": "Chinese",
-    "text": "甫下数子（棋子），客已先得手。",
-    "answer": "Key: 刚译文：刚下几个棋子，客人已经先我得手。"
+    "text": "<strong>甫</strong>下数子（棋子），客已先得手。",
+    "answer": "Key: 刚<br>译文：刚下几个棋子，客人已经先我得手。"
   },
   {
     "subject": "Chinese",
-    "text": "我业治驼",
-    "answer": "Key: 职业译文：我的职业就是治疗驼背（的问题）。"
+    "text": "我<strong>业</strong>治驼",
+    "answer": "Key: 职业<br>译文：我的职业就是治疗驼背（的问题）。"
   },
   {
     "subject": "Chinese",
-    "text": "何以异于此医也哉",
-    "answer": "Key: 和...不同译文：这与那个医生有什么不同呢？"
+    "text": "何以<strong>异</strong>于此医也哉",
+    "answer": "Key: 和...不同<br>译文：这与那个医生有什么不同呢？"
   },
   {
     "subject": "Chinese",
-    "text": "馈汝浆",
-    "answer": "Key: 你译文：赠与你琼浆。"
+    "text": "馈<strong>汝</strong>浆",
+    "answer": "Key: 你<br>译文：赠与你琼浆。"
   },
   {
     "subject": "Chinese",
-    "text": "父怒不与",
-    "answer": "Key: 给译文：父亲生气了不肯给"
+    "text": "父怒不<strong>与</strong>",
+    "answer": "Key: 给<br>译文：父亲生气了不肯给"
   },
   {
     "subject": "Chinese",
-    "text": "谨庠序之教",
-    "answer": "Key: 认真庠：商之学校。序：周之学校译文：认真兴办学校教育"
+    "text": "<strong>谨</strong>庠序之教",
+    "answer": "Key: 认真<br>庠：商之学校。序：周之学校<br>译文：认真兴办学校教育"
   },
   {
     "subject": "Chinese",
-    "text": "申之以孝悌之义",
-    "answer": "Key: 反复教导译文：用尊老敬上的道义反复教导他们"
+    "text": "<strong>申</strong>之以孝悌之义",
+    "answer": "Key: 反复教导<br>译文：用尊老敬上的道义反复教导他们"
   },
   {
     "subject": "Chinese",
-    "text": "声非加疾也，而闻者彰",
-    "answer": "Key: 强译文：声音并没有加强，但听声之人却听得清晰明白"
+    "text": "声非加<strong>疾</strong>也，而闻者彰",
+    "answer": "Key: 强<br>译文：声音并没有加强，但听声之人却听得清晰明白"
   },
   {
     "subject": "Chinese",
-    "text": "参省乎己",
-    "answer": "Key: 检查译文：对自己进行检查反省"
+    "text": "<strong>参</strong>省乎己",
+    "answer": "Key: 检查<br>译文：对自己进行检查反省"
   },
   {
     "subject": "Chinese",
-    "text": "\"不足为外人道也。\"（《桃花源记》）",
+    "text": "\"不足<strong>为</strong>外人道也。\"（《桃花源记》）",
     "answer": "Key: 表示动作、行为的对象。可译为\"向\"\"对\"等。"
   },
   {
     "subject": "Chinese",
-    "text": "圣人之所以为圣，......其皆出于此乎？（《师说》）",
+    "text": "圣人之所以为圣，......<strong>其</strong>皆出于此乎？（《师说》）",
     "answer": "Key: 放在句首，表示测度、反诘、婉商、期望等语气，视情况可译为\"大概\"\"难道\"\"还是\"\"可要\"等，或省去。"
   },
   {
     "subject": "Chinese",
-    "text": "向吾不为斯役，则久已病矣。（《捕蛇者说》）",
+    "text": "向吾不为斯役，<strong>则</strong>久已病矣。（《捕蛇者说》）",
     "answer": "Key: 表示假设关系。有的用在前一分句，引出假设的情况，相当于\"假使\"\"如果\"；有的用于后面的分句，表示假设或推断的结果，相当于\"那么\"\"就\"。"
   },
   {
     "subject": "Chinese",
-    "text": "晋侯、秦伯围郑，以其无礼于晋，且贰于楚也。（《烛之武退秦师》）",
+    "text": "晋侯、秦伯围郑，<strong>以</strong>其无礼于晋，且贰于楚也。（《烛之武退秦师》）",
     "answer": "Key: 表示因果关系，常用在表原因的分句前，可译为\"因为\"。"
   },
   {
     "subject": "Chinese",
-    "text": "盖均无贫，和无寡，安无倾。（《季氏将伐颛臾》）",
+    "text": "<strong>盖</strong>均无贫，和无寡，安无倾。（《季氏将伐颛臾》）",
     "answer": "Key: \"盖\"用在句首，作副词，表示下边说的一些话，是带有推测性的断定，相当于现代汉语中\"大概\"\"推想\"的意思。"
   },
   {
     "subject": "Chinese",
-    "text": "故木受绳则直，金就砺则利。（《劝学》）",
+    "text": "故木受绳则直，金就砺<strong>则</strong>利。（《劝学》）",
     "answer": "Key: 表承接。表示两件事情在时间上、事理上的紧密联系。可译为\"就\"\"便\"或译为\"原来是\"\"已经是\"。"
   },
   {
     "subject": "Chinese",
-    "text": "归去来兮，请息交以绝游。（《归去来兮辞》）",
+    "text": "归去来兮，请息交<strong>以</strong>绝游。（《归去来兮辞》）",
     "answer": "Key: 表示并列或递进关系，可译为\"而\"\"又\"\"而且\"\"并且\"等，或者省去。"
   },
   {
     "subject": "Chinese",
-    "text": "寡人之于国也，尽心焉耳矣。（《寡人之于国也》）",
+    "text": "寡人之<strong>于</strong>国也，尽心焉耳矣。（《寡人之于国也》）",
     "answer": "Key: 引进动作的时间、处所、范围、对象、方面、原因等，视情况可译为\"在\"\"在......方面\""
   },
   {
     "subject": "Chinese",
-    "text": "不（通\"\"否）者，若属皆且为所虏！（《鸿门宴》）",
+    "text": "不（通\"\"否）者，若属皆且<strong>为</strong>所虏！（《鸿门宴》）",
     "answer": "Key: 表示被动关系。读阳平声，可译为\"被\"。"
   },
   {
     "subject": "Chinese",
-    "text": "君子博学而日参省乎己。（《劝学》）",
+    "text": "君子博学<strong>而</strong>日参省乎己。（《劝学》）",
     "answer": "Key: 表示递进关系。可译为\"并且\"或\"而且\"。"
   },
   {
@@ -2489,12 +2488,12 @@
   },
   {
     "subject": "Economics",
-    "text": "Production possibility curve: the _____ possible output combinations of two G&S can be produced with existing _____ and _____ being fully and efficiently used.",
+    "text": "Production possibility curve: the _____ possible output combinations of two G&amp;S can be produced with existing _____ and _____ being fully and efficiently used.",
     "answer": "Key: maximum/ resources/ technology"
   },
   {
     "subject": "Economics",
-    "text": "Capital: _____ resources used to _____ other G&S.",
+    "text": "Capital: _____ resources used to _____ other G&amp;S.",
     "answer": "Key: Man-made/ produce"
   },
   {
@@ -2679,7 +2678,7 @@
   },
   {
     "subject": "Economics",
-    "text": "_____ merger: firms engaged in the _____ stage of production of the same type of G&S combine. E.g. a paper manufacturer merges with another paper manufacturer.",
+    "text": "_____ merger: firms engaged in the _____ stage of production of the same type of G&amp;S combine. E.g. a paper manufacturer merges with another paper manufacturer.",
     "answer": "Key: Horizontal/ same"
   },
   {
@@ -2933,8 +2932,7 @@
       "B. 2-19",
       "C. 3-6",
       "D. 3-19"
-    ],
-    "image": "./Math/q6.png"
+    ]
   },
   {
     "subject": "Math",
@@ -3009,8 +3007,7 @@
       "B. radian",
       "C. perimeter",
       "D. arc"
-    ],
-    "image": "./Math/q14.png"
+    ]
   },
   {
     "subject": "Math",
