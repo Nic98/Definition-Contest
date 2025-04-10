@@ -1,289 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Definition Contest - Round Two</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="toggleAnswer.js"></script>
-    <script src="backbutton.js"></script>
-    <script src="countword.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Definition Contest - Round Two</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="toggleAnswer.js"></script>
+  <script src="backbutton.js"></script>
+  <script src="countword.js"></script>
 </head>
 <body>
-    <h1>Definition Contest - Round Two</h1>
-    <!-- <button class="back-button" onclick="window.location.href='index.html'">Back to Home</button> -->
-    <button id="shuffle-button" class="shuffle-button">Shuffle Questions</button>
-    
-    <div id="questions-container">
-        <p>Loading questions...</p>
-    </div>
+  <h1>Definition Contest - Round Two</h1>
+  <button id="shuffle-button" class="shuffle-button">Shuffle Questions</button>
+  <div id="questions-container">
+    <p>Loading questions...</p>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Store all questions from all subjects
-            let allSubjectQuestions = [];
-            
-            // Function to shuffle array (Fisher-Yates algorithm)
-            function shuffleArray(array) {
-                const newArray = [...array]; // Create a copy to avoid modifying the original
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                }
-                return newArray;
-            }
+  <!-- ✅ 加载题库模块，并动态渲染 -->
+  <script type="module">
+    import allQuestions from './extractor/allQuestions.js';
 
-            // Function to display questions in the container
-            function displayQuestions() {
-                const questionsContainer = document.getElementById('questions-container');
-                questionsContainer.innerHTML = '';
-                
-                // If no questions loaded yet, show loading message
-                if (allSubjectQuestions.length === 0) {
-                    questionsContainer.innerHTML = '<p>No questions available. Please check your connection.</p>';
-                    return;
-                }
-                
-                // Shuffle and select 30 random questions
-                const shuffledQuestions = shuffleArray(allSubjectQuestions);
-                const numQuestions = Math.min(30, shuffledQuestions.length);
-                const selectedQuestions = shuffledQuestions.slice(0, numQuestions);
-                
-                // Display the selected questions
-                selectedQuestions.forEach((question, index) => {
-                    const questionDiv = document.createElement('div');
-                    questionDiv.className = 'question';
-                    
-                    const questionNumber = index + 1;
-                    const questionPara = document.createElement('p');
-                    
-                    // Format the question text with subject
-                    if (question.isMultipleChoice) {
-                        questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
-                    } else {
-                        // For fill-in-the-blank questions, add word count if available
-                        questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
-                        if (question.wordCount) {
-                            const wordCountSpan = document.createElement('span');
-                            wordCountSpan.className = 'word-count';
-                            wordCountSpan.textContent = ` (words:${question.wordCount})`;
-                            questionPara.appendChild(wordCountSpan);
-                        }
-                    }
-                    
-                    // Add MCQ options if it's a multiple choice question
-                    if (question.isMultipleChoice && question.options) {
-                        const mcqOptionsDiv = document.createElement('div');
-                        mcqOptionsDiv.className = 'mcq-options';
-                        
-                        const optionsList = document.createElement('ul');
-                        question.options.forEach(option => {
-                            const optionItem = document.createElement('li');
-                            optionItem.textContent = option;
-                            optionsList.appendChild(optionItem);
-                        });
-                        
-                        mcqOptionsDiv.appendChild(optionsList);
-                        questionDiv.appendChild(questionPara);
-                        questionDiv.appendChild(mcqOptionsDiv);
-                    } else {
-                        questionDiv.appendChild(questionPara);
-                    }
-                    
-                    // Add image if present
-                    if (question.image) {
-                        const imgElement = document.createElement('img');
-                        imgElement.src = question.image;
-                        imgElement.style.width = '100%';
-                        imgElement.style.maxWidth = '400px';
-                        questionDiv.appendChild(imgElement);
-                        
-                        // Add empty div after image (as in original structure)
-                        const emptyDiv = document.createElement('div');
-                        questionDiv.appendChild(emptyDiv);
-                    }
-                    
-                    const showButton = document.createElement('button');
-                    showButton.textContent = 'Show Answer';
-                    showButton.onclick = function() {
-                        toggleRoundTwoAnswer(questionNumber);
-                    };
-                    
-                    const answerDiv = document.createElement('div');
-                    answerDiv.className = 'answer';
-                    answerDiv.id = `round-two-answer${questionNumber}`;
-                    answerDiv.textContent = question.answer;
-                    answerDiv.style.display = 'none';
-                    
-                    questionDiv.appendChild(showButton);
-                    questionDiv.appendChild(answerDiv);
-                    
-                    questionsContainer.appendChild(questionDiv);
-                });
-                
-                // Calculate word counts for answers
-                // calculateAnswerWordCount();
-            }
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
 
-            // Function to toggle answer visibility
-            function toggleRoundTwoAnswer(questionNumber) {
-                const answer = document.getElementById(`round-two-answer${questionNumber}`);
-                if (!answer) return;
-                
-                const button = answer.previousElementSibling;
-                
-                if (answer.style.display === 'block') {
-                    answer.style.display = 'none';
-                    button.textContent = 'Show Answer';
-                } else {
-                    answer.style.display = 'block';
-                    button.textContent = 'Hide Answer';
-                }
-            }
+    function toggleRoundTwoAnswer(questionNumber) {
+      const answer = document.getElementById(`round-two-answer${questionNumber}`);
+      if (!answer) return;
+      const button = answer.previousElementSibling;
+      if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        button.textContent = 'Show Answer';
+      } else {
+        answer.style.display = 'block';
+        button.textContent = 'Hide Answer';
+      }
+    }
 
-            // Hard-coded questions from all subjects to avoid CORS issues
-            // CS questions
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Computer Science", text: "Binary number system is a base _____ system", answer: "2", isMultipleChoice: false },
-                { subject: "Computer Science", text: "The sample rate is the number of samples taken in a _____", answer: "second", isMultipleChoice: false },
-                { subject: "Computer Science", text: "The sample resolution is the number of _____ per sample", answer: "bits", isMultipleChoice: false },
-                { subject: "Computer Science", text: "Image resolution: number of _____ in an image", answer: "pixels", isMultipleChoice: false },
-                { subject: "Computer Science", text: "_____ is the smallest component of the image", answer: "Pixel", isMultipleChoice: false },
-                { subject: "Computer Science", text: "512 KiB = _____ MiB", answer: "0.5", isMultipleChoice: false },
-                { subject: "Computer Science", text: "Georgia compresses photographs to store them on the USB flash memory drive. It is important that the compression does not affect the quality of the photographs in any way. State which type of compression is the most suitable.", answer: "Lossless compression", isMultipleChoice: false },
-                { subject: "Computer Science", text: "The header of a packet contains _____ IP address and _____ (IP) address", answer: "Destination/receivers, Originator's/senders", isMultipleChoice: false, wordCount: "1/1" },
-                { subject: "Computer Science", text: "The header of a packet contains _____ number and _____ detection method.", answer: "packet, Error", isMultipleChoice: false, wordCount: "1/1" },
-                { subject: "Computer Science", text: "A packet contains header, _____, trailer", answer: "payload", isMultipleChoice: false }
-            ]);
+    function displayQuestions(questions) {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
 
-            // Physics questions
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Physics", text: "The angle between the _____ and the _____ is known as the angle of reflection.", answer: "incident ray, reflected ray", isMultipleChoice: false, wordCount: "2/2" },
-                { subject: "Physics", text: "The SI unit of electric current is _____.", answer: "ampere (A)", isMultipleChoice: false },
-                { subject: "Physics", text: "The SI unit of electric potential difference is _____.", answer: "volt (V)", isMultipleChoice: false },
-                { subject: "Physics", text: "The SI unit of electrical resistance is _____.", answer: "ohm (Ω)", isMultipleChoice: false },
-                { subject: "Physics", text: "The relationship between voltage, current, and resistance is known as _____.", answer: "Ohm's Law", isMultipleChoice: false }
-            ]);
+      const selected = shuffleArray(questions).slice(0, 30);
 
-            // Math questions
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Math", text: "The formula for the area of a circle is _____.", answer: "A = πr²", isMultipleChoice: false },
-                { subject: "Math", text: "The formula for the circumference of a circle is _____.", answer: "C = 2πr", isMultipleChoice: false },
-                { subject: "Math", text: "The formula for the volume of a sphere is _____.", answer: "V = (4/3)πr³", isMultipleChoice: false },
-                { subject: "Math", text: "The formula for the surface area of a sphere is _____.", answer: "A = 4πr²", isMultipleChoice: false },
-                { subject: "Math", text: "The Pythagorean theorem states that _____.", answer: "a² + b² = c²", isMultipleChoice: false }
-            ]);
+      selected.forEach((q, i) => {
+        const number = i + 1;
+        const div = document.createElement('div');
+        div.className = 'question';
 
-            // Economics questions
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Economics", text: "_____ refers to a general and sustained fall in the price level of goods and services in an economy.", answer: "Deflation", isMultipleChoice: false },
-                { subject: "Economics", text: "_____ is a fall in the value of one currency against others in a _____ exchange rate system.", answer: "Depreciation, floating", isMultipleChoice: false, wordCount: "1/1" },
-                { subject: "Economics", text: "Production possibility curve: the _____ possible output combinations of two G&S can be produced with existing _____ and _____ being fully and efficiently used.", answer: "maximum, resources, factors", isMultipleChoice: false, wordCount: "1/1/1" },
-                { subject: "Economics", text: "_____ refers to a general and sustained rise in the price level of goods and services in an economy.", answer: "Inflation", isMultipleChoice: false },
-                { subject: "Economics", text: "The _____ is the total value of all final goods and services produced within a country's borders in a specific time period.", answer: "Gross Domestic Product (GDP)", isMultipleChoice: false }
-            ]);
+        const p = document.createElement('p');
+        p.textContent = `${number}. [${q.subject}] ${q.text}`;
+        div.appendChild(p);
 
-            // Chemistry questions
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Chemistry", text: "Reducing agent is a substance that reduces another substance and is itself _____.", answer: "oxidized", isMultipleChoice: false },
-                { subject: "Chemistry", text: "The pH scale ranges from _____ to _____.", answer: "0, 14", isMultipleChoice: false, wordCount: "1/1" },
-                { subject: "Chemistry", text: "A solution with a pH less than 7 is _____.", answer: "acidic", isMultipleChoice: false },
-                { subject: "Chemistry", text: "A solution with a pH greater than 7 is _____.", answer: "basic/alkaline", isMultipleChoice: false },
-                { subject: "Chemistry", text: "A solution with a pH of exactly 7 is _____.", answer: "neutral", isMultipleChoice: false }
-            ]);
+        // 多项选择题
+        if (q.options && Array.isArray(q.options)) {
+          const optionsDiv = document.createElement('div');
+          optionsDiv.className = 'mcq-options';
+          const ul = document.createElement('ul');
 
-            // Biology questions - including multiple choice
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Biology", text: "The process by which plants make their own food using sunlight is called _____.", answer: "photosynthesis", isMultipleChoice: false },
-                { subject: "Biology", text: "The basic unit of life is the _____.", answer: "cell", isMultipleChoice: false },
-                { subject: "Biology", text: "The process by which cells divide to form two identical daughter cells is called _____.", answer: "mitosis", isMultipleChoice: false },
-                { subject: "Biology", text: "The process by which cells divide to form four genetically different daughter cells is called _____.", answer: "meiosis", isMultipleChoice: false },
-                { subject: "Biology", text: "The genetic material of a cell is _____.", answer: "DNA", isMultipleChoice: false },
-                { 
-                    subject: "Biology", 
-                    text: "Living animals release carbon dioxide. This is an example of which life process?", 
-                    answer: "A. Excretion", 
-                    isMultipleChoice: true,
-                    options: [
-                        "A. Excretion",
-                        "B. Movement",
-                        "C. Nutrition",
-                        "D. Sensitivity"
-                    ]
-                },
-                { 
-                    subject: "Biology", 
-                    text: "What is a role of water in digestion?", 
-                    answer: "B. It is a solvent.", 
-                    isMultipleChoice: true,
-                    options: [
-                        "A. It is an enzyme.",
-                        "B. It is a solvent.",
-                        "C. It is soluble.",
-                        "D. It is a mineral."
-                    ]
-                },
-                { 
-                    subject: "Biology", 
-                    text: "The lack of which component of a balanced diet will lead to the development of scurvy?", 
-                    answer: "C. Vitamin C", 
-                    isMultipleChoice: true,
-                    options: [
-                        "A. Calcium",
-                        "B. Iron",
-                        "C. Vitamin C",
-                        "D. Vitamin D"
-                    ]
-                },
-                { 
-                    subject: "Biology", 
-                    text: "The diagram shows the structures in a reflex arc. What is X?", 
-                    answer: "B. Relay neurone", 
-                    isMultipleChoice: true,
-                    options: [
-                        "A. Effector",
-                        "B. Relay neurone",
-                        "C. Sensory neurone",
-                        "D. Synapse"
-                    ],
-                    image: "./Biology/q29.png"
-                },
-                { 
-                    subject: "Biology", 
-                    text: "In a sperm cell, which structure contains enzymes that can digest the jelly coat of an egg cell?", 
-                    answer: "A. Acrosome", 
-                    isMultipleChoice: true,
-                    options: [
-                        "A. Acrosome",
-                        "B. Flagellum",
-                        "C. Mitochondria",
-                        "D. Nucleus"
-                    ]
-                }
-            ]);
+          q.options.forEach(opt => {
+            const li = document.createElement('li');
+            li.textContent = opt;
+            ul.appendChild(li);
+          });
 
-            // Business questions
-            allSubjectQuestions = allSubjectQuestions.concat([
-                { subject: "Business", text: "A product sells for $7. Material and other variable costs are $3 per unit. Fixed costs are $60,000. The break-even level of output is:", answer: "15,000 units", isMultipleChoice: false },
-                { subject: "Business", text: "The four Ps of marketing are product, price, promotion, and _____.", answer: "place", isMultipleChoice: false },
-                { subject: "Business", text: "_____ is the process of planning, organizing, leading, and controlling resources to achieve organizational goals.", answer: "Management", isMultipleChoice: false },
-                { subject: "Business", text: "_____ is the process of creating, communicating, delivering, and exchanging offerings that have value for customers.", answer: "Marketing", isMultipleChoice: false },
-                { subject: "Business", text: "_____ is the process of recording, classifying, and summarizing financial transactions.", answer: "Accounting", isMultipleChoice: false }
-            ]);
+          optionsDiv.appendChild(ul);
+          div.appendChild(optionsDiv);
+        }
 
-            // Add more subjects and multiple choice questions as needed...
+        // 图片（如果有）
+        if (q.image) {
+          const img = document.createElement('img');
+          img.src = q.image;
+          img.style.width = '100%';
+          img.style.maxWidth = '400px';
+          div.appendChild(img);
+          div.appendChild(document.createElement('div'));
+        }
 
-            // Display initial set of questions
-            displayQuestions();
-            
-            // Add event listener for shuffle button
-            document.getElementById('shuffle-button').addEventListener('click', function() {
-                displayQuestions();
-            });
-            
-            // Expose the toggle function globally
-            window.toggleRoundTwoAnswer = toggleRoundTwoAnswer;
-        });
-    </script>
+        // 显示答案按钮和答案 div
+        const btn = document.createElement('button');
+        btn.textContent = 'Show Answer';
+        btn.onclick = () => toggleRoundTwoAnswer(number);
+        div.appendChild(btn);
+
+        const ans = document.createElement('div');
+        ans.className = 'answer';
+        ans.id = `round-two-answer${number}`;
+        ans.textContent = q.answer;
+        ans.style.display = 'none';
+        div.appendChild(ans);
+
+        container.appendChild(div);
+      });
+    }
+
+    // 初始化
+    displayQuestions(allQuestions);
+
+    // 绑定 Shuffle 按钮
+    document.getElementById('shuffle-button').addEventListener('click', () => {
+      displayQuestions(allQuestions);
+    });
+
+    // 将函数暴露到全局（供按钮事件调用）
+    window.toggleRoundTwoAnswer = toggleRoundTwoAnswer;
+  </script>
 </body>
 </html>
