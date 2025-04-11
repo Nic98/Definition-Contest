@@ -8,6 +8,12 @@ const excludeFiles = ['round-two.html', 'template.html'];
 
 const questionData = [];
 
+function cleanQuestionHTML(html) {
+  // 去除题号开头，如 "12. "、"28、"、"9 - "
+  const cleaned = html.replace(/^\s*\d+[\.\-:、\s]+/, '');
+  return cleaned;
+}
+
 const files = fs.readdirSync(questionsDir).filter(file =>
   file.endsWith('.html') && !excludeFiles.includes(file)
 );
@@ -31,9 +37,9 @@ files.forEach(file => {
     // 获取题干文本并去除题号
     const pTags = div.querySelectorAll('p');
     if (pTags.length > 0) {
-      const rawText = pTags[0].textContent.trim();
-      questionObj.text = rawText.replace(/^\d+[\.\s\-:、]+/, '');
-    }
+      const rawHTML = pTags[0].innerHTML.trim(); // 保留标签
+      questionObj.text = cleanQuestionHTML(rawHTML);
+    }    
   
     // 获取答案
     const answerEl = div.querySelector('.answer');
