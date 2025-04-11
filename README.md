@@ -77,8 +77,6 @@ http-server -p 8080
 
   http://localhost:8080/extractor/round-two.html
 
---- 
-
 ## 📦 输出格式样例 | Sample Extracted Question
 
 {
@@ -110,6 +108,7 @@ Gregg (Yuhao)
 Contact
 
 Email: foxnemonemo@gmail.com
+
 GitHub: @Nic98
 
 ## 🤝 Acknowledgments
