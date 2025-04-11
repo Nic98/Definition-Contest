@@ -27,43 +27,52 @@ files.forEach(file => {
       text: '',
       answer: '',
     };
-
-    // 获取题干文本，保留 HTML 格式（如加粗）
+  
+    // 获取题干文本并去除题号
     const pTags = div.querySelectorAll('p');
     if (pTags.length > 0) {
-      const rawText = pTags[0].innerHTML.trim();  // 使用 innerHTML 以保留 HTML 标签
-      questionObj.text = rawText.replace(/^\d+[\.\s\-:、]+/, '');  // 移除题目前的编号
+      const rawText = pTags[0].textContent.trim();
+      questionObj.text = rawText.replace(/^\d+[\.\s\-:、]+/, '');
     }
-
+  
     // 获取答案
     const answerEl = div.querySelector('.answer');
     if (answerEl) {
-      questionObj.answer = answerEl.innerHTML.trim();  // 使用 innerHTML 以保留 HTML 格式
+      questionObj.answer = answerEl.textContent.trim();
     }
-
-    // 获取选择题选项（如果有）
+  
+    // 获取选择题选项
     const optionsContainer = div.querySelector('.mcq-options');
     if (optionsContainer) {
+      const optionElements = optionsContainer.querySelectorAll('p, li');
       const optionsList = [];
-      const optionItems = optionsContainer.querySelectorAll('p, li');
-      optionItems.forEach(item => {
-        const txt = item.textContent.trim();
-        const match = txt.match(/^([A-D])[\.\s:-]?\s*(.+)$/i);
+      optionElements.forEach(p => {
+        const match = p.textContent.match(/^\s*([A-D])[\.\s:-]?\s*(.+)$/i);
         if (match) {
           const key = match[1].toUpperCase();
           const value = match[2].trim();
           optionsList.push(`${key}. ${value}`);
         }
       });
-
+  
       if (optionsList.length > 0) {
         questionObj.isMultipleChoice = true;
         questionObj.options = optionsList;
       }
     }
-
+  
+    // ✅ 获取图片路径（支持相对路径）
+    const imgEl = div.querySelector('img');
+    if (imgEl) {
+      const src = imgEl.getAttribute('src');
+      if (src && src.trim()) {
+        questionObj.image = src.trim();
+      }
+    }
+  
     questionData.push(questionObj);
   });
+  
 });
 
 // 写入到 JS 文件
