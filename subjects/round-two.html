@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Definition Contest - Round Two</title>
+  <link rel="stylesheet" href="../style.css" />
+  <script src="../components/toggleAnswer.js"></script>
+  <script src="../components/backbutton.js"></script>
+  <script src="../components/countword.js"></script>
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon"> 
+</head>
+<body>
+  <h1>Definition Contest - Round Two</h1>
+  <button id="shuffle-button" class="shuffle-button">Shuffle Questions</button>
+  <div id="questions-container">
+    <p>Loading questions...</p>
+  </div>
+
+  <!-- ✅ 加载题库模块，并动态渲染 -->
+  <script type="module">
+    import allQuestions from '../extractor/allQuestions.js';
+
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+
+    function toggleRoundTwoAnswer(questionNumber) {
+      const answer = document.getElementById(`round-two-answer${questionNumber}`);
+      if (!answer) return;
+      const button = answer.previousElementSibling;
+      if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        button.textContent = 'Show Answer';
+      } else {
+        answer.style.display = 'block';
+        button.textContent = 'Hide Answer';
+      }
+    }
+
+    function displayQuestions(questions) {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const selected = shuffleArray(questions).slice(0, 30);
+
+      selected.forEach((q, i) => {
+        const number = i + 1;
+        const div = document.createElement('div');
+        div.className = 'question';
+
+        const p = document.createElement('p');
+        p.innerHTML = `${number}. [${q.subject}] ${q.text}`;  // Use innerHTML to preserve HTML tags
+        div.appendChild(p);
+
+        // 多项选择题
+        if (q.options && Array.isArray(q.options)) {
+          const optionsDiv = document.createElement('div');
+          optionsDiv.className = 'mcq-options';
+          const ul = document.createElement('ul');
+
+          q.options.forEach(opt => {
+            const li = document.createElement('li');
+            li.textContent = opt;
+            ul.appendChild(li);
+          });
+
+          optionsDiv.appendChild(ul);
+          div.appendChild(optionsDiv);
+        }
+
+        // 图片（如果有）
+        if (q.image) {
+          const img = document.createElement('img');
+          img.src = q.image;
+          img.style.width = '100%';
+          img.style.maxWidth = '400px';
+          div.appendChild(img);
+          div.appendChild(document.createElement('div'));
+        }
+
+        // 显示答案按钮和答案 div
+        const btn = document.createElement('button');
+        btn.textContent = 'Show Answer';
+        btn.onclick = () => toggleRoundTwoAnswer(number);
+        div.appendChild(btn);
+
+        const ans = document.createElement('div');
+        ans.className = 'answer';
+        ans.id = `round-two-answer${number}`;
+        ans.textContent = q.answer;
+        ans.style.display = 'none';
+        div.appendChild(ans);
+
+        container.appendChild(div);
+      });
+    }
+
+    // 初始化
+    displayQuestions(allQuestions);
+
+    // 绑定 Shuffle 按钮
+    document.getElementById('shuffle-button').addEventListener('click', () => {
+      displayQuestions(allQuestions);
+    });
+
+    // 将函数暴露到全局（供按钮事件调用）
+    window.toggleRoundTwoAnswer = toggleRoundTwoAnswer;
+  </script>
+</body>
+</html>
