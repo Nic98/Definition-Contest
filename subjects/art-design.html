@@ -10,6 +10,18 @@
 </head>
 <body>
     <h1>Definition Contest - Art & Design</h1>
+    <div class="student-info" style="margin: 16px 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <label style="display:flex; flex-direction:column; gap:6px;">
+            <span><strong>Name</strong></span>
+            <input id="studentName" type="text" placeholder="Enter your name" style="padding:8px; min-width:220px;">
+        </label>
+        <label style="display:flex; flex-direction:column; gap:6px;">
+            <span><strong>Class</strong></span>
+            <input id="studentClass" type="text" placeholder="Enter your class" style="padding:8px; min-width:220px;">
+        </label>
+    </div>
+    
+
     <script src="../components/countword.js"></script>
     <script src="../components/backbutton.js"></script>
     <script src="../components/toggleAnswer.js"></script>
@@ -284,5 +296,77 @@
     <button onclick="toggleAnswer(18)">Show Answer</button>
     <div class="answer" id="answer18" style="display:none;">A. Theme (course term)</div>
 </div>
+
+    <div style="margin: 28px 0 12px 0;">
+        <button id="submitBtn" style="padding: 10px 16px; font-size: 16px; cursor: pointer;">Submit & Download JSON</button>
+    </div>
+    
+    <script>
+    (function () {
+        function downloadJSON(obj, filename) {
+            const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function pickRandomQuestion() {
+            const questions = Array.from(document.querySelectorAll(".question"));
+            if (!questions.length) return null;
+
+            const chosen = questions[Math.floor(Math.random() * questions.length)];
+            questions.forEach(q => { if (q !== chosen) q.style.display = "none"; });
+
+            // Add correctness checkbox to the chosen question
+            const grading = document.createElement("div");
+            grading.style.marginTop = "10px";
+            grading.style.padding = "10px";
+            grading.style.border = "1px solid rgba(0,0,0,0.15)";
+            grading.style.borderRadius = "8px";
+            grading.innerHTML = `
+                <label style="display:flex; gap:8px; align-items:center;">
+                    <input id="isCorrect" type="checkbox">
+                    <span><strong>Correct</strong> (tick if the answer is correct)</span>
+                </label>
+            `;
+            chosen.appendChild(grading);
+
+            return chosen;
+        }
+
+        let chosenQuestion = null;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            chosenQuestion = pickRandomQuestion();
+
+            const btn = document.getElementById("submitBtn");
+            if (!btn) return;
+
+            btn.addEventListener("click", function () {
+                const name = (document.getElementById("studentName")?.value || "").trim();
+                const cls = (document.getElementById("studentClass")?.value || "").trim();
+                const isCorrect = !!document.getElementById("isCorrect")?.checked;
+
+                const result = {
+                    name: name,
+                    class: cls,
+                    is_correct: isCorrect
+                };
+
+                const safeName = (name || "student").replace(/[^\w\-]+/g, "_");
+                const safeClass = (cls || "class").replace(/[^\w\-]+/g, "_");
+                const filename = `${safeName}_${safeClass}_result.json`;
+
+                downloadJSON(result, filename);
+            });
+        });
+    })();
+    </script>
+    
 </body>
 </html>
