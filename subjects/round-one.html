@@ -7,10 +7,18 @@
     <link rel="stylesheet" href="../style.css">
     <script src="../components/creator.js"></script>
     <script src="../components/backbutton.js"></script>
+    <script src="../components/roundOneFlow.js"></script>
     <link rel="icon" href="../whbc-icon.png" type="image/x-icon"> 
 </head>
 <body>
     <h1>Definition Contest - Round One</h1>
+    <div style="display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 18px;">
+        <div style="padding: 10px 14px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; background: rgba(255,255,255,0.85);">
+            <strong>Selected Class:</strong> <span id="selectedClassValue">-</span>
+        </div>
+        <button id="changeClassBtn" style="padding: 10px 16px; font-size: 16px; cursor: pointer;">Change Class</button>
+    </div>
+    <p style="text-align:center; margin: 0 0 16px 0;">Choose a subject for the selected class.</p>
     <div class="subject-list">
         <a href="art-design.html">Art & Design</a>
         <a href="biology.html">Biology</a>
@@ -23,6 +31,8 @@
         <a href="physics.html">Physics</a>
         <a href="math.html">Math</a>
     </div>
+    <script>
+        RoundOneFlow.wireRoundOneSubjectMenu();
+    </script>
 </body>
-</html>
 </html>

@@ -9,27 +9,24 @@
 
 </head>
 <body>
+    <button id="subjectBackBtn" style="position: fixed; top: 20px; left: 20px; padding: 10px 14px; cursor: pointer;">← Back</button>
     <script src="../components/countword.js"></script>
     <script src="../components/backbutton.js"></script>
     <script src="../components/toggleAnswer.js"></script>
     <script src="../components/creator.js"></script>
+    <script src="../components/roundOneFlow.js"></script>
 
     <h1>Definition Contest - Computer Science</h1>
 
-    <div class="student-info" style="margin: 16px 0; display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-        <label>
-            Name:
-            <input type="text" id="studentName" placeholder="Enter name" style="margin-left: 8px; padding: 6px 8px;">
-        </label>
-        <label>
-            Class:
-            <input type="text" id="studentClass" placeholder="Enter class" style="margin-left: 8px; padding: 6px 8px;">
-        </label>
+    <div class="student-info" style="margin: 16px 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <div style="padding: 10px 14px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; background: rgba(255,255,255,0.85); min-width:220px;">
+            <strong>Class</strong><br>
+            <span id="selectedClassValue">-</span>
+        </div>
+        <input id="studentClass" type="hidden">
     </div>
 
-    <div id="randomQuestionNote" style="margin: 8px 0 16px 0; font-size: 0.95rem;">
-        One question is shown randomly each time you refresh the page.
-    </div>
+<div id="randomQuestionNote" style="margin: 8px 0 16px 0; font-size: 0.95rem;">One random question is shown each time you open this page.</div>
 
 
     <div class="question">
@@ -346,49 +343,18 @@
         Submit & Download JSON
     </button>
 
+    
+
+
     <script>
-        // Show only ONE random question
-        document.addEventListener('DOMContentLoaded', function () {
-            const questions = Array.from(document.querySelectorAll('.question'));
-            if (!questions.length) return;
-
-            // Hide all
-            questions.forEach(q => q.style.display = 'none');
-
-            // Pick one
-            const idx = Math.floor(Math.random() * questions.length);
-            const selected = questions[idx];
-            selected.style.display = 'block';
-
-            // Optional: show which question number was selected (not included in JSON per requirements)
-            const note = document.getElementById('randomQuestionNote');
-            if (note) note.textContent = `Randomly selected question: ${idx + 1} (refresh to change)`;
-        });
-
-        // Submit -> download JSON file
-        document.getElementById('submitBtn').addEventListener('click', function () {
-            const nameVal = (document.getElementById('studentName').value || '').trim();
-            const classVal = (document.getElementById('studentClass').value || '').trim();
-            const isCorrect = document.getElementById('isCorrect').checked;
-
-            const payload = {
-                name: nameVal,
-                class: classVal,
-                is_correct: isCorrect
-            };
-
-            const jsonStr = JSON.stringify(payload, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'result.json';
-            document.body.appendChild(a);
-            a.click();
-            URL.revokeObjectURL(a.href);
-            a.remove();
-        });
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const selectedClass = params.get('class') || localStorage.getItem('roundOneSelectedClass') || '';
+            document.getElementById('subjectBackBtn').addEventListener('click', function () {
+                window.location.href = 'round-one.html?class=' + encodeURIComponent(selectedClass);
+            });
+        })();
+        RoundOneFlow.wireRoundOneSubjectPage();
     </script>
-
 </body>
 </html>

@@ -10,26 +10,24 @@
 </head>
     
     <body>
+    <button id="subjectBackBtn" style="position: fixed; top: 20px; left: 20px; padding: 10px 14px; cursor: pointer;">← Back</button>
         <script src="../components/countword.js"></script>
         <script src="../components/backbutton.js"></script>
         <script src="../components/toggleAnswer.js"></script>
         <script src="../components/creator.js"></script>
+    <script src="../components/roundOneFlow.js"></script>
 
         <h1>Definition Contest - English for Academic Purposes</h1>
 
-    <div class="student-info" style="margin: 16px 0; display: flex; gap: 12px; flex-wrap: wrap;">
-        <label style="display:flex; align-items:center; gap:8px;">
-            <span>Name:</span>
-            <input id="studentName" type="text" placeholder="Enter your name" style="min-width: 220px; padding: 6px 10px;">
-        </label>
-        <label style="display:flex; align-items:center; gap:8px;">
-            <span>Class:</span>
-            <input id="studentClass" type="text" placeholder="Enter your class" style="min-width: 220px; padding: 6px 10px;">
-        </label>
+    <div class="student-info" style="margin: 16px 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <div style="padding: 10px 14px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; background: rgba(255,255,255,0.85); min-width:220px;">
+            <strong>Class</strong><br>
+            <span id="selectedClassValue">-</span>
+        </div>
+        <input id="studentClass" type="hidden">
     </div>
 
-    
-        <div class="question">
+<div class="question">
             <p>1. The new law aims to <span class="blank">_____</span> wildlife conservation efforts.</p>
             <div class="judge" style="margin: 10px 0;">
                 <label style="display:inline-flex; align-items:center; gap:8px;">
@@ -984,55 +982,14 @@
     </div>
 
     <script>
-    (function () {
-        function pickRandomQuestion() {
-            const questions = Array.from(document.querySelectorAll('.question'));
-            if (questions.length === 0) return;
-
-            const idx = Math.floor(Math.random() * questions.length);
-            questions.forEach((q, i) => {
-                q.style.display = (i === idx) ? '' : 'none';
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const selectedClass = params.get('class') || localStorage.getItem('roundOneSelectedClass') || '';
+            document.getElementById('subjectBackBtn').addEventListener('click', function () {
+                window.location.href = 'round-one.html?class=' + encodeURIComponent(selectedClass);
             });
-        }
-
-        function getVisibleQuestion() {
-            const questions = Array.from(document.querySelectorAll('.question'));
-            return questions.find(q => q.style.display !== 'none') || null;
-        }
-
-        function downloadJSON(obj) {
-            const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "submission.json";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            pickRandomQuestion();
-
-            const btn = document.getElementById('submitBtn');
-            if (!btn) return;
-
-            btn.addEventListener('click', function () {
-                const name = (document.getElementById('studentName')?.value || "").trim();
-                const cls = (document.getElementById('studentClass')?.value || "").trim();
-
-                const q = getVisibleQuestion();
-                const isCorrect = !!(q && q.querySelector('.is-correct') && q.querySelector('.is-correct').checked);
-
-                downloadJSON({
-                    name: name,
-                    class: cls,
-                    is_correct: isCorrect
-                });
-            });
-        });
-    })();
+        })();
+        RoundOneFlow.wireRoundOneSubjectPage();
     </script>
 
 </body>
