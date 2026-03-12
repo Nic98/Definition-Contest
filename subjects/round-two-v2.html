@@ -12,6 +12,43 @@
 
 
     <style>
+        .post-timeup-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .post-timeup-modal-content {
+            background: #fff;
+            width: min(520px, 100%);
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .post-timeup-modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .post-timeup-modal-content p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .post-timeup-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
         /* Fixed timer (top-right) */
         #timer{
             position: fixed;
@@ -39,21 +76,14 @@
     
     <div id="timer" aria-live="polite"><span class="label">Time left:</span> <span id="time">60</span>s</div>
 <h1>Definition Contest - Round Two</h1>
-    <!-- <button class="back-button" onclick="window.location.href='index.html'">Back to Home</button> -->
-    <button id="shuffle-button" class="shuffle-button">Shuffle Questions</button>
+    <button id="next-button" class="shuffle-button">Next 3 Questions</button>
 
-    <!-- Student info -->
     <section class="student-info" style="margin: 16px 0 20px 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-        <label style="display:flex; gap:8px; align-items:center;">
-            <span style="min-width: 52px;">Name</span>
-            <input id="student-name" type="text" placeholder="Enter name" style="padding:8px 10px; border-radius:8px; border:1px solid #ccc; min-width: 220px;" />
-        </label>
-        <label style="display:flex; gap:8px; align-items:center;">
-            <span style="min-width: 52px;">Class</span>
-            <input id="student-class" type="text" placeholder="Enter class" style="padding:8px 10px; border-radius:8px; border:1px solid #ccc; min-width: 220px;" />
-        </label>
+        <strong id="student-info-display">Loading judge information...</strong>
     </section>
     
+    <div id="batch-info" style="margin: 12px 0; font-weight: 600;"></div>
+
     <div id="questions-container">
         <p>Loading questions...</p>
     </div>
@@ -63,251 +93,417 @@
         <span id="submit-status" style="margin-left: 10px; font-size: 0.95rem;"></span>
     </div>
 
+    <div id="post-timeup-modal" class="post-timeup-modal" style="display:none;">
+        <div class="post-timeup-modal-content">
+            <h2>Time is up</h2>
+            <p>The JSON file has been downloaded. What would you like to do next?</p>
+            <div class="post-timeup-modal-actions">
+                <button id="same-class-next-btn" class="shuffle-button">Same Class - Next Set</button>
+                <button id="change-class-btn" class="shuffle-button">Choose Another Class</button>
+            </div>
+        </div>
+    </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
 
-            // ===== Timer (auto-submit) =====
-            const TIMER_DURATION_SECONDS = 60; // change if needed
-            let timeLeft = TIMER_DURATION_SECONDS;
-            let hasAutoSubmitted = false;
-            let timerInterval = null;
+      document.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const studentClass = (params.get('class') || '').trim();
+        const studentName = (params.get('name') || '').trim();
 
-            const timerBox = document.getElementById('timer');
-            const timeEl = document.getElementById('time');
+        if (!studentClass || !studentName) {
+            window.location.href = 'round-two-entry.html';
+            return;
+        }
 
-            // Expose timer state for submit JSON
-            window.__roundTwoTimer = {
-                duration: TIMER_DURATION_SECONDS,
-                startedAt: Date.now(),
-                get time_left(){ return timeLeft; }
-            };
+        const studentInfoDisplay = document.getElementById('student-info-display');
+        if (studentInfoDisplay) {
+            studentInfoDisplay.textContent = `Judge: ${studentName} | Class: ${studentClass}`;
+        }
 
-            function updateTimerUI(){
-                if (timeEl) timeEl.textContent = String(timeLeft);
-                if (timerBox){
-                    if (timeLeft <= 5) timerBox.classList.add('urgent');
-                    else timerBox.classList.remove('urgent');
+        const TIMER_DURATION_SECONDS = 60; // change if needed
+        let timeLeft = TIMER_DURATION_SECONDS;
+        let hasAutoSubmitted = false;
+        let timerInterval = null;
+        let isFrozen = false;
+        let setNumber = 1;
+
+        const timerBox = document.getElementById('timer');
+        const timeEl = document.getElementById('time');
+
+        window.__roundTwoTimer = {
+            duration: TIMER_DURATION_SECONDS,
+            startedAt: Date.now(),
+            __submitted: false,
+            get time_left(){ return timeLeft; }
+        };
+
+        function updateTimerUI(){
+            if (timeEl) timeEl.textContent = String(timeLeft);
+            if (timerBox){
+                if (timeLeft <= 5) timerBox.classList.add('urgent');
+                else timerBox.classList.remove('urgent');
+            }
+        }
+
+        // Store all questions from all subjects
+        let allSubjectQuestions = [];
+
+        // Current batch of 5 questions being shown
+        let currentQuestions = [];
+
+        // Questions that have already appeared
+        let usedQuestionIndices = new Set();
+
+        // Save all results across batches
+        let allResults = [];
+
+        // Current batch number
+        let batchNumber = 1;
+
+        // Each batch shows 5 questions
+        const QUESTIONS_PER_BATCH = 3;
+
+        function resetTimer(){
+            if (timerInterval) clearInterval(timerInterval);
+
+            isFrozen = false;
+            timeLeft = TIMER_DURATION_SECONDS;
+            hasAutoSubmitted = false;
+            window.__roundTwoTimer.startedAt = Date.now();
+            window.__roundTwoTimer.__submitted = false;
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                if (isFrozen) return;
+
+                timeLeft -= 1;
+                if (timeLeft < 0) timeLeft = 0;
+                updateTimerUI();
+
+                if (timeLeft === 0 && !hasAutoSubmitted){
+                    hasAutoSubmitted = true;
+                    if (timerInterval) clearInterval(timerInterval);
+                    handleTimeUp();
                 }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function displayQuestions() {
+            const questionsContainer = document.getElementById('questions-container');
+            const batchInfo = document.getElementById('batch-info');
+            questionsContainer.innerHTML = '';
+
+            if (allSubjectQuestions.length === 0) {
+                questionsContainer.innerHTML = '<p>No questions available. Please check your connection.</p>';
+                return;
             }
 
-            function resetTimer(){
-                // Stop previous interval if any
-                if (timerInterval) clearInterval(timerInterval);
-                timeLeft = TIMER_DURATION_SECONDS;
-                hasAutoSubmitted = false;
-                window.__roundTwoTimer.startedAt = Date.now();
-                                window.__roundTwoTimer.__submitted = false;
-updateTimerUI();
+            const availableIndices = allSubjectQuestions
+                .map((_, index) => index)
+                .filter(index => !usedQuestionIndices.has(index));
 
-                timerInterval = setInterval(() => {
-                    timeLeft -= 1;
-                    if (timeLeft < 0) timeLeft = 0;
-                    updateTimerUI();
-
-                    if (timeLeft === 0 && !hasAutoSubmitted){
-                        hasAutoSubmitted = true;
-                        if (timerInterval) clearInterval(timerInterval);
-
-                        // Auto-submit first (so name/class still available),
-                        // then reshuffle (which also resets timer + clears name/class)
-                        const submitBtn = document.getElementById('submit-button');
-                        if (submitBtn) submitBtn.click();
-
-                        setTimeout(() => {
-                            const shuffleBtn = document.getElementById('shuffle-button');
-                            if (shuffleBtn) shuffleBtn.click();
-                        }, 100);
-                    }
-                }, 1000);
-            }
-
-            // Start timer on page load
-            resetTimer();
-            // ===== End Timer =====
-
-            // Store all questions from all subjects
-            let allSubjectQuestions = [];
-            // Store current displayed questions (after shuffle)
-            let currentQuestions = [];
-            
-            // Function to shuffle array (Fisher-Yates algorithm)
-            function shuffleArray(array) {
-                const newArray = [...array]; // Create a copy to avoid modifying the original
-                for (let i = newArray.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            if (availableIndices.length === 0) {
+                questionsContainer.innerHTML = '<p>All questions have been used.</p>';
+                if (batchInfo) {
+                    batchInfo.textContent = `Batch ${Math.max(batchNumber - 1, 1)} | No more unused questions`;
                 }
-                return newArray;
+                const nextBtn = document.getElementById('next-button');
+                if (nextBtn) nextBtn.disabled = true;
+                return;
             }
 
-            // Function to display questions in the container
-            function displayQuestions() {
-                const questionsContainer = document.getElementById('questions-container');
-                questionsContainer.innerHTML = '';
-                
-                // If no questions loaded yet, show loading message
-                if (allSubjectQuestions.length === 0) {
-                    questionsContainer.innerHTML = '<p>No questions available. Please check your connection.</p>';
-                    return;
-                }
-                
-                // Shuffle and select 30 random questions
-                const shuffledQuestions = shuffleArray(allSubjectQuestions);
-                const numQuestions = Math.min(30, shuffledQuestions.length);
-                const selectedQuestions = shuffledQuestions.slice(0, numQuestions);
-                currentQuestions = selectedQuestions;
-                
-                // Display the selected questions
-                selectedQuestions.forEach((question, index) => {
-                    const questionDiv = document.createElement('div');
-                    questionDiv.className = 'question';
-                    questionDiv.dataset.subject = question.subject || '';
-                    
-                    const questionNumber = index + 1;
-                    questionDiv.dataset.qnum = String(questionNumber);
-                    const questionPara = document.createElement('p');
-                    
-                    // Format the question text with subject
-                    if (question.isMultipleChoice) {
-                        questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
-                      } else {
-                        // For fill-in-the-blank questions, preserve HTML content and add word count if available
-                        questionPara.innerHTML = `${questionNumber}. [${question.subject}] ${question.text}`;
-                        
-                        if (question.wordCount) {
-                            const wordCountSpan = document.createElement('span');
-                            wordCountSpan.className = 'word-count';
-                            wordCountSpan.textContent = ` (words: ${question.wordCount})`;
-                            questionPara.appendChild(wordCountSpan);
-                        }
-                    }
-                    
-                    // Add MCQ options if it's a multiple choice question
-                    if (question.isMultipleChoice && question.options) {
-                        const mcqOptionsDiv = document.createElement('div');
-                        mcqOptionsDiv.className = 'mcq-options';
-                        
-                        const optionsList = document.createElement('ul');
-                        question.options.forEach(option => {
-                            const optionItem = document.createElement('li');
-                            optionItem.textContent = option;
-                            optionsList.appendChild(optionItem);
-                        });
-                        
-                        mcqOptionsDiv.appendChild(optionsList);
-                        questionDiv.appendChild(questionPara);
-                        questionDiv.appendChild(mcqOptionsDiv);
-                    } else {
-                        questionDiv.appendChild(questionPara);
-                    }
-                    
-                    // Add image if present
-                    if (question.image) {
-                        const imgElement = document.createElement('img');
-                        imgElement.src = question.image;
-                        imgElement.style.width = '70%';
-                        imgElement.style.maxWidth = '400px';
-                        questionDiv.appendChild(imgElement);
-                        
-                        // Add empty div after image (as in original structure)
-                        const emptyDiv = document.createElement('div');
-                        questionDiv.appendChild(emptyDiv);
-                    }
-                    
-                    const showButton = document.createElement('button');
-                    showButton.textContent = 'Show Answer';
-                    showButton.onclick = function() {
-                        toggleRoundTwoAnswer(questionNumber);
-                    };
-                    
-                    const answerDiv = document.createElement('div');
-                    answerDiv.className = 'answer';
-                    answerDiv.id = `round-two-answer${questionNumber}`;
-                    answerDiv.textContent = question.answer;
-                    answerDiv.style.display = 'none';
-                    
-                    questionDiv.appendChild(showButton);
-                    questionDiv.appendChild(answerDiv);
+            const shuffledAvailable = shuffleArray(availableIndices);
+            const selectedIndices = shuffledAvailable.slice(0, Math.min(QUESTIONS_PER_BATCH, availableIndices.length));
 
-                    // Marking checkbox (user decides correctness)
-                    const statusWrap = document.createElement('div');
-                    statusWrap.style.marginTop = '10px';
-                    statusWrap.style.display = 'flex';
-                    statusWrap.style.alignItems = 'center';
-                    statusWrap.style.gap = '14px';
+            currentQuestions = selectedIndices.map(index => {
+                usedQuestionIndices.add(index);
+                return {
+                    ...allSubjectQuestions[index],
+                    originalIndex: index
+                };
+            });
 
-                    const statusTitle = document.createElement('span');
-                    statusTitle.textContent = 'Status:';
-                    statusTitle.style.fontWeight = '600';
-                    statusWrap.appendChild(statusTitle);
-
-                    function addStatusOption(value, labelText, checkedByDefault) {
-                        const optLabel = document.createElement('label');
-                        optLabel.style.display = 'flex';
-                        optLabel.style.alignItems = 'center';
-                        optLabel.style.gap = '8px';
-
-                        const cb = document.createElement('input');
-                        cb.type = 'checkbox';
-                        cb.className = 'status-option';
-                        cb.dataset.value = value;
-                        cb.name = `status-q${questionNumber}`;
-                        cb.id = `status-${value}-q${questionNumber}`;
-                        if (checkedByDefault) cb.checked = true;
-
-                        cb.addEventListener('change', function () {
-                            const all = Array.from(statusWrap.querySelectorAll('input.status-option'));
-                            if (cb.checked) {
-                                all.forEach(o => { if (o !== cb) o.checked = false; });
-                            } else {
-                                const anyChecked = all.some(o => o.checked);
-                                if (!anyChecked) {
-                                    const passCb = statusWrap.querySelector('input.status-option[data-value="pass"]');
-                                    if (passCb) passCb.checked = true;
-                                }
-                            }
-                        });
-
-                        const txt = document.createElement('span');
-                        txt.textContent = labelText;
-
-                        optLabel.appendChild(cb);
-                        optLabel.appendChild(txt);
-                        statusWrap.appendChild(optLabel);
-                    }
-
-                    addStatusOption('correct', 'Correct', false);
-                    addStatusOption('incorrect', 'Incorrect', false);
-                    addStatusOption('pass', 'Pass', true);
-
-                    questionDiv.appendChild(statusWrap);
-                    
-                    questionsContainer.appendChild(questionDiv);
-                });
-                
-                // Calculate word counts for answers
+            if (batchInfo) {
+                batchInfo.textContent = `Batch ${batchNumber} | Showing ${currentQuestions.length} question(s)`;
             }
 
-            // Function to toggle answer visibility
-            function toggleRoundTwoAnswer(questionNumber) {
-                const answer = document.getElementById(`round-two-answer${questionNumber}`);
-                if (!answer) return;
-                
-                const button = answer.previousElementSibling;
-                
-                if (answer.style.display === 'block') {
-                    answer.style.display = 'none';
-                    button.textContent = 'Show Answer';
+            currentQuestions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.dataset.subject = question.subject || '';
+                questionDiv.dataset.originalIndex = String(question.originalIndex);
+
+                const questionNumber = index + 1;
+                questionDiv.dataset.qnum = String(questionNumber);
+
+                const questionPara = document.createElement('p');
+
+                if (question.isMultipleChoice) {
+                    questionPara.textContent = `${questionNumber}. [${question.subject}] ${question.text}`;
                 } else {
-                    answer.style.display = 'block';
-                    button.textContent = 'Hide Answer';
-                }
-            }
+                    questionPara.innerHTML = `${questionNumber}. [${question.subject}] ${question.text}`;
 
+                    if (question.wordCount) {
+                        const wordCountSpan = document.createElement('span');
+                        wordCountSpan.className = 'word-count';
+                        wordCountSpan.textContent = ` (words: ${question.wordCount})`;
+                        questionPara.appendChild(wordCountSpan);
+                    }
+                }
+
+                if (question.isMultipleChoice && question.options) {
+                    const mcqOptionsDiv = document.createElement('div');
+                    mcqOptionsDiv.className = 'mcq-options';
+
+                    const optionsList = document.createElement('ul');
+                    question.options.forEach(option => {
+                        const optionItem = document.createElement('li');
+                        optionItem.textContent = option;
+                        optionsList.appendChild(optionItem);
+                    });
+
+                    mcqOptionsDiv.appendChild(optionsList);
+                    questionDiv.appendChild(questionPara);
+                    questionDiv.appendChild(mcqOptionsDiv);
+                } else {
+                    questionDiv.appendChild(questionPara);
+                }
+
+                if (question.image) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = question.image;
+                    imgElement.style.width = '70%';
+                    imgElement.style.maxWidth = '400px';
+                    questionDiv.appendChild(imgElement);
+
+                    const emptyDiv = document.createElement('div');
+                    questionDiv.appendChild(emptyDiv);
+                }
+
+                const showButton = document.createElement('button');
+                showButton.textContent = 'Show Answer';
+                showButton.className = 'show-answer-button';
+                showButton.onclick = function () {
+                    toggleRoundTwoAnswer(questionNumber);
+                };
+
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer';
+                answerDiv.id = `round-two-answer${questionNumber}`;
+                answerDiv.textContent = question.answer;
+                answerDiv.style.display = 'none';
+
+                questionDiv.appendChild(showButton);
+                questionDiv.appendChild(answerDiv);
+
+                const statusWrap = document.createElement('div');
+                statusWrap.style.marginTop = '10px';
+                statusWrap.style.display = 'flex';
+                statusWrap.style.alignItems = 'center';
+                statusWrap.style.gap = '14px';
+
+                const statusTitle = document.createElement('span');
+                statusTitle.textContent = 'Status:';
+                statusTitle.style.fontWeight = '600';
+                statusWrap.appendChild(statusTitle);
+
+                function addStatusOption(value, labelText, checkedByDefault) {
+                    const optLabel = document.createElement('label');
+                    optLabel.style.display = 'flex';
+                    optLabel.style.alignItems = 'center';
+                    optLabel.style.gap = '8px';
+
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.className = 'status-option';
+                    cb.dataset.value = value;
+                    cb.name = `status-q${questionNumber}`;
+                    cb.id = `status-${value}-q${questionNumber}`;
+                    if (checkedByDefault) cb.checked = true;
+
+                    cb.addEventListener('change', function () {
+                        const all = Array.from(statusWrap.querySelectorAll('input.status-option'));
+                        if (cb.checked) {
+                            all.forEach(o => { if (o !== cb) o.checked = false; });
+                        } else {
+                            const anyChecked = all.some(o => o.checked);
+                            if (!anyChecked) {
+                                const passCb = statusWrap.querySelector('input.status-option[data-value="pass"]');
+                                if (passCb) passCb.checked = true;
+                            }
+                        }
+                    });
+
+                    const txt = document.createElement('span');
+                    txt.textContent = labelText;
+
+                    optLabel.appendChild(cb);
+                    optLabel.appendChild(txt);
+                    statusWrap.appendChild(optLabel);
+                }
+
+                addStatusOption('correct', 'Correct', false);
+                addStatusOption('incorrect', 'Incorrect', false);
+                addStatusOption('pass', 'Pass', true);
+
+                questionDiv.appendChild(statusWrap);
+                questionsContainer.appendChild(questionDiv);
+            });
+
+            const nextBtn = document.getElementById('next-button');
+            if (nextBtn) nextBtn.disabled = false;
+        }
+
+        function saveCurrentBatchResults() {
+            const questionDivs = Array.from(document.querySelectorAll('#questions-container .question'));
+
+            questionDivs.forEach(div => {
+                const originalIndex = Number(div.dataset.originalIndex);
+                const subject = div.dataset.subject || '';
+                const checked = div.querySelector('input.status-option:checked');
+                const status = checked ? (checked.dataset.value || 'pass') : 'pass';
+
+                const existingIndex = allResults.findIndex(item => item.originalIndex === originalIndex);
+
+                const resultItem = {
+                    originalIndex: originalIndex,
+                    subject: subject,
+                    status: status,
+                    text: allSubjectQuestions[originalIndex]?.text || '',
+                    answer: allSubjectQuestions[originalIndex]?.answer || ''
+                };
+
+                if (existingIndex >= 0) {
+                    allResults[existingIndex] = resultItem;
+                } else {
+                    allResults.push(resultItem);
+                }
+            });
+        }
+
+        function toggleRoundTwoAnswer(questionNumber) {
+            const answer = document.getElementById(`round-two-answer${questionNumber}`);
+            if (!answer) return;
+
+            const button = answer.previousElementSibling;
+
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                button.textContent = 'Show Answer';
+            } else {
+                answer.style.display = 'block';
+                button.textContent = 'Hide Answer';
+            }
+        }
+
+        function buildResultObject() {
+            saveCurrentBatchResults();
+            return {
+                judge_name: studentName,
+                class: studentClass,
+                round_type: 'round_two',
+                mode: 'judge_mode',
+                set_number: setNumber,
+                time_used: (window.__roundTwoTimer && typeof window.__roundTwoTimer.duration === 'number')
+                    ? (window.__roundTwoTimer.duration - (window.__roundTwoTimer.time_left ?? window.__roundTwoTimer.duration))
+                    : null,
+                total_answered: allResults.length,
+                answers: allResults.map((item, index) => ({
+                    question_number: index + 1,
+                    original_index: item.originalIndex,
+                    subject: item.subject,
+                    status: item.status,
+                    text: item.text,
+                    answer: item.answer
+                }))
+            };
+        }
+
+        function downloadCurrentResult() {
+            const statusEl = document.getElementById('submit-status');
+            if (statusEl) statusEl.textContent = '';
+
+            const result = buildResultObject();
+            const jsonText = JSON.stringify(result, null, 2);
+            const blob = new Blob([jsonText], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            const safeName = studentName ? studentName.replace(/[^a-z0-9\-_]+/gi, '_') : 'judge';
+            const safeClass = studentClass ? studentClass.replace(/[^a-z0-9\-_]+/gi, '_') : 'class';
+            a.href = url;
+            a.download = `round-two_${safeClass}_judge-${safeName}_set-${setNumber}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+
+            if (statusEl) statusEl.textContent = 'Downloaded JSON.';
+        }
+
+        function showPostTimeupActions() {
+            const modal = document.getElementById('post-timeup-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+            document.body.style.overflow = 'hidden';
+
+            const nextBtn = document.getElementById('next-button');
+            const submitBtn = document.getElementById('submit-button');
+            if (nextBtn) nextBtn.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
+        }
+
+        function hidePostTimeupActions() {
+            const modal = document.getElementById('post-timeup-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            document.body.style.overflow = '';
+
+            const nextBtn = document.getElementById('next-button');
+            const submitBtn = document.getElementById('submit-button');
+            if (nextBtn) nextBtn.disabled = false;
+            if (submitBtn) submitBtn.disabled = false;
+        }
+        function handleTimeUp() {
+            if (window.__roundTwoTimer) {
+                window.__roundTwoTimer.__submitted = true;
+            }
+            isFrozen = true;
+            downloadCurrentResult();
+            showPostTimeupActions();
+        }
+
+        function startNextSetForSameClass() {
+            currentQuestions = [];
+            usedQuestionIndices = new Set();
+            allResults = [];
+            batchNumber = 1;
+            setNumber += 1;
+
+            const submitStatus = document.getElementById('submit-status');
+            if (submitStatus) submitStatus.textContent = '';
+
+            hidePostTimeupActions();
+            resetTimer();
+            displayQuestions();
+        }
+        // Hard-coded questions from all subjects to avoid CORS issues
             // Hard-coded questions from all subjects to avoid CORS issues
             // CS questions
-            allSubjectQuestions = [
+      allSubjectQuestions = [
             {
+    
     "subject": "CS",
     "text": "Binary number system is a base _____ system",
     "answer": "2"
@@ -3513,80 +3709,44 @@ updateTimerUI();
   }
 ];
 
-            // Add more subjects and multiple choice questions as needed...
-
             // Display initial set of questions
             displayQuestions();
-            
-            // Add event listener for shuffle button
-            document.getElementById('shuffle-button').addEventListener('click', function() {
-                // Reset name/class
-                const nameInput = document.getElementById('student-name');
-                const classInput = document.getElementById('student-class');
-                if (nameInput) nameInput.value = '';
-                if (classInput) classInput.value = '';
+            resetTimer();
 
-                if (window.__roundTwoTimer) window.__roundTwoTimer.__submitted = false;
-                // Reset timer
-                if (typeof resetTimer === 'function') resetTimer();
-
-                // Show new questions
+            document.getElementById('next-button').addEventListener('click', function() {
+                if (isFrozen) return;
+                saveCurrentBatchResults();
+                batchNumber += 1;
                 displayQuestions();
             });
-            // Expose the toggle function globally
+
             window.toggleRoundTwoAnswer = toggleRoundTwoAnswer;
 
-            // Submit -> download JSON
             document.getElementById('submit-button').addEventListener('click', function() {
-                const statusEl = document.getElementById('submit-status');
-                statusEl.textContent = '';
+                if (window.__roundTwoTimer) {
+                    window.__roundTwoTimer.__submitted = true;
+                }
 
-                // Prevent double-submit (manual + auto)
-                if (window.__roundTwoTimer && window.__roundTwoTimer.__submitted) return;
-                if (window.__roundTwoTimer) window.__roundTwoTimer.__submitted = true;
-                try { clearInterval(timerInterval); } catch(e) {}
+                if (timerInterval) clearInterval(timerInterval);
+                isFrozen = true;
 
-                const nameValue = (document.getElementById('student-name').value || '').trim();
-                const classValue = (document.getElementById('student-class').value || '').trim();
-
-                // Build JSON payload
-                const result = {
-                    name: nameValue,
-                    class: classValue,
-                    time_used: (window.__roundTwoTimer && typeof window.__roundTwoTimer.duration === 'number')
-                        ? (window.__roundTwoTimer.duration - (window.__roundTwoTimer.time_left ?? window.__roundTwoTimer.duration))
-                        : null
-                };
-
-                // Read per-question checkbox states from DOM (robust even after reshuffle)
-                const questionDivs = Array.from(document.querySelectorAll('#questions-container .question'));
-                questionDivs.forEach(div => {
-                    const qnum = div.dataset.qnum;
-                    const subject = div.dataset.subject || '';
-                    const checked = div.querySelector('input.status-option:checked');
-                    const status = checked ? (checked.dataset.value || 'pass') : 'pass';
-                    result[`question${qnum}`] = {
-                        status: status,
-                        subject: subject
-                    };
-                });
-
-                const jsonText = JSON.stringify(result, null, 2);
-                const blob = new Blob([jsonText], { type: 'application/json;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-
-                const a = document.createElement('a');
-                const safeName = nameValue ? nameValue.replace(/[^a-z0-9\-_]+/gi, '_') : 'student';
-                const safeClass = classValue ? classValue.replace(/[^a-z0-9\-_]+/gi, '_') : 'class';
-                a.href = url;
-                a.download = `round-two_${safeName}_${safeClass}.json`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                URL.revokeObjectURL(url);
-
-                statusEl.textContent = 'Downloaded JSON.';
+                downloadCurrentResult();
+                showPostTimeupActions();
             });
+
+            const sameClassNextBtn = document.getElementById('same-class-next-btn');
+            if (sameClassNextBtn) {
+                sameClassNextBtn.addEventListener('click', function() {
+                    startNextSetForSameClass();
+                });
+            }
+
+            const changeClassBtn = document.getElementById('change-class-btn');
+            if (changeClassBtn) {
+                changeClassBtn.addEventListener('click', function() {
+                    window.location.href = 'round-two-entry.html?name=' + encodeURIComponent(studentName);
+                });
+            }
         });
     </script>
 </body>

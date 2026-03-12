@@ -19,15 +19,18 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        if (path.endsWith('/subjects/round-two-entry.html') || path.endsWith('subjects/round-two-entry.html')) {
+            window.location.href = '../index.html';
+            return;
+        }
+
         if (path.endsWith('/subjects/round-two.html') || path.endsWith('subjects/round-two.html') ||
             path.endsWith('/subjects/round-two-v2.html') || path.endsWith('subjects/round-two-v2.html')) {
             window.location.href = '../index.html';
             return;
         }
 
-        if (
-            path.includes('/subjects/') || path.includes('subjects/')
-        ) {
+        if (path.includes('/subjects/') || path.includes('subjects/')) {
             if (selectedClass) {
                 window.location.href = 'round-one.html?class=' + encodeURIComponent(selectedClass);
             } else {
@@ -38,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (document.referrer) {
             history.back();
+        } else {
+            window.location.href = 'index.html';
         }
     };
 
