@@ -76,7 +76,6 @@
     
     <div id="timer" aria-live="polite"><span class="label">Time left:</span> <span id="time">60</span>s</div>
 <h1>Definition Contest - Round Two</h1>
-    <button id="next-button" class="shuffle-button">Next 3 Questions</button>
 
     <section class="student-info" style="margin: 16px 0 20px 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
         <strong id="student-info-display">Loading judge information...</strong>
@@ -88,10 +87,12 @@
         <p>Loading questions...</p>
     </div>
 
-    <div style="margin: 20px 0 36px 0;">
+    <div style="display: none; margin: 20px 0 36px 0;">
         <button id="submit-button" class="shuffle-button">Submit & Download JSON</button>
         <span id="submit-status" style="margin-left: 10px; font-size: 0.95rem;"></span>
     </div>
+    <button id="next-button" class="shuffle-button">Next 3 Questions</button>
+
 
     <div id="post-timeup-modal" class="post-timeup-modal" style="display:none;">
         <div class="post-timeup-modal-content">
@@ -120,7 +121,7 @@
             studentInfoDisplay.textContent = `Judge: ${studentName} | Class: ${studentClass}`;
         }
 
-        const TIMER_DURATION_SECONDS = 60; // change if needed
+        const TIMER_DURATION_SECONDS = 5; // change if needed
         let timeLeft = TIMER_DURATION_SECONDS;
         let hasAutoSubmitted = false;
         let timerInterval = null;
