@@ -1,86 +1,103 @@
 // ================================================================
 // DEFINITION CONTEST — QUESTION DATABASE
 // Auto-generated from Excel. Do not edit manually.
+// Each question includes qNum (1-based row number in its sheet).
 // ================================================================
 
 const QUESTIONS = {
   "CS": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "Binary number system is a base _____ system",
       "answer": "2"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "The sample rate is the number of samples taken in a _____",
       "answer": "second"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "The sample resolution is the number of _____ per sample",
       "answer": "bits"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "Image resolution: number of _____ in an image",
       "answer": "pixels"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "_____ is the smallest component of the image",
       "answer": "Pixel"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "512 KiB = _____ MiB",
       "answer": "0.5"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "Georgia compresses photographs to store them on the USB flash memory drive. It is important that the compression does not affect the quality of the photographs in any way. State which type of compression is the most suitable.",
       "answer": "Lossless compression"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "The header of a packet contains _____ IP address and _____ (IP) address",
       "answer": "Destination/receivers, Originator's/senders"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "The header of a packet contains _____ number and _____ detection method.",
       "answer": "packet, Error"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "A packet contains header, _____, trailer",
       "answer": "payload"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "The CPU stands for Central Processing _____.",
       "answer": "Unit"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "A printer is an example of an output _____.",
       "answer": "device"
     },
     {
+      "qNum": 13,
       "type": "blank",
       "stem": "Data entered into a computer using a keyboard is called _____.",
       "answer": "input"
     },
     {
+      "qNum": 14,
       "type": "blank",
       "stem": "ROM stands for Read Only _____.",
       "answer": "Memory"
     },
     {
+      "qNum": 15,
       "type": "blank",
       "stem": "A collection of related files is called a _____.",
       "answer": "database"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "Part inside CPU, used to control the interaction of different parts of the CPU.",
       "answer": "A",
@@ -90,6 +107,7 @@ const QUESTIONS = {
       "optionD": "Memory Address Register"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "Which sensor measures the amount of liquid flowing through an environment?",
       "answer": "B",
@@ -99,6 +117,7 @@ const QUESTIONS = {
       "optionD": "Light sensor"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "Solid-state storage is non-_____.",
       "answer": "B",
@@ -108,6 +127,7 @@ const QUESTIONS = {
       "optionD": "portable"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "_____ storage is used to permanently store software and data files.",
       "answer": "C",
@@ -117,6 +137,7 @@ const QUESTIONS = {
       "optionD": "Virtual"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "A MAC address is a media _____ control address.",
       "answer": "A",
@@ -126,6 +147,7 @@ const QUESTIONS = {
       "optionD": "allocation"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "A network device has a _____ MAC address that can help identify the device in the network.",
       "answer": "D",
@@ -135,6 +157,7 @@ const QUESTIONS = {
       "optionD": "unique"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "An IP address is an Internet _____ address.",
       "answer": "B",
@@ -144,6 +167,7 @@ const QUESTIONS = {
       "optionD": "Process"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "An IP address can be static or _____.",
       "answer": "C",
@@ -153,6 +177,7 @@ const QUESTIONS = {
       "optionD": "public"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "Which device can connect multiple devices and automatically assign them an IP address?",
       "answer": "B",
@@ -162,6 +187,7 @@ const QUESTIONS = {
       "optionD": "Modem"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "_____ storage is a collection of servers that store data in a remote location.",
       "answer": "C",
@@ -171,6 +197,7 @@ const QUESTIONS = {
       "optionD": "Local"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "Assembly language is an example of a _____ level language.",
       "answer": "B",
@@ -180,6 +207,7 @@ const QUESTIONS = {
       "optionD": "scripting"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "Which level language can directly manipulate the hardware?",
       "answer": "C",
@@ -189,6 +217,7 @@ const QUESTIONS = {
       "optionD": "Natural"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "Which level language can use specialised hardware?",
       "answer": "A",
@@ -198,6 +227,7 @@ const QUESTIONS = {
       "optionD": "Declarative"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "One function of the _____ is that it has the built-in compiler.",
       "answer": "B",
@@ -207,6 +237,7 @@ const QUESTIONS = {
       "optionD": "Loader"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "Which translator takes one statement at a time and executes it?",
       "answer": "C",
@@ -216,6 +247,7 @@ const QUESTIONS = {
       "optionD": "Linker"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "Which translator generates an error report at the end of translation of the whole program?",
       "answer": "A",
@@ -225,6 +257,7 @@ const QUESTIONS = {
       "optionD": "Debugger"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "Which programming language is written using mnemonic codes?",
       "answer": "B",
@@ -234,6 +267,7 @@ const QUESTIONS = {
       "optionD": "HTML"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "Which translator makes debugging easier because each line of code is analysed and checked before execution?",
       "answer": "C",
@@ -243,6 +277,7 @@ const QUESTIONS = {
       "optionD": "Linker"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "Which translator produces fast, executable code that runs directly on the processor?",
       "answer": "B",
@@ -252,6 +287,7 @@ const QUESTIONS = {
       "optionD": "Editor"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "Which translator generates an error report at the end of translation of the whole program?",
       "answer": "C",
@@ -261,6 +297,7 @@ const QUESTIONS = {
       "optionD": "Loader"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "Which translator stops the translation process as soon as the first error is encountered?",
       "answer": "B",
@@ -270,6 +307,7 @@ const QUESTIONS = {
       "optionD": "Linker"
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "Once translated, which translator does not need to be present for the program to run?",
       "answer": "B",
@@ -279,6 +317,7 @@ const QUESTIONS = {
       "optionD": "Editor"
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "If an error is detected, which translated program will not run at all?",
       "answer": "A",
@@ -288,6 +327,7 @@ const QUESTIONS = {
       "optionD": "IDE"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "One function of a _____ is to display web pages by rendering HTML.",
       "answer": "B",
@@ -297,6 +337,7 @@ const QUESTIONS = {
       "optionD": "URL"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "_____ cookies are stored in memory/RAM.",
       "answer": "C",
@@ -306,6 +347,7 @@ const QUESTIONS = {
       "optionD": "Third-party"
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "A text file sent by a web server to collect data about a user's browsing habits is a _____.",
       "answer": "B",
@@ -315,6 +357,7 @@ const QUESTIONS = {
       "optionD": "history file"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "_____ cookies are stored on the hard drive/secondary storage.",
       "answer": "C",
@@ -324,6 +367,7 @@ const QUESTIONS = {
       "optionD": "Live"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "One function of web _____ is to send URL to DNS.",
       "answer": "B",
@@ -333,6 +377,7 @@ const QUESTIONS = {
       "optionD": "protocol"
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "A _____ is one that only exists electronically.",
       "answer": "C",
@@ -342,6 +387,7 @@ const QUESTIONS = {
       "optionD": "cheque"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "The process that uses a digital ledger to track the use of digital currency is called _____.",
       "answer": "C",
@@ -353,81 +399,97 @@ const QUESTIONS = {
   ],
   "BIO": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "Excretion is the removal of the waste products of _______ and substances in excess of requirements.",
       "answer": "metabolism"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "A species is a group of organisms that can reproduce to produce ______ offspring.",
       "answer": "fertile"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "Myriapods, insects, arachnids and crustaceans belong to the phylum _______.",
       "answer": "arthropod"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "Osmosis is the net movement of water molecules down a ________ ________ gradient through a partially permeable membrane.",
       "answer": "water potential"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "The pressure of water inside the plant cells pressing outwards on the cell wall is called ________ ________.",
       "answer": "turgor pressure"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "___________ solution is used to test the presence of reducing sugar.",
       "answer": "Benedict’s"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "Enzyme action involves the shape of the active site of an enzyme being ____________ to its substrate and the formation of products.",
       "answer": "complementary"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "At the enzyme’s ________ temperature and pH, the reaction it catalyses proceeds at its highest rate.",
       "answer": "optimum"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "___________ is a green pigment that transfers energy from light into energy in chemicals, for the synthesis of carbohydrates.",
       "answer": "chlorophyll"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "The movement of nutrients from the intestines into the blood is called ________, and the uptake and use of nutrients by cells is called assimilation.",
       "answer": "absorption"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "__________is the plant structure that transports sucrose and amino acids from source to sink.",
       "answer": "phloem"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "__________ is a type of white blood cell to produce antibodies for defending against pathogens.",
       "answer": "lymphocyte"
     },
     {
+      "qNum": 13,
       "type": "blank",
       "stem": "__________ is the muscle contracts along with the external intercostal muscles for inspiration.",
       "answer": "diaphragm"
     },
     {
+      "qNum": 14,
       "type": "blank",
       "stem": "____________ is the molecule released and diffuses across the synaptic cleft to bind with its receptor proteins on the next neurone.",
       "answer": "neurotransmitter"
     },
     {
+      "qNum": 15,
       "type": "blank",
       "stem": "____________ is the hormone secreted from the corpus luteum or the placenta to maintain the thickness of the uterus lining.",
       "answer": "progesterone"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "When a herbivore sees a carnivore, which characteristic of living things is involved?",
       "answer": "D",
@@ -437,6 +499,7 @@ const QUESTIONS = {
       "optionD": "sensitivity"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "In a kidney tubule, which substances are filtered out of the blood in the glomerulus?",
       "answer": "C",
@@ -446,6 +509,7 @@ const QUESTIONS = {
       "optionD": "protein, salts, urea and water"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "Which list contains only vertebrates?",
       "answer": "B",
@@ -455,6 +519,7 @@ const QUESTIONS = {
       "optionD": "crocodile, myriapods, reptiles"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "Small molecules are used to synthesise large food molecules. Which statement is correct?",
       "answer": "C",
@@ -464,6 +529,7 @@ const QUESTIONS = {
       "optionD": "Simple sugar is the basic unit of protein."
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "A student used biuret reagent to test milk for the presence of protein. The milk tested positive for protein. Which colour did the sample change to?",
       "answer": "D",
@@ -473,6 +539,7 @@ const QUESTIONS = {
       "optionD": "purple"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "Which change occurs when areas of forest are cleared for farming?",
       "answer": "C",
@@ -482,6 +549,7 @@ const QUESTIONS = {
       "optionD": "increased release of oxygen into the atmosphere"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "A diet contains a lot of plant material, but no meat. Which dietary component is unlikely to be deficient in this diet?",
       "answer": "B",
@@ -491,6 +559,7 @@ const QUESTIONS = {
       "optionD": "vitamin D"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "Which two parts of the teeth are very hard?",
       "answer": "B",
@@ -500,6 +569,7 @@ const QUESTIONS = {
       "optionD": "pulp and bone"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "Which blood vessel transports blood from the lungs to the heart?",
       "answer": "C",
@@ -509,6 +579,7 @@ const QUESTIONS = {
       "optionD": "vena cava"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "How can the spread of disease be prevented?",
       "answer": "D",
@@ -518,6 +589,7 @@ const QUESTIONS = {
       "optionD": "washing hands before and after handling raw food"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "What is the function of the acrosome in a sperm cell?",
       "answer": "A",
@@ -527,6 +599,7 @@ const QUESTIONS = {
       "optionD": "The acrosome stores genetic information."
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "Which statement is a correct comparison of aerobic respiration and anaerobic respiration in yeast?",
       "answer": "B",
@@ -536,6 +609,7 @@ const QUESTIONS = {
       "optionD": "They both use the reactants glucose and oxygen."
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "Which secondary sexual characteristic is associated with testosterone?",
       "answer": "B",
@@ -545,6 +619,7 @@ const QUESTIONS = {
       "optionD": "widening of hips"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "Which statement describes transpiration?",
       "answer": "D",
@@ -554,6 +629,7 @@ const QUESTIONS = {
       "optionD": "Water vapour diffuses out of the leaves."
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "Which characteristic is an example of continuous variation?",
       "answer": "B",
@@ -563,6 +639,7 @@ const QUESTIONS = {
       "optionD": "seed shape in pea plants"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "What is the role of mRNA?",
       "answer": "B",
@@ -572,6 +649,7 @@ const QUESTIONS = {
       "optionD": "duplicates chromosomes before mitosis"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "What is the formula for calculating the magnification of specimens?",
       "answer": "D",
@@ -581,6 +659,7 @@ const QUESTIONS = {
       "optionD": "image size ÷ actual size"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "What increases the rate of diffusion of oxygen into a cell?",
       "answer": "D",
@@ -590,6 +669,7 @@ const QUESTIONS = {
       "optionD": "increasing the temperature"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "What are stem cells?",
       "answer": "C",
@@ -599,6 +679,7 @@ const QUESTIONS = {
       "optionD": "unspecialised cells that divide by meiosis to produce daughter cells"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "What is the route taken by an electrical impulse in a simple reflex arc?",
       "answer": "D",
@@ -608,6 +689,7 @@ const QUESTIONS = {
       "optionD": "receptor → sensory neurone → relay neurone → motor neurone → effector"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "What is the function of the iris?",
       "answer": "B",
@@ -617,6 +699,7 @@ const QUESTIONS = {
       "optionD": "It refracts light entering the eye."
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "A number of plants are produced using asexual reproduction. Which statement about these plants is correct?",
       "answer": "B",
@@ -626,6 +709,7 @@ const QUESTIONS = {
       "optionD": "They are produced from two parents and are genetically identical."
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "Which structure is pollen transferred from and to during pollination?",
       "answer": "B",
@@ -635,6 +719,7 @@ const QUESTIONS = {
       "optionD": "from stigma to ovule"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "Which substances are dissolved in human blood plasma?",
       "answer": "C",
@@ -644,6 +729,7 @@ const QUESTIONS = {
       "optionD": "oxygen, urea and starch"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "What happens to the lining of the human uterus in the days before the release of an egg cell?",
       "answer": "C",
@@ -653,6 +739,7 @@ const QUESTIONS = {
       "optionD": "It thins."
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "What describes an allele?",
       "answer": "C",
@@ -662,6 +749,7 @@ const QUESTIONS = {
       "optionD": "an alternative form of a gene made of protein"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "What is shown by the widest block in a pyramid of numbers for a grassland ecosystem?",
       "answer": "D",
@@ -671,6 +759,7 @@ const QUESTIONS = {
       "optionD": "the producers in the pyramid"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "Why are bacteria useful in biotechnology and genetic modification?",
       "answer": "B",
@@ -680,6 +769,7 @@ const QUESTIONS = {
       "optionD": "They have a slow reproduction rate."
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "Heart muscle cells have a high rate of metabolism. Which structure do they require to be present in high numbers?",
       "answer": "B",
@@ -689,6 +779,7 @@ const QUESTIONS = {
       "optionD": "vacuoles"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "What is an example of diffusion?",
       "answer": "B",
@@ -700,81 +791,97 @@ const QUESTIONS = {
   ],
   "BUS": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "__________company are businesses owned by shareholders but they can sell shares to the public and their shares are tradeable on the Stock Exchange.",
       "answer": "Public limited company"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "_________is a person who organises, operates and takes the risk for a new business venture.",
       "answer": "Entrepreneur"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "_______ leadership style where the manager expects to be in charge of the business and to have their orders followed.",
       "answer": "Autocratic"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "_______are graphs which show how costs and revenues of a business change with sales.",
       "answer": "Break-even chart"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "_______outlines the responsibilities and duties to be carried out by someone employed to do a specific job.",
       "answer": "Job description"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "______________is a financial plan for the marketing of a product or product range for some specified period of time.",
       "answer": "Marketing budget"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "_______occurs when people and business concentrate on what they are best at.",
       "answer": "Specialisation"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "____________occurs by watching a more experienced worker doing the job.",
       "answer": "On-the-job training"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "________is an organisation of employees who have joined together to ensure their interests are protected.",
       "answer": "Trade union"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "___________is the collection and collation of original data via direct contact with potential or existing customers.",
       "answer": "Primary research"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "____________is a term which is used to describe all the activities which go into marketing a product or service, including product, price, place and promotion.",
       "answer": "Marketing mix"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "Added value is the difference between price and ____________.",
       "answer": "Cost of bought-in materials and components"
     },
     {
+      "qNum": 13,
       "type": "blank",
       "stem": "____________are costs paid for by the rest of society, other than the business, as a result of business activity.",
       "answer": "External costs"
     },
     {
+      "qNum": 14,
       "type": "blank",
       "stem": "__________is made up of people who want to change business (or government) decisions by taking action, such as organising consumer boycotts.",
       "answer": "Pressure group"
     },
     {
+      "qNum": 15,
       "type": "blank",
       "stem": "__________is a term for those techniques used bu businesses to cut down on waste and therefore increase efficiency.",
       "answer": "Lean production"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "One of the key characteristics of successful entrepreneur is that:",
       "answer": "B",
@@ -784,6 +891,7 @@ const QUESTIONS = {
       "optionD": "They want to avoid hard work."
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "All of the following are likely reasons why people work except:",
       "answer": "D",
@@ -793,6 +901,7 @@ const QUESTIONS = {
       "optionD": "to watch TV."
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "Which type of leadership style best defines “let it be”？",
       "answer": "C",
@@ -802,6 +911,7 @@ const QUESTIONS = {
       "optionD": "Centralized leadership"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "In which type of production are several identical products completed at each stage before passing on to the next stage?",
       "answer": "B",
@@ -811,6 +921,7 @@ const QUESTIONS = {
       "optionD": "Lean production"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "Which one of the following products is most likely to be produced using batch production methods?",
       "answer": "A",
@@ -820,6 +931,7 @@ const QUESTIONS = {
       "optionD": "Hand-made watches"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "Which of the following sources of finance is most likely to be used by a company planning to take over another business?",
       "answer": "C",
@@ -829,6 +941,7 @@ const QUESTIONS = {
       "optionD": "Trade credit"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "Which of the following is an example of internal finance for a limited company?",
       "answer": "D",
@@ -838,6 +951,7 @@ const QUESTIONS = {
       "optionD": "Selling off inventories"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "A large national toy retailer wants to inform potential consumers of its huge product range. It would be most likely to use:",
       "answer": "B",
@@ -847,6 +961,7 @@ const QUESTIONS = {
       "optionD": "national newspapers"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "All of the following are examples of forms of information technology that can be used to communicate with customers except:",
       "answer": "A",
@@ -856,6 +971,7 @@ const QUESTIONS = {
       "optionD": "SMS messages"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "Which one of the following businesses is most likely to be badly affected by a long recession?",
       "answer": "A",
@@ -865,6 +981,7 @@ const QUESTIONS = {
       "optionD": "A bakery"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "XYZ Co. has found out that one of its suppliers employs children to do dangerous production work. The managers of XYZ do nothing about this. This is an example of:",
       "answer": "C",
@@ -874,6 +991,7 @@ const QUESTIONS = {
       "optionD": "putting profits before ethics"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "A product sells for $7. Material and other variable costs are $3 per unit. Fixed costs are $60 000. The break-even level of output is:",
       "answer": "A",
@@ -883,6 +1001,7 @@ const QUESTIONS = {
       "optionD": "cannot tell from the information given"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "Quality control in a factory is usually achieved by:",
       "answer": "B",
@@ -892,6 +1011,7 @@ const QUESTIONS = {
       "optionD": "testing materials as they arrive at the factory but not the finished product"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "One of the external benefits resulting from a business decision to open a new factory is:",
       "answer": "D",
@@ -901,6 +1021,7 @@ const QUESTIONS = {
       "optionD": "the shops in the area benefit from residents’ increased incomes"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "One way in which businesses can contribute to sustainable development is:",
       "answer": "B",
@@ -910,6 +1031,7 @@ const QUESTIONS = {
       "optionD": "developing new products which are likely to have sustained demand"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "The formula for the return on capital employed ratio (%) is:",
       "answer": "C",
@@ -919,6 +1041,7 @@ const QUESTIONS = {
       "optionD": "net profit ÷ sales revenue × 100"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "The formula for the gross profit margin (%) is:",
       "answer": "A",
@@ -928,6 +1051,7 @@ const QUESTIONS = {
       "optionD": "sales revenue ÷ gross profit × 100"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "The formula for the net profit margin (%) is:",
       "answer": "B",
@@ -937,6 +1061,7 @@ const QUESTIONS = {
       "optionD": "net profit ÷ overhead expenses x 100"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "‘The liquidity of our business is declining’. Which one of the following statements best explains this quote?",
       "answer": "C",
@@ -946,6 +1071,7 @@ const QUESTIONS = {
       "optionD": "The business is holding more current assets compared to current liabilities than last year"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "All of the following would be found on the fixed assets section of a firm’s balance sheet except:",
       "answer": "D",
@@ -955,6 +1081,7 @@ const QUESTIONS = {
       "optionD": "debtors"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "Which of the following is a current asset?",
       "answer": "D",
@@ -964,6 +1091,7 @@ const QUESTIONS = {
       "optionD": "Debtors"
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "Working capital is calculated by:",
       "answer": "D",
@@ -973,6 +1101,7 @@ const QUESTIONS = {
       "optionD": "current assets – current liabilities"
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "If a cashflow forecast suggests that a business will run out of cash, which of the following would help overcome this problem?",
       "answer": "D",
@@ -982,6 +1111,7 @@ const QUESTIONS = {
       "optionD": "Delay paying suppliers"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "Which of the following is not a reason why a business needs money?",
       "answer": "D",
@@ -991,6 +1121,7 @@ const QUESTIONS = {
       "optionD": "To increase prices of its products"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "Government location grants are most likely to be made available in regions of the country which have:",
       "answer": "B",
@@ -1000,6 +1131,7 @@ const QUESTIONS = {
       "optionD": "many other firms starting up"
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "The location of which one of the following businesses is most likely to be influenced by the availability of skilled workers?",
       "answer": "A",
@@ -1009,6 +1141,7 @@ const QUESTIONS = {
       "optionD": "Travel company’s ticket office"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "Quality assurance means:",
       "answer": "B",
@@ -1018,6 +1151,7 @@ const QUESTIONS = {
       "optionD": "assuring workers that the work they do is of a high quality"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "Which one of the following costs is most likely to be variable for a fast food restaurant?",
       "answer": "C",
@@ -1027,6 +1161,7 @@ const QUESTIONS = {
       "optionD": "The machinery used to cook the food"
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "The best definition of fixed costs are those that do not vary with:",
       "answer": "C",
@@ -1036,6 +1171,7 @@ const QUESTIONS = {
       "optionD": "number of workers"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "The break-even level of output is that number of units at which:",
       "answer": "C",
@@ -1047,6 +1183,7 @@ const QUESTIONS = {
   ],
   "AD": [
     {
+      "qNum": 1,
       "type": "mcq",
       "stem": "Which color is a primary color?",
       "answer": "B",
@@ -1056,6 +1193,7 @@ const QUESTIONS = {
       "optionD": "Orange"
     },
     {
+      "qNum": 2,
       "type": "mcq",
       "stem": "What tool is used to erase pencil marks?",
       "answer": "B",
@@ -1065,6 +1203,7 @@ const QUESTIONS = {
       "optionD": "Ruler"
     },
     {
+      "qNum": 3,
       "type": "mcq",
       "stem": "Which of the following is a secondary color?",
       "answer": "C",
@@ -1074,6 +1213,7 @@ const QUESTIONS = {
       "optionD": "White"
     },
     {
+      "qNum": 4,
       "type": "mcq",
       "stem": "What do we call the lightness or darkness of a color?",
       "answer": "C",
@@ -1083,6 +1223,7 @@ const QUESTIONS = {
       "optionD": "Shape"
     },
     {
+      "qNum": 5,
       "type": "mcq",
       "stem": "Which art material is used for watercolor painting?",
       "answer": "B",
@@ -1092,6 +1233,7 @@ const QUESTIONS = {
       "optionD": "Clay"
     },
     {
+      "qNum": 6,
       "type": "mcq",
       "stem": "What is a circle, square, and triangle classified as?",
       "answer": "B",
@@ -1101,6 +1243,7 @@ const QUESTIONS = {
       "optionD": "Lines"
     },
     {
+      "qNum": 7,
       "type": "mcq",
       "stem": "Which color is warm?",
       "answer": "C",
@@ -1110,6 +1253,7 @@ const QUESTIONS = {
       "optionD": "Purple"
     },
     {
+      "qNum": 8,
       "type": "mcq",
       "stem": "What do we call the way a surface feels or looks?",
       "answer": "A",
@@ -1119,6 +1263,7 @@ const QUESTIONS = {
       "optionD": "Space"
     },
     {
+      "qNum": 9,
       "type": "mcq",
       "stem": "Which tool is used to hold and mix paint?",
       "answer": "A",
@@ -1128,6 +1273,7 @@ const QUESTIONS = {
       "optionD": "Scissors"
     },
     {
+      "qNum": 10,
       "type": "mcq",
       "stem": "Which color is cool?",
       "answer": "C",
@@ -1137,6 +1283,7 @@ const QUESTIONS = {
       "optionD": "Orange"
     },
     {
+      "qNum": 11,
       "type": "mcq",
       "stem": "Which material is used for sculpting?",
       "answer": "A",
@@ -1146,6 +1293,7 @@ const QUESTIONS = {
       "optionD": "Marker"
     },
     {
+      "qNum": 12,
       "type": "mcq",
       "stem": "Which art form is three-dimensional?",
       "answer": "C",
@@ -1155,6 +1303,7 @@ const QUESTIONS = {
       "optionD": "Print"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "What is a quick, rough drawing called?",
       "answer": "B",
@@ -1164,6 +1313,7 @@ const QUESTIONS = {
       "optionD": "Collage"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "What do we add to a color to make it lighter?",
       "answer": "C",
@@ -1173,6 +1323,7 @@ const QUESTIONS = {
       "optionD": "Brown"
     },
     {
+      "qNum": 15,
       "type": "mcq",
       "stem": "What do we add to a color to make it darker?",
       "answer": "B",
@@ -1182,6 +1333,7 @@ const QUESTIONS = {
       "optionD": "Red"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "Which paint dries quickly and is water-based?",
       "answer": "B",
@@ -1191,6 +1343,7 @@ const QUESTIONS = {
       "optionD": "Tempera"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "Red, yellow and blue are called the _______.",
       "answer": "B",
@@ -1200,6 +1353,7 @@ const QUESTIONS = {
       "optionD": "Complementary Colors"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "Which subject shows inanimate objects like fruit and flowers?",
       "answer": "C",
@@ -1209,6 +1363,7 @@ const QUESTIONS = {
       "optionD": "Abstract"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "What is art made by gluing different materials together called?",
       "answer": "B",
@@ -1218,51 +1373,61 @@ const QUESTIONS = {
       "optionD": "Drawing"
     },
     {
+      "qNum": 20,
       "type": "blank",
       "stem": "Red, blue, and yellow are called __________ colors.",
       "answer": "primary"
     },
     {
+      "qNum": 21,
       "type": "blank",
       "stem": "__________ a plastic paint that mixes with water; it is waterproof when dry",
       "answer": "acrylic"
     },
     {
+      "qNum": 22,
       "type": "blank",
       "stem": "__________The element of art derived from reflected or absorbed light.",
       "answer": "color"
     },
     {
+      "qNum": 23,
       "type": "blank",
       "stem": "__________ paint that needs to mix with a solvent, and takes a long time to dry",
       "answer": "oil paint"
     },
     {
+      "qNum": 24,
       "type": "blank",
       "stem": "A two-dimensional area with height and width is a __________.",
       "answer": "shape"
     },
     {
+      "qNum": 25,
       "type": "blank",
       "stem": "__________ artworks that are three-dimensional",
       "answer": "sculpture"
     },
     {
+      "qNum": 26,
       "type": "blank",
       "stem": "__________ paint that mixes with water",
       "answer": "watercolor"
     },
     {
+      "qNum": 27,
       "type": "blank",
       "stem": "The lightness or darkness of a color is called__________.",
       "answer": "value"
     },
     {
+      "qNum": 28,
       "type": "blank",
       "stem": "__________ the physical volume of a shape and the space that it occupies",
       "answer": "form"
     },
     {
+      "qNum": 29,
       "type": "blank",
       "stem": "A path made by a moving point is called a__________.",
       "answer": "texture"
@@ -1270,6 +1435,7 @@ const QUESTIONS = {
   ],
   "CHI": [
     {
+      "qNum": 1,
       "type": "mcq",
       "stem": "工之侨以归……匣而埋诸土,期年出之,抱以适市。[适]",
       "answer": "C",
@@ -1279,6 +1445,7 @@ const QUESTIONS = {
       "optionD": "刚好"
     },
     {
+      "qNum": 2,
       "type": "mcq",
       "stem": "贵人过而见之, 易之以百金, 献诸朝。[易]",
       "answer": "A",
@@ -1288,6 +1455,7 @@ const QUESTIONS = {
       "optionD": "轻视"
     },
     {
+      "qNum": 3,
       "type": "mcq",
       "stem": "乐官传视, 皆曰:“希世之珍也。” [珍]",
       "answer": "D",
@@ -1297,6 +1465,7 @@ const QUESTIONS = {
       "optionD": "珍宝"
     },
     {
+      "qNum": 4,
       "type": "mcq",
       "stem": "盘顶如初抽笋，锐而规 [锐]",
       "answer": "A",
@@ -1306,6 +1475,7 @@ const QUESTIONS = {
       "optionD": "细小"
     },
     {
+      "qNum": 5,
       "type": "mcq",
       "stem": "住足不得久，乃下。[住]",
       "answer": "A",
@@ -1315,6 +1485,7 @@ const QUESTIONS = {
       "optionD": "通“驻”，驻扎"
     },
     {
+      "qNum": 6,
       "type": "mcq",
       "stem": "迂而僻，且无石级者，曰天门开。[僻]",
       "answer": "B",
@@ -1324,6 +1495,7 @@ const QUESTIONS = {
       "optionD": "孤僻"
     },
     {
+      "qNum": 7,
       "type": "mcq",
       "stem": "外骨，故峭石危立，望之若剑戟罴虎之林。[望]",
       "answer": "A",
@@ -1333,6 +1505,7 @@ const QUESTIONS = {
       "optionD": "名望"
     },
     {
+      "qNum": 8,
       "type": "mcq",
       "stem": "抚松下瞰，惊定乃笑。[惊]",
       "answer": "A",
@@ -1342,6 +1515,7 @@ const QUESTIONS = {
       "optionD": "气势大而猛"
     },
     {
+      "qNum": 9,
       "type": "mcq",
       "stem": "嘉靖辛卯，余闭门扫轨，朋旧少过。[轨]",
       "answer": "A",
@@ -1351,6 +1525,7 @@ const QUESTIONS = {
       "optionD": "运行"
     },
     {
+      "qNum": 10,
       "type": "mcq",
       "stem": "家无闲室，昼居于内，日抱小女儿以嬉。[闲]",
       "answer": "B",
@@ -1360,6 +1535,7 @@ const QUESTIONS = {
       "optionD": "隔离"
     },
     {
+      "qNum": 11,
       "type": "mcq",
       "stem": "儿亦爱弄书，见书辄以指循行，口作声，若甚解者。[循]",
       "answer": "A",
@@ -1369,6 +1545,7 @@ const QUESTIONS = {
       "optionD": "步行"
     },
     {
+      "qNum": 12,
       "type": "mcq",
       "stem": "故余读常不废，时有所见，用著于录。[废]",
       "answer": "C",
@@ -1378,6 +1555,7 @@ const QUESTIONS = {
       "optionD": "倒塌"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "意到即笔，不得留，昔人所谓兔起鹘落时也。[笔]",
       "answer": "D",
@@ -1387,6 +1565,7 @@ const QUESTIONS = {
       "optionD": "记录"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "物之所贵于天下者，以其少有而难得也。[贵]",
       "answer": "B",
@@ -1396,6 +1575,7 @@ const QUESTIONS = {
       "optionD": "敬词"
     },
     {
+      "qNum": 15,
       "type": "mcq",
       "stem": "故服有章，爵有等，使人不可以妄觊。[章]",
       "answer": "C",
@@ -1405,6 +1585,7 @@ const QUESTIONS = {
       "optionD": "印章"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "故鄗南之役，王无以为赏，乃以其爵饮将士。[饮]",
       "answer": "C",
@@ -1414,6 +1595,7 @@ const QUESTIONS = {
       "optionD": "饮料"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "于是秦伐赵，李牧击却之。[却]",
       "answer": "D",
@@ -1423,6 +1605,7 @@ const QUESTIONS = {
       "optionD": "击退"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "两生雅闻其酒狂。[雅]",
       "answer": "B",
@@ -1432,6 +1615,7 @@ const QUESTIONS = {
       "optionD": "交往"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "今日非速君饮。[速]",
       "answer": "C",
@@ -1441,6 +1625,7 @@ const QUESTIONS = {
       "optionD": "催促"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "两生遽摘七经数十义叩之。[叩]",
       "answer": "D",
@@ -1450,6 +1635,7 @@ const QUESTIONS = {
       "optionD": "问"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "弼索酒，被发跳叫。[被]",
       "answer": "A",
@@ -1459,6 +1645,7 @@ const QUESTIONS = {
       "optionD": "披散"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "今人一服儒衣，反奄奄欲绝。[服]",
       "answer": "A",
@@ -1468,6 +1655,7 @@ const QUESTIONS = {
       "optionD": "习惯"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "录毕走送之。[走]",
       "answer": "D",
@@ -1477,6 +1665,7 @@ const QUESTIONS = {
       "optionD": "跑"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "余援疑质理，或遇其叱咄，色愈恭，礼愈至。[或]",
       "answer": "B",
@@ -1486,6 +1675,7 @@ const QUESTIONS = {
       "optionD": "稍微"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "生以乡人子谒余。[谒]",
       "answer": "A",
@@ -1495,6 +1685,7 @@ const QUESTIONS = {
       "optionD": "名帖"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "俟其欣悦，则又请焉。[俟]",
       "answer": "C",
@@ -1504,6 +1695,7 @@ const QUESTIONS = {
       "optionD": "猜测"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "闾巷子弟执业造其家。[造]",
       "answer": "A",
@@ -1513,6 +1705,7 @@ const QUESTIONS = {
       "optionD": "拆"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "\"然独好周人急\"。[周]",
       "answer": "B",
@@ -1522,6 +1715,7 @@ const QUESTIONS = {
       "optionD": "圆周"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "\"人殆之，不肯舍\"。[舍]",
       "answer": "B",
@@ -1531,6 +1725,7 @@ const QUESTIONS = {
       "optionD": "下榻"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "\"能假我一榻乎\"。[假]",
       "answer": "D",
@@ -1540,6 +1735,7 @@ const QUESTIONS = {
       "optionD": "借"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "\"征医视脉\"。[征]",
       "answer": "D",
@@ -1549,6 +1745,7 @@ const QUESTIONS = {
       "optionD": "请"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "\"躬为煮糜炼药\"。[躬]",
       "answer": "A",
@@ -1558,6 +1755,7 @@ const QUESTIONS = {
       "optionD": "自身"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "\"传其事以劝焉\"。[劝]",
       "answer": "B",
@@ -1567,6 +1765,7 @@ const QUESTIONS = {
       "optionD": "感化"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "\"延就坐\"。[延]",
       "answer": "B",
@@ -1576,6 +1775,7 @@ const QUESTIONS = {
       "optionD": "拖延"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "\"人殆之，不肯舍\"。[殆]",
       "answer": "A",
@@ -1585,6 +1785,7 @@ const QUESTIONS = {
       "optionD": "懈怠"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "“未及三年”。[及]",
       "answer": "A",
@@ -1594,6 +1795,7 @@ const QUESTIONS = {
       "optionD": "达到"
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "\"君之为县有惠爱\"。[为]",
       "answer": "C",
@@ -1603,6 +1805,7 @@ const QUESTIONS = {
       "optionD": "认为"
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "“夫令之于民诚重矣”。[诚]",
       "answer": "D",
@@ -1612,6 +1815,7 @@ const QUESTIONS = {
       "optionD": "确实"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "“亦被其殃而有辱也”。[被]",
       "answer": "A",
@@ -1621,6 +1825,7 @@ const QUESTIONS = {
       "optionD": "披着"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "“固宜”。[固]",
       "answer": "B",
@@ -1630,6 +1835,7 @@ const QUESTIONS = {
       "optionD": "十分"
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "“而君则亦既去矣”。[既]",
       "answer": "C",
@@ -1639,6 +1845,7 @@ const QUESTIONS = {
       "optionD": "后来"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "“而君则亦既去矣”。[去]",
       "answer": "B",
@@ -1648,6 +1855,7 @@ const QUESTIONS = {
       "optionD": "前往"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "“由是好事者绘《吴山图》以为赠”。[好]",
       "answer": "A",
@@ -1657,6 +1865,7 @@ const QUESTIONS = {
       "optionD": "合适"
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "“因命余记之”。[命]",
       "answer": "B",
@@ -1666,6 +1875,7 @@ const QUESTIONS = {
       "optionD": "命名"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "“因命余记之”。[记]",
       "answer": "A",
@@ -1677,66 +1887,79 @@ const QUESTIONS = {
   ],
   "MATH-0580": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "The derivative of function 𝑦=(2𝑥+1)² is _____.",
       "answer": "4(2x+1)"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "∫ 𝑥 𝑑𝑥 = __________.",
       "answer": "0.5𝑥²+𝑐"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "The gradient of tangent × the gradient of normal is __________.",
       "answer": "-1"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "𝑓²(𝑥) =(𝑓(𝑥))². (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "Find the next term of the following sequence. 22, 17, 12, 7, 2, _____",
       "answer": "-3"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "For composite functions, fg(x) = gf(x) is always true. (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "Find the gradient of the line AB, where A(3, 5) and B(4, 7).",
       "answer": "2"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "The period of the graph of 𝑦=3 sin2𝑥 +4 is _________.(in radian)",
       "answer": "𝜋"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "Stationary points/turning points of a function f(x) occur when dy/dx=___________.",
       "answer": "0"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "Only _____________ function has an inverse.",
       "answer": "one-one"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "The gradient of 4x+2y=6 is ____________.",
       "answer": "-2"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "Find the mode in the following data. 1, 3, 4, 7, 3, 2, 4, 3",
       "answer": "3"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "What is the expression of 3/5 as a percentage?",
       "answer": "C",
@@ -1746,6 +1969,7 @@ const QUESTIONS = {
       "optionD": "0.8"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "Solve the equation 3x+5=20.",
       "answer": "B",
@@ -1755,6 +1979,7 @@ const QUESTIONS = {
       "optionD": "x=9"
     },
     {
+      "qNum": 15,
       "type": "mcq",
       "stem": "What is the sum of interior angles of a triangle?",
       "answer": "D",
@@ -1764,6 +1989,7 @@ const QUESTIONS = {
       "optionD": "𝜋"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "What is the area of a rectangle with length 8 and width 5?",
       "answer": "B",
@@ -1773,6 +1999,7 @@ const QUESTIONS = {
       "optionD": "80"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "A fair six-sided die is rolled once. What is the probability of rolling a 4?",
       "answer": "A",
@@ -1784,81 +2011,97 @@ const QUESTIONS = {
   ],
   "MATH-0606": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "The derivative of function 𝑦=(2𝑥+1)² is _____.",
       "answer": "4(2x+1)"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "The magnitude of vector 3i-4j=__________.",
       "answer": "5"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "The length of a unit vector is ________.",
       "answer": "1"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "∫ 𝑥 𝑑𝑥 = __________.",
       "answer": "0.5𝑥²+𝑐"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "The gradient of tangent × the gradient of normal is __________.",
       "answer": "-1"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "The derivative of sinx is __________.",
       "answer": "cosx"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "∫ sin𝑥 𝑑𝑥 is __________.",
       "answer": "-cosx+c"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "𝑓²(𝑥) =(𝑓(𝑥))². (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "Find the next term of the following sequence. 22, 17, 12, 7, 2, _____",
       "answer": "-3"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "For composite functions, fg(x) = gf(x) is always true. (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "Simplify e^(ln5)=_________.",
       "answer": "5"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "The period of the graph of 𝑦=3 sin2𝑥 +4 is _________.(in radian)",
       "answer": "𝜋"
     },
     {
+      "qNum": 13,
       "type": "blank",
       "stem": "Simplify lg2+lg5=_______.",
       "answer": "1"
     },
     {
+      "qNum": 14,
       "type": "blank",
       "stem": "sinx ∙ cosecx =_________.",
       "answer": "1"
     },
     {
+      "qNum": 15,
       "type": "blank",
       "stem": "Stationary points/turning points of a function f(x) occur when dy/dx=___________.",
       "answer": "0"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "In an arithmetic progression, the difference between consecutive terms is called the ________.",
       "answer": "B",
@@ -1868,6 +2111,7 @@ const QUESTIONS = {
       "optionD": "common factor"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "The 6th term of the arithmetic sequence 4, 7, 10, 13, ... is ________.",
       "answer": "D",
@@ -1877,6 +2121,7 @@ const QUESTIONS = {
       "optionD": "19"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "The 4th term of the geometric sequence 2, 6, 18, ... is ________.",
       "answer": "B",
@@ -1886,6 +2131,7 @@ const QUESTIONS = {
       "optionD": "108"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "The sum to infinity of the geometric series 8+4+2+1+⋯ is",
       "answer": "C",
@@ -1895,6 +2141,7 @@ const QUESTIONS = {
       "optionD": "18"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "The second derivative is the ______ of the first derivative.",
       "answer": "B",
@@ -1904,6 +2151,7 @@ const QUESTIONS = {
       "optionD": "range"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "Which of the following is the derivative of function f (x)=xlnx?",
       "answer": "D",
@@ -1913,6 +2161,7 @@ const QUESTIONS = {
       "optionD": "lnx+1"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "The gradient of the curve 𝑦=𝑥²-3𝑥 at the point where 𝑥=2 is",
       "answer": "C",
@@ -1922,6 +2171,7 @@ const QUESTIONS = {
       "optionD": "2"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "The vector with A(1, 2) and B(4, 6) has components ______.",
       "answer": "A",
@@ -1931,6 +2181,7 @@ const QUESTIONS = {
       "optionD": "(3, 5)"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "Simplify 𝑥² ∙ 𝑥⁴.",
       "answer": "B",
@@ -1940,6 +2191,7 @@ const QUESTIONS = {
       "optionD": "𝑥⁸"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "The indefinite integral of 1/x with respect to x is _______.",
       "answer": "A",
@@ -1949,6 +2201,7 @@ const QUESTIONS = {
       "optionD": "𝑥⁻¹+c"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "∫₁³2𝑥𝑑𝑥=______.",
       "answer": "C",
@@ -1958,6 +2211,7 @@ const QUESTIONS = {
       "optionD": "10"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "Velocity is a _________.",
       "answer": "B",
@@ -1967,6 +2221,7 @@ const QUESTIONS = {
       "optionD": "direction"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "The velocity of a particle is given by v=4t-3. Its acceleration is _______.",
       "answer": "A",
@@ -1976,6 +2231,7 @@ const QUESTIONS = {
       "optionD": "0"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "The displacement of a particle is given by 𝑠=𝑡³-2𝑡²+𝑡, its velocity at t=2 is",
       "answer": "B",
@@ -1985,6 +2241,7 @@ const QUESTIONS = {
       "optionD": "9"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "The set of input values is called the ___________ of the function.",
       "answer": "B",
@@ -1994,6 +2251,7 @@ const QUESTIONS = {
       "optionD": "Gradient"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "If f(x)=2x and g(x)=x+2, find fg(x).",
       "answer": "D",
@@ -2003,6 +2261,7 @@ const QUESTIONS = {
       "optionD": "2(x+2)"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "The function f(x) has its inverse if and only if ________________.",
       "answer": "A",
@@ -2012,6 +2271,7 @@ const QUESTIONS = {
       "optionD": "f(x)>0 for all x in the domain"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "If a line is tangent to a curve, how many points of intersection does the line have with the curve?",
       "answer": "B",
@@ -2021,6 +2281,7 @@ const QUESTIONS = {
       "optionD": "3"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "simplify (𝑒²)³",
       "answer": "B",
@@ -2030,6 +2291,7 @@ const QUESTIONS = {
       "optionD": "ln8"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "log₄ 20 ÷ log₄ 5 =__________",
       "answer": "A",
@@ -2039,6 +2301,7 @@ const QUESTIONS = {
       "optionD": "log₄ 20-log₄ 5"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "Which of the following functions has a different minimum value?",
       "answer": "B",
@@ -2048,6 +2311,7 @@ const QUESTIONS = {
       "optionD": "f(x)=𝑥²-1"
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "A straight line drawn from one point on the edge of a circle to another is called ______.",
       "answer": "A",
@@ -2057,6 +2321,7 @@ const QUESTIONS = {
       "optionD": "Segment"
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "The circle has centre O and radius 1. The length of minor arc AB is 1/2. Find the acute angle AOB in radians.",
       "answer": "C",
@@ -2066,6 +2331,7 @@ const QUESTIONS = {
       "optionD": "1"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "When the angle is measured in radians, the area of circular sector AOB with radians r and angle 𝜽 is________",
       "answer": "C",
@@ -2075,6 +2341,7 @@ const QUESTIONS = {
       "optionD": "𝑟²𝑠𝑖𝑛𝜽/2"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "A reflex angle is an angle",
       "answer": "C",
@@ -2084,6 +2351,7 @@ const QUESTIONS = {
       "optionD": "more than 360°"
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "-4 rad is in the _______ quadrant.",
       "answer": "B",
@@ -2093,6 +2361,7 @@ const QUESTIONS = {
       "optionD": "Fourth"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "Which one of the following has the different value from the others?",
       "answer": "A",
@@ -2102,6 +2371,7 @@ const QUESTIONS = {
       "optionD": "tan(𝜋\\4)"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "Which of the following equations does not always equal 1?",
       "answer": "C",
@@ -2111,6 +2381,7 @@ const QUESTIONS = {
       "optionD": "𝑐𝑜𝑠𝑒𝑐²𝜃-𝑐𝑜𝑡²𝜃"
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "To find the number of five digit numbers can be formed by 2,4,5,7,8, if no digit can be used more than once, we should use ______________",
       "answer": "B",
@@ -2120,6 +2391,7 @@ const QUESTIONS = {
       "optionD": "Arrangement"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "Find the range of f(x)=lnx.",
       "answer": "A",
@@ -2131,51 +2403,61 @@ const QUESTIONS = {
   ],
   "MATH-0606-2.5": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "For composite functions, fg(x) = gf(x) always true. (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "Simplify e^(ln5)=_________.",
       "answer": "5"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "The period of the graph of 𝑦=3 sin2𝑥 +4 is _________.(in radian)",
       "answer": "𝜋"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "Simplify lg2+lg5=_______.",
       "answer": "1"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "sinx ∙ cosecx =_________.",
       "answer": "1"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "if 𝑓(𝑥)=𝑥+1, 𝑓²(𝑥)=(𝑥+1)² (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "if 𝑓(𝑥)=𝑥+1, 𝑓⁻¹(𝑥)=1/(𝑥+1) (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "when f(x) is divided by 2x+1, the remainder is -4. f(-0.5)=_________",
       "answer": "-4"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "Line A and Line B are parallel, if the gradient of line A is 2, the gradient of line B is____________",
       "answer": "2"
     },
     {
+      "qNum": 10,
       "type": "mcq",
       "stem": "Find the domain for y=lnx.",
       "answer": "A",
@@ -2185,6 +2467,7 @@ const QUESTIONS = {
       "optionD": "x≠1"
     },
     {
+      "qNum": 11,
       "type": "mcq",
       "stem": "An obtuse angle is an angle_______",
       "answer": "B",
@@ -2194,6 +2477,7 @@ const QUESTIONS = {
       "optionD": "more than 360°"
     },
     {
+      "qNum": 12,
       "type": "mcq",
       "stem": "If the line AB has the gradient 2, and passes through the point (1, 2), which one is the expression for line AB:",
       "answer": "C",
@@ -2203,6 +2487,7 @@ const QUESTIONS = {
       "optionD": "y-2=-0.5(x-1)"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "Which of the following has the smallest number of straight sides?",
       "answer": "D",
@@ -2212,6 +2497,7 @@ const QUESTIONS = {
       "optionD": "Circular segment"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "Which of the following functions intersects with the x-axis?",
       "answer": "B",
@@ -2223,61 +2509,73 @@ const QUESTIONS = {
   ],
   "MATH-9709": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "The derivative of function 𝑦=(2𝑥+1)² is _____.",
       "answer": "4(2x+1)"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "∫ 𝑥 𝑑𝑥 = __________.",
       "answer": "0.5𝑥²+𝑐"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "The gradient of tangent × the gradient of normal is __________.",
       "answer": "-1"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "𝑓²(𝑥) =(𝑓(𝑥))². (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "Find the next term of the following sequence. 22, 17, 12, 7, 2, _____",
       "answer": "-3"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "For composite functions, fg(x) = gf(x) is always true. (True or False)",
       "answer": "False"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "Find the gradient of the line AB, where A(3, 5) and B(4, 7).",
       "answer": "2"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "The period of the graph of 𝑦=3 sin2𝑥 +4 is _________.(in radian)",
       "answer": "𝜋"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "Stationary points/turning points of a function f(x) occur when dy/dx=___________.",
       "answer": "0"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "Only _____________ function has an inverse.",
       "answer": "one-one"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "-4 rad is in the _______ quadrant.",
       "answer": "second"
     },
     {
+      "qNum": 12,
       "type": "mcq",
       "stem": "If two events A and B cannot occur at the same time, then the two events are _______________.",
       "answer": "C",
@@ -2287,6 +2585,7 @@ const QUESTIONS = {
       "optionD": "exhaustive"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "Two events, A and B, are _____________ if the outcome of A does not affect the outcome of B, and vice versa.",
       "answer": "A",
@@ -2296,6 +2595,7 @@ const QUESTIONS = {
       "optionD": "exhaustive"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "The most commonly occuring value is called ____________.",
       "answer": "B",
@@ -2305,6 +2605,7 @@ const QUESTIONS = {
       "optionD": "variance"
     },
     {
+      "qNum": 15,
       "type": "mcq",
       "stem": "The graph of f(x) is transformed to the graph of f(x+5). This transformation is called ______________.",
       "answer": "A",
@@ -2314,6 +2615,7 @@ const QUESTIONS = {
       "optionD": "reflection"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "The graph of f(x) is transformed to the graph of f(3x). This transformation is called ______________.",
       "answer": "B",
@@ -2323,6 +2625,7 @@ const QUESTIONS = {
       "optionD": "reflection"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "When the gradient of a function is ____________ we say the function is an increasing function.",
       "answer": "D",
@@ -2332,6 +2635,7 @@ const QUESTIONS = {
       "optionD": "positive"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "Which one is an improper integral?",
       "answer": "A",
@@ -2343,6 +2647,7 @@ const QUESTIONS = {
   ],
   "EAP": [
     {
+      "qNum": 1,
       "type": "mcq",
       "stem": "The teacher ______ the documents that I submitted last week.",
       "answer": "B",
@@ -2352,6 +2657,7 @@ const QUESTIONS = {
       "optionD": "created"
     },
     {
+      "qNum": 2,
       "type": "mcq",
       "stem": "Her British ______ made it clear that he grew up in London.",
       "answer": "A",
@@ -2361,6 +2667,7 @@ const QUESTIONS = {
       "optionD": "research"
     },
     {
+      "qNum": 3,
       "type": "mcq",
       "stem": "This region ______ wines that win international awards.",
       "answer": "B",
@@ -2370,6 +2677,7 @@ const QUESTIONS = {
       "optionD": "extends"
     },
     {
+      "qNum": 4,
       "type": "mcq",
       "stem": "The hotel ______ breakfast that includes both local and international dishes.",
       "answer": "B",
@@ -2379,6 +2687,7 @@ const QUESTIONS = {
       "optionD": "requires"
     },
     {
+      "qNum": 5,
       "type": "mcq",
       "stem": "The ______ where teams design robots attracts young engineers worldwide.",
       "answer": "A",
@@ -2388,6 +2697,7 @@ const QUESTIONS = {
       "optionD": "profession"
     },
     {
+      "qNum": 6,
       "type": "mcq",
       "stem": "This internship offers an ______ that enhances your career prospects.",
       "answer": "D",
@@ -2397,6 +2707,7 @@ const QUESTIONS = {
       "optionD": "opportunity"
     },
     {
+      "qNum": 7,
       "type": "mcq",
       "stem": "The manager confirmed that the room would be ______ after 3 PM.",
       "answer": "B",
@@ -2406,6 +2717,7 @@ const QUESTIONS = {
       "optionD": "original"
     },
     {
+      "qNum": 8,
       "type": "mcq",
       "stem": "Companies should adopt policies that reduce harm to the ______.",
       "answer": "A",
@@ -2415,6 +2727,7 @@ const QUESTIONS = {
       "optionD": "department"
     },
     {
+      "qNum": 9,
       "type": "mcq",
       "stem": "Teaching is a ______ that demands both patience and creativity.",
       "answer": "C",
@@ -2424,6 +2737,7 @@ const QUESTIONS = {
       "optionD": "research"
     },
     {
+      "qNum": 10,
       "type": "mcq",
       "stem": "The ancient castle is ______ where three rivers meet.",
       "answer": "B",
@@ -2433,6 +2747,7 @@ const QUESTIONS = {
       "optionD": "extended"
     },
     {
+      "qNum": 11,
       "type": "mcq",
       "stem": "Research ______ that people who read regularly sleep better.",
       "answer": "A",
@@ -2442,6 +2757,7 @@ const QUESTIONS = {
       "optionD": "organizes"
     },
     {
+      "qNum": 12,
       "type": "mcq",
       "stem": "This dress is suitable for formal ______ where etiquette matters.",
       "answer": "D",
@@ -2451,6 +2767,7 @@ const QUESTIONS = {
       "optionD": "occasions"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "The store offers products ______ from stationery to electronics.",
       "answer": "A",
@@ -2460,6 +2777,7 @@ const QUESTIONS = {
       "optionD": "impressing"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "Her speech ______ everyone who attended the conference.",
       "answer": "C",
@@ -2469,6 +2787,7 @@ const QUESTIONS = {
       "optionD": "processed"
     },
     {
+      "qNum": 15,
       "type": "mcq",
       "stem": "______ checkups help detect issues that might develop into serious diseases.",
       "answer": "D",
@@ -2478,6 +2797,7 @@ const QUESTIONS = {
       "optionD": "Regular"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "The team ______ solved problems that initially seemed unsolvable.",
       "answer": "B",
@@ -2487,6 +2807,7 @@ const QUESTIONS = {
       "optionD": "practically"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "Species ______ if they adapt to environments that change rapidly.",
       "answer": "A",
@@ -2496,6 +2817,7 @@ const QUESTIONS = {
       "optionD": "recognize"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "The cancellation ______ fans who had waited months for the concert.",
       "answer": "C",
@@ -2505,6 +2827,7 @@ const QUESTIONS = {
       "optionD": "complained"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "Vaccines ______ diseases that could cause widespread outbreaks.",
       "answer": "B",
@@ -2514,6 +2837,7 @@ const QUESTIONS = {
       "optionD": "disappear"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "Climate change poses a ______ that requires global cooperation.",
       "answer": "C",
@@ -2523,6 +2847,7 @@ const QUESTIONS = {
       "optionD": "march"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "Save the document now; ______, you might lose data that isn’t backed up.",
       "answer": "A",
@@ -2532,6 +2857,7 @@ const QUESTIONS = {
       "optionD": "practically"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "Species ______ to climates that shift due to global warming.",
       "answer": "D",
@@ -2541,6 +2867,7 @@ const QUESTIONS = {
       "optionD": "adapt"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "You've illegally ______ and misused confidential security files.",
       "answer": "A",
@@ -2550,6 +2877,7 @@ const QUESTIONS = {
       "optionD": "measured"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "I'll call the restaurant and make a ______.",
       "answer": "B",
@@ -2559,6 +2887,7 @@ const QUESTIONS = {
       "optionD": "amendment"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "Coastal cities ______ floods that intensify with rising sea levels.",
       "answer": "C",
@@ -2568,6 +2897,7 @@ const QUESTIONS = {
       "optionD": "edit"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "The singer has denied the magazine's ______ that she is leaving the band.",
       "answer": "D",
@@ -2577,6 +2907,7 @@ const QUESTIONS = {
       "optionD": "claim"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "The engineer who designed this system is ______ of solving complex technical problems.",
       "answer": "B",
@@ -2586,6 +2917,7 @@ const QUESTIONS = {
       "optionD": "rapid"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "She ______ 10% of her salary to charity every month, which helps many children.",
       "answer": "A",
@@ -2595,6 +2927,7 @@ const QUESTIONS = {
       "optionD": "purchases"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "The store ______ that all products they sell are made from organic materials.",
       "answer": "B",
@@ -2604,6 +2937,7 @@ const QUESTIONS = {
       "optionD": "connects"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "We must ______ resources that future generations need.",
       "answer": "D",
@@ -2613,76 +2947,91 @@ const QUESTIONS = {
       "optionD": "conserve"
     },
     {
+      "qNum": 31,
       "type": "blank",
       "stem": "As ____ (按照要求)， this report includes a summary of students' opinions and suggestions for next year.",
       "answer": "requested"
     },
     {
+      "qNum": 32,
       "type": "blank",
       "stem": "To improve the overall experience, several suggestions are strongly ____________ (被推荐) based on the survey findings.",
       "answer": "recommended"
     },
     {
+      "qNum": 33,
       "type": "blank",
       "stem": "Overall, the long-term benefits clearly ____________ (在重要性上超过) the disadvantages.",
       "answer": "outweigh"
     },
     {
+      "qNum": 34,
       "type": "blank",
       "stem": "A student _________ survey (学生满意度问卷) was distributed to collect data from over 200 participants.",
       "answer": "satisfaction"
     },
     {
+      "qNum": 35,
       "type": "blank",
       "stem": "The vast ____________ (绝大多数) of respondents expressed satisfaction with the new campus facilities.",
       "answer": "majority"
     },
     {
+      "qNum": 36,
       "type": "blank",
       "stem": "Overall, the data from the questionnaire has ________ (揭露) a clear preference for digital textbooks.",
       "answer": "revealed"
     },
     {
+      "qNum": 37,
       "type": "blank",
       "stem": "A persuasive argumentative essay is incomplete without addressing a valid ____________ (反驳)",
       "answer": "refutation"
     },
     {
+      "qNum": 38,
       "type": "blank",
       "stem": "A formal report must use an ____________ (客观的) tone and avoid personal, emotional language.",
       "answer": "objective"
     },
     {
+      "qNum": 39,
       "type": "blank",
       "stem": "The survey results revealed certain ____________ (方面) where the school's sports facilities could still be improved.",
       "answer": "aspects/ areas"
     },
     {
+      "qNum": 40,
       "type": "blank",
       "stem": "All in ____________ (总之), the campus tour provided valuable insights into university.",
       "answer": "all"
     },
     {
+      "qNum": 41,
       "type": "blank",
       "stem": "In ____________ (结论), the data from the questionnaire highlights several areas where immediate improvements are necessary.",
       "answer": "conclusion"
     },
     {
+      "qNum": 42,
       "type": "blank",
       "stem": "After identifying the main causes of the issue, the report must propose ____________ (解决办法) to address them effectively.",
       "answer": "solutions"
     },
     {
+      "qNum": 43,
       "type": "blank",
       "stem": "When analyzing a short story, it is crucial to understand how the main conflict drives the ____________ (情节) forward.",
       "answer": "plot"
     },
     {
+      "qNum": 44,
       "type": "blank",
       "stem": "When writing a casual email to a classmate, you should use an ____________ (非正式的) register.",
       "answer": "informal"
     },
     {
+      "qNum": 45,
       "type": "blank",
       "stem": "Sarah was on ____________ (紧张不安/如坐针毡) all day, terrified that the teacher would find out that she cheated in exams.",
       "answer": "edge"
@@ -2690,51 +3039,61 @@ const QUESTIONS = {
   ],
   "EAP-2.5": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "The trousers I wanted were unfortunately out of ____________ (断货).",
       "answer": "stock"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "After playing football, his hair looked messy and ____________ (邋遢的).",
       "answer": "scruffy"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "The friendly baby had very ____________ (丰满的) cheeks.",
       "answer": "plump"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "The ____________ (有礼貌的) waiter held the door open for us.",
       "answer": "polite/ courteous"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "A ____________ (可靠的) friend will never break a promise.",
       "answer": "reliable"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "After the party, the ____________ (性格内向的) girl needed quiet time alone.",
       "answer": "introverted"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "My ____________ (节俭的) aunt reuses gift wrap to save money.",
       "answer": "thrifty"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "Our ____________ (爱管闲事的) neighbor asks too many personal questions.",
       "answer": "nosy"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "My ____________ (固执的) dog refuses to walk in the rain.",
       "answer": "stubborn"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "The old woman's ____________ (皱纹) showed a lifetime of smiles and laughter.",
       "answer": "wrinkles"
@@ -2742,6 +3101,7 @@ const QUESTIONS = {
   ],
   "PHY": [
     {
+      "qNum": 1,
       "type": "mcq",
       "stem": "Which property of an object never changes when a force acts on the object?",
       "answer": "C",
@@ -2751,6 +3111,7 @@ const QUESTIONS = {
       "optionD": "speed"
     },
     {
+      "qNum": 2,
       "type": "mcq",
       "stem": "Which type of radiation is measured using a detector connected to a counter?",
       "answer": "C",
@@ -2760,6 +3121,7 @@ const QUESTIONS = {
       "optionD": "visible light"
     },
     {
+      "qNum": 3,
       "type": "mcq",
       "stem": "The diagram represents three objects, X, Y and Z, in space. Object Y orbits object X and is orbited by object Z. Which type of object is Y?",
       "answer": "D",
@@ -2769,6 +3131,7 @@ const QUESTIONS = {
       "optionD": "dwarf planet"
     },
     {
+      "qNum": 4,
       "type": "mcq",
       "stem": "What is the name of the galaxy that contains our Solar System?",
       "answer": "D",
@@ -2778,6 +3141,7 @@ const QUESTIONS = {
       "optionD": "Milky Way"
     },
     {
+      "qNum": 5,
       "type": "mcq",
       "stem": "For an object near a diverging lens, at what distance to the lens would result in no image?",
       "answer": "D",
@@ -2787,6 +3151,7 @@ const QUESTIONS = {
       "optionD": "Nowhere"
     },
     {
+      "qNum": 6,
       "type": "mcq",
       "stem": "Sound waves of which of the following frequencies cannot be heard by a human?",
       "answer": "A",
@@ -2796,6 +3161,7 @@ const QUESTIONS = {
       "optionD": "80 Hz"
     },
     {
+      "qNum": 7,
       "type": "mcq",
       "stem": "To find the resistance of a metal wire, what measurements must be taken?",
       "answer": "C",
@@ -2805,6 +3171,7 @@ const QUESTIONS = {
       "optionD": "current and cross-sectional diameter"
     },
     {
+      "qNum": 8,
       "type": "mcq",
       "stem": "Which of the following is NOT needed when using an appliance that is double-insulated?",
       "answer": "C",
@@ -2814,6 +3181,7 @@ const QUESTIONS = {
       "optionD": "fire wire"
     },
     {
+      "qNum": 9,
       "type": "mcq",
       "stem": "What phase of the moon is shown in the figure?",
       "answer": "C",
@@ -2823,6 +3191,7 @@ const QUESTIONS = {
       "optionD": "waxing crescent"
     },
     {
+      "qNum": 10,
       "type": "mcq",
       "stem": "Which of the following energy resources cannot be traced back to the Sun?",
       "answer": "B",
@@ -2832,6 +3201,7 @@ const QUESTIONS = {
       "optionD": "wave"
     },
     {
+      "qNum": 11,
       "type": "mcq",
       "stem": "What is the boiling point of water under standard atmosphere pressure in kelvin?",
       "answer": "D",
@@ -2841,6 +3211,7 @@ const QUESTIONS = {
       "optionD": "373 K"
     },
     {
+      "qNum": 12,
       "type": "mcq",
       "stem": "Where do visible light and microwave travel at the same speed?",
       "answer": "C",
@@ -2850,6 +3221,7 @@ const QUESTIONS = {
       "optionD": "through a piece of glass"
     },
     {
+      "qNum": 13,
       "type": "mcq",
       "stem": "Which quantity does a light-year measure?",
       "answer": "D",
@@ -2859,6 +3231,7 @@ const QUESTIONS = {
       "optionD": "distance"
     },
     {
+      "qNum": 14,
       "type": "mcq",
       "stem": "In a small power station, fossil fuel is used to generate electricity. Which energy store is reduced by this process?",
       "answer": "A",
@@ -2868,6 +3241,7 @@ const QUESTIONS = {
       "optionD": "thermal"
     },
     {
+      "qNum": 15,
       "type": "mcq",
       "stem": "What cannot a radioactive source undergoing gamma decay be used for?",
       "answer": "C",
@@ -2877,6 +3251,7 @@ const QUESTIONS = {
       "optionD": "sterilising food"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "A radioactive substance is used as a tracer for cancer diagnosis. Which of the following half lifes is suitable for this application?",
       "answer": "B",
@@ -2886,6 +3261,7 @@ const QUESTIONS = {
       "optionD": "a million years"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "Light from a distance galaxy undergoes blueshift. Which of the following statements is correct?",
       "answer": "B",
@@ -2895,6 +3271,7 @@ const QUESTIONS = {
       "optionD": "Light emitted by the galaxy is becoming blue."
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "What does the abbreviation e.m.f. mean?",
       "answer": "B",
@@ -2904,6 +3281,7 @@ const QUESTIONS = {
       "optionD": "electric motive force"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "Which of the following is a scalar quantity?",
       "answer": "D",
@@ -2913,6 +3291,7 @@ const QUESTIONS = {
       "optionD": "pressure"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "Which unit is equivalent to the unit(s) of potential difference?",
       "answer": "A",
@@ -2922,6 +3301,7 @@ const QUESTIONS = {
       "optionD": "C/s"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "What is the unit for the rate of energy transfer from one object to another?",
       "answer": "C",
@@ -2931,6 +3311,7 @@ const QUESTIONS = {
       "optionD": "pascal"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "During a beta decay, where does the beta particle originate from?",
       "answer": "B",
@@ -2940,6 +3321,7 @@ const QUESTIONS = {
       "optionD": "out of nowhere"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "How does the Sun produce its energy?",
       "answer": "D",
@@ -2949,6 +3331,7 @@ const QUESTIONS = {
       "optionD": "by fusion of hydrogen"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "Which of the following contributes the most to global warming?",
       "answer": "B",
@@ -2958,6 +3341,7 @@ const QUESTIONS = {
       "optionD": "a cow farm"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "A force of 10 N acts on an object upwards. The object moves to the right over a distance of 2.0 m. How much work has this force done on the object?",
       "answer": "B",
@@ -2967,6 +3351,7 @@ const QUESTIONS = {
       "optionD": "It cannot be determined without further information."
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "Light is incident on a piece of plastic from air as shown by the diagram. Calculate the refractive index of the plastic.",
       "answer": "B",
@@ -2976,6 +3361,7 @@ const QUESTIONS = {
       "optionD": "1/√3"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "Which unit is equivalent to the unit(s) of pressure?",
       "answer": "C",
@@ -2985,6 +3371,7 @@ const QUESTIONS = {
       "optionD": "N·cm^2"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "The nearest star to the Sun is Proxima Centauri, which is 4.2 light years from us. Where is it?",
       "answer": "B",
@@ -2994,6 +3381,7 @@ const QUESTIONS = {
       "optionD": "In valhalla"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "Which of the following is an SI base unit?",
       "answer": "D",
@@ -3003,6 +3391,7 @@ const QUESTIONS = {
       "optionD": "ampere"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "What is the nature of an alpha particle?",
       "answer": "A",
@@ -3012,76 +3401,91 @@ const QUESTIONS = {
       "optionD": "a helium atom"
     },
     {
+      "qNum": 31,
       "type": "blank",
       "stem": "A vector quantity has ________ and ________.",
       "answer": "magnitude; direction (in any order)"
     },
     {
+      "qNum": 32,
       "type": "blank",
       "stem": "Acceleration is the rate of change of ___________.",
       "answer": "velocity"
     },
     {
+      "qNum": 33,
       "type": "blank",
       "stem": "Law of reflection of wave: angle of ________ is equal to the angle of ________.",
       "answer": "incidence; reflection (in any order)"
     },
     {
+      "qNum": 34,
       "type": "blank",
       "stem": "Hooke’s law: the _________ of the spring is proportional to the force stretching it, within the limit of ____________.",
       "answer": "extension; proportionality"
     },
     {
+      "qNum": 35,
       "type": "blank",
       "stem": "Moment of a force is force times ______________ from pivot.",
       "answer": "perpendicular distance"
     },
     {
+      "qNum": 36,
       "type": "blank",
       "stem": "Conditions for equilibrium: no net _________ and no net __________.",
       "answer": "force; moment (in any order)"
     },
     {
+      "qNum": 37,
       "type": "blank",
       "stem": "Three types of radioactive decay, alpha, _______ and _______ decay.",
       "answer": "beta; gamma (in any order)"
     },
     {
+      "qNum": 38,
       "type": "blank",
       "stem": "The closest gas giant from the Sun is ________.",
       "answer": "Jupiter"
     },
     {
+      "qNum": 39,
       "type": "blank",
       "stem": "______ is the rate of flow of charge.",
       "answer": "current"
     },
     {
+      "qNum": 40,
       "type": "blank",
       "stem": "We use _____ hand to determine the force on a current-carrying wire in a magnetic field.",
       "answer": "left"
     },
     {
+      "qNum": 41,
       "type": "blank",
       "stem": "Three ways of transferring thermal energy: conduction, _________ and _________.",
       "answer": "convection; radiation (in any order)"
     },
     {
+      "qNum": 42,
       "type": "blank",
       "stem": "We can hear people talking in a room with a open door without seeing them, because sound wave _______.",
       "answer": "diffracts"
     },
     {
+      "qNum": 43,
       "type": "blank",
       "stem": "Scattering of _______ provides evidence for the structure of atoms.",
       "answer": "alpha-particles"
     },
     {
+      "qNum": 44,
       "type": "blank",
       "stem": "For a __________ wave, the vibration of particles is parallel to the direction of propagation of wave.",
       "answer": "longitudinal"
     },
     {
+      "qNum": 45,
       "type": "blank",
       "stem": "In a solid, the movement of particles is ________.",
       "answer": "vibration"
@@ -3089,51 +3493,61 @@ const QUESTIONS = {
   ],
   "PHY-2.5": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "A vector quantity has ________ and ________.",
       "answer": "magnitude; direction (in any order)"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "Acceleration is the rate of change of ___________.",
       "answer": "velocity"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "Gravitational field strength is _______ per unit _______.",
       "answer": "force; mass"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "Hooke’s law: the _________ of the spring is proportional to the force stretching it, within the limit of ____________.",
       "answer": "extension; proportionality"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "Moment of a force is force times ___________ distance from pivot.",
       "answer": "perpendicular"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "Conditions for equilibrium: no net _________ and no net __________.",
       "answer": "force; moment (in any order)"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "Resultant force is the rate of change of ____________.",
       "answer": "momentum"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "Momentum is mass times __________.",
       "answer": "velocity"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "Power is __________ per unit time.",
       "answer": "work done / energy transferred"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "Impulse is force times ________ for which force acts.",
       "answer": "time"
@@ -3141,81 +3555,97 @@ const QUESTIONS = {
   ],
   "CHE": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "1. _________ are atoms of the same element, that have the same number of proton but different number of neutrons.",
       "answer": "Isotopes"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "2. _______ is formed when a pair of electrons is shared between two atoms leading to noble gas electronic configurations.",
       "answer": "Covalent bond"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "3._______is the electrostatic attraction between the positive ions in a giant metallic lattice and a ‘sea’ of delocalised electrons",
       "answer": "Metallic bond"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "4.The _______ as the molten or aqueous substance that undergoes electrolysis.",
       "answer": "electrolyte"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "5.Colour of methyl orange in alkaline solution is ______, colour of thymolphthalein is acidic solution is ________.",
       "answer": "yellow, colourless"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "6. The transfer of thermal energy during a reaction is called the ___________ of the reaction",
       "answer": "enthalpy change"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "7. A strong acid _________ dissociate in aqueous solution. Weak acid _______ dissociate in aqueous solution",
       "answer": "completely/fully, partially"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "8. ZnO is an example of ______ oxides",
       "answer": "amphoteric"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "9. Group VII elements in the periodic table are known as _______.",
       "answer": "halogen"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "10. ___________is a substance that oxidises another substance and is itself reduced.",
       "answer": "Oxidising agent"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "11. __________ is a compound containing only carbon and hydrogen",
       "answer": "Hydrocarbon"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "12. Polymers as large molecules built up from many smaller molecules called _________",
       "answer": "monomers"
     },
     {
+      "qNum": 13,
       "type": "blank",
       "stem": "13. _________ are compounds with the same molecular formula, but different structural formulae",
       "answer": "Structural isomers"
     },
     {
+      "qNum": 14,
       "type": "blank",
       "stem": "14. In an _______ reaction, only one product is formed",
       "answer": "addition"
     },
     {
+      "qNum": 15,
       "type": "blank",
       "stem": "15. _________ solution as a solution containing the maximum concentration of a solute dissolved in the solvent at a specified temperature.",
       "answer": "Saturated"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "1. Relative atomic mass is the average mass of the ________ of an element, relative to 1/12th of the mass of _______.",
       "answer": "D",
@@ -3225,6 +3655,7 @@ const QUESTIONS = {
       "optionD": "Isotopes, C-12"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "2. The _________ is the process for making ammonia under 450 degree celcius, 200atm, and Fe as catalyst.",
       "answer": "C",
@@ -3234,6 +3665,7 @@ const QUESTIONS = {
       "optionD": "polymerization"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "3. What is the Avogadro constant?",
       "answer": "C",
@@ -3243,6 +3675,7 @@ const QUESTIONS = {
       "optionD": "9.81 x 10^24"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "4. What is the change of physical state from solid to gas?",
       "answer": "C",
@@ -3252,6 +3685,7 @@ const QUESTIONS = {
       "optionD": "boiling"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "5. The mass number/nucleon number is the total number of________ in the nucleus of an atom?",
       "answer": "A",
@@ -3261,6 +3695,7 @@ const QUESTIONS = {
       "optionD": "Proton and Nucleon"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "6. Define the _____ formula of a compound as the simplest whole number ratio of the different atoms or ions in a compound.",
       "answer": "B",
@@ -3270,6 +3705,7 @@ const QUESTIONS = {
       "optionD": "general"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "7. An endothermic reaction ______ thermal energy leading to a ________ in the temperature of the surroundings.",
       "answer": "A",
@@ -3279,6 +3715,7 @@ const QUESTIONS = {
       "optionD": "Release, decrease"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "8. Oxidation is: ______ of electrons and; _______ in oxidation number",
       "answer": "B",
@@ -3288,6 +3725,7 @@ const QUESTIONS = {
       "optionD": "loss, decrease"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "9. A reducing agent is a substance that ____ another substance and is itself _______",
       "answer": "B",
@@ -3297,6 +3735,7 @@ const QUESTIONS = {
       "optionD": "reduces, reduced"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "10. Acids are proton _____ and bases are proton _____",
       "answer": "A",
@@ -3306,6 +3745,7 @@ const QUESTIONS = {
       "optionD": "acceptor, donor"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "11. Aluminium oxide is a/an _______ oxides",
       "answer": "C",
@@ -3315,6 +3755,7 @@ const QUESTIONS = {
       "optionD": "neutral"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "12. Group _______ atoms have a full outer electron shell",
       "answer": "D",
@@ -3324,6 +3765,7 @@ const QUESTIONS = {
       "optionD": "VIII"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "13. the number of occupied electron shells is equal to the _______ number",
       "answer": "D",
@@ -3333,6 +3775,7 @@ const QUESTIONS = {
       "optionD": "period"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "14. simple molecular compounds have ______ melting points and boiling points and _____ electrical conductivity",
       "answer": "C",
@@ -3342,6 +3785,7 @@ const QUESTIONS = {
       "optionD": "low good"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "15. a hydrogen–oxygen fuel cell uses hydrogen and oxygen to produce _______ with water as the only chemical product",
       "answer": "A",
@@ -3351,6 +3795,7 @@ const QUESTIONS = {
       "optionD": "sound"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "16. activation energy, Ea, as the ______ energy that colliding particles must have to react",
       "answer": "D",
@@ -3360,6 +3805,7 @@ const QUESTIONS = {
       "optionD": "minimum"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "17. a catalyst ______ the rate of a reaction and is _______ at the end of a reaction",
       "answer": "B",
@@ -3369,6 +3815,7 @@ const QUESTIONS = {
       "optionD": "decreases, used up"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "18. chlorides are soluble, except and silver",
       "answer": "C",
@@ -3378,6 +3825,7 @@ const QUESTIONS = {
       "optionD": "tin"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "19. a hydrated substance as a substance that is _______ combined with water",
       "answer": "C",
@@ -3387,6 +3835,7 @@ const QUESTIONS = {
       "optionD": "permanently"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "20. Group I alkali metals have ______ melting point, and ________ reactivity,",
       "answer": "D",
@@ -3396,6 +3845,7 @@ const QUESTIONS = {
       "optionD": "decreasing, increasing"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "21. chlorine is a _______ gas",
       "answer": "A",
@@ -3405,6 +3855,7 @@ const QUESTIONS = {
       "optionD": "blue"
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "22. the main ore of aluminium is _______ and that aluminium is extracted by electrolysis",
       "answer": "D",
@@ -3414,6 +3865,7 @@ const QUESTIONS = {
       "optionD": "cryolite"
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "23. the treatment of the domestic water supply uses _________ to kill microbes",
       "answer": "D",
@@ -3423,6 +3875,7 @@ const QUESTIONS = {
       "optionD": "chlorination"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "24. Members of a homologous series have the ______ general formula and _______ chemical properties",
       "answer": "D",
@@ -3432,6 +3885,7 @@ const QUESTIONS = {
       "optionD": "same, similar"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "25. the separation of petroleum into useful fractions is done by __________",
       "answer": "D",
@@ -3441,6 +3895,7 @@ const QUESTIONS = {
       "optionD": "fractional distillation"
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "26. The _______ fraction of petroleum is used as a chemical feedstock",
       "answer": "B",
@@ -3450,6 +3905,7 @@ const QUESTIONS = {
       "optionD": "kerosene"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "27. In a ________ reaction one atom or group of atoms is replaced by another atom or group of atoms",
       "answer": "D",
@@ -3459,6 +3915,7 @@ const QUESTIONS = {
       "optionD": "substitution"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "28. alkenes can be manufactured by the _______ of larger alkane molecules using a high temperature and a catalyst",
       "answer": "A",
@@ -3468,6 +3925,7 @@ const QUESTIONS = {
       "optionD": "reducing"
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "29. the ethanoic acid can be formed by the oxidation of ethanol: with _______ aqueous potassium manganate(VII); and by bacterial _______ during vinegar production.",
       "answer": "A",
@@ -3477,6 +3935,7 @@ const QUESTIONS = {
       "optionD": "alkaline, reduction"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "30. Proteins are natural _______ that are formed from amino acid monomers",
       "answer": "C",
@@ -3488,51 +3947,61 @@ const QUESTIONS = {
   ],
   "CHE-2.5": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "1. _________ are atoms of the same element, that have the same number of proton but different number of neutrons.",
       "answer": "Isotopes"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "2. _______ is formed when a pair of electrons is shared between two atoms leading to noble gas electronic configurations.",
       "answer": "Covalent bond"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "3._______is the electrostatic attraction between the positive ions in a giant metallic lattice and a ‘sea’ of delocalised electrons",
       "answer": "Metallic bond"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "4.The _______ as the molten or aqueous substance that undergoes electrolysis.",
       "answer": "electrolyte"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "5.Colour of methyl orange in alkaline solution is ______, colour of thymolphthalein is acidic solution is ________.",
       "answer": "yellow, colourless"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "6. The transfer of thermal energy during a reaction is called the ___________ of the reaction",
       "answer": "enthalpy change"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "7. A strong acid _________ dissociate in aqueous solution. Weak acid _______ dissociate in aqueous solution",
       "answer": "completely/fully, partially"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "8. a reversible reaction in a _____ system is at equilibrium when the rate of the forward reaction is _____ to the rate of the reverse reaction.",
       "answer": "closed, equal"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "9. the sum of the oxidation numbers in a compound is _______",
       "answer": "zero"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "10. ___________is a substance that oxidises another substance and is itself reduced.",
       "answer": "Oxidising agent"
@@ -3540,81 +4009,97 @@ const QUESTIONS = {
   ],
   "ECON": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "__________ means limited resources cannot satisfy unlimited human wants.",
       "answer": "scarcity"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "Opportunity cost is the ________________ alternative/choice forgone.",
       "answer": "next best"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "______ good is man-made resource used to produce other G&S.",
       "answer": "capital"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "__________ is the willingness and ability to organize resources, including risk-taking and decision-making.",
       "answer": "enterprise"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "Free goods are goods that are unlimited in supply, do not use scarce resources to produce, having no _____________.",
       "answer": "opportunity cost"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "Social cost is the sum of private cost and _________ cost.",
       "answer": "external"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "________ income is the income left after deduction of income tax.",
       "answer": "disposable"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "A product is a _________ when its purchase can replace the want for another good or service.",
       "answer": "substitute"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "________ is a payment provided by government to producers to help reduce their costs of production.",
       "answer": "subsidy"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "Market ________ is achieved when market demand equals market supply",
       "answer": "equiilibrium"
     },
     {
+      "qNum": 11,
       "type": "blank",
       "stem": "Demand is price elastic wen PED is greater than _______.",
       "answer": "one"
     },
     {
+      "qNum": 12,
       "type": "blank",
       "stem": "Supply is price ________ when percentage change in price is greater than percentage change in quantity supplied.",
       "answer": "inelastic"
     },
     {
+      "qNum": 13,
       "type": "blank",
       "stem": "__________ measures the amount of output produced by per unit of input.",
       "answer": "productivity"
     },
     {
+      "qNum": 14,
       "type": "blank",
       "stem": "_______ cost do not vary with the level of output, it exists when output is zero.",
       "answer": "fixed"
     },
     {
+      "qNum": 15,
       "type": "blank",
       "stem": "________ sector is about the production or extraction of natural resources.",
       "answer": "primary"
     },
     {
+      "qNum": 16,
       "type": "mcq",
       "stem": "What is the cause of economic scarcity?",
       "answer": "C",
@@ -3624,6 +4109,7 @@ const QUESTIONS = {
       "optionD": "unlimited wants with unlimited resources"
     },
     {
+      "qNum": 17,
       "type": "mcq",
       "stem": "What is a factor of production?",
       "answer": "A",
@@ -3633,6 +4119,7 @@ const QUESTIONS = {
       "optionD": "savings in banks"
     },
     {
+      "qNum": 18,
       "type": "mcq",
       "stem": "Which diagram shows an opportunity cost by movement from point X to point Y?",
       "answer": "C",
@@ -3642,6 +4129,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 19,
       "type": "mcq",
       "stem": "What will result in a movement along the demand curve for a product?",
       "answer": "C",
@@ -3651,6 +4139,7 @@ const QUESTIONS = {
       "optionD": "a successful advertising"
     },
     {
+      "qNum": 20,
       "type": "mcq",
       "stem": "What is the most likely cause of a product having a price elasticity of demand greater than one?",
       "answer": "A",
@@ -3660,6 +4149,7 @@ const QUESTIONS = {
       "optionD": "accout for a small proportion of consumer income"
     },
     {
+      "qNum": 21,
       "type": "mcq",
       "stem": "In the diagram, which supply curve has the perfectly inelastic supply?",
       "answer": "B",
@@ -3669,6 +4159,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 22,
       "type": "mcq",
       "stem": "What is a disadvantage of a market economy?",
       "answer": "B",
@@ -3678,6 +4169,7 @@ const QUESTIONS = {
       "optionD": "state intervention"
     },
     {
+      "qNum": 23,
       "type": "mcq",
       "stem": "What is an example of a public good?",
       "answer": "B",
@@ -3687,6 +4179,7 @@ const QUESTIONS = {
       "optionD": "vaccinations"
     },
     {
+      "qNum": 24,
       "type": "mcq",
       "stem": "What would be least likely to act as a store of value during a period of rapid inflation?",
       "answer": "A",
@@ -3696,6 +4189,7 @@ const QUESTIONS = {
       "optionD": "shares"
     },
     {
+      "qNum": 25,
       "type": "mcq",
       "stem": "The use of a mobile phone to make payments is an example of which function of money?",
       "answer": "A",
@@ -3705,6 +4199,7 @@ const QUESTIONS = {
       "optionD": "a unit of account"
     },
     {
+      "qNum": 26,
       "type": "mcq",
       "stem": "Which type of economy of scale results from a firm producing a diverse range of products?",
       "answer": "C",
@@ -3714,6 +4209,7 @@ const QUESTIONS = {
       "optionD": "technical"
     },
     {
+      "qNum": 27,
       "type": "mcq",
       "stem": "Which measure would indicate that an expansionary fiscal policy is being used by the government?",
       "answer": "D",
@@ -3723,6 +4219,7 @@ const QUESTIONS = {
       "optionD": "lower taxes"
     },
     {
+      "qNum": 28,
       "type": "mcq",
       "stem": "What is an expansionary monetary policy?",
       "answer": "A",
@@ -3732,6 +4229,7 @@ const QUESTIONS = {
       "optionD": "an increase in the standard rate of income tax"
     },
     {
+      "qNum": 29,
       "type": "mcq",
       "stem": "What may directly cause economic growth?",
       "answer": "B",
@@ -3741,6 +4239,7 @@ const QUESTIONS = {
       "optionD": "higher unemployment"
     },
     {
+      "qNum": 30,
       "type": "mcq",
       "stem": "The table shows economic indicators for an economy over a one-year period. Which indicator most likely caused economic growth?",
       "answer": "A",
@@ -3750,6 +4249,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 31,
       "type": "mcq",
       "stem": "A person receives annual interest of 4% on their savings. Inflation is 5% per annual.What is the approximate change in the real value of their savings?",
       "answer": "B",
@@ -3759,6 +4259,7 @@ const QUESTIONS = {
       "optionD": "0.09"
     },
     {
+      "qNum": 32,
       "type": "mcq",
       "stem": "Real Gross Domestic Product (GDP) per capita is a better measure of comparative living standards because it is adjusted for the effects of",
       "answer": "D",
@@ -3768,6 +4269,7 @@ const QUESTIONS = {
       "optionD": "population change and inflation"
     },
     {
+      "qNum": 33,
       "type": "mcq",
       "stem": "If the rate of inflation rises from 2% to 10%, which function of money is likely to be most affected?",
       "answer": "C",
@@ -3777,6 +4279,7 @@ const QUESTIONS = {
       "optionD": "unit of account"
     },
     {
+      "qNum": 34,
       "type": "mcq",
       "stem": "If interest rates fall, what will be the most likely effect on saving and borrowing?",
       "answer": "B",
@@ -3786,6 +4289,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 35,
       "type": "mcq",
       "stem": "What three key questions determine resource allocation?",
       "answer": "A",
@@ -3795,6 +4299,7 @@ const QUESTIONS = {
       "optionD": "where, how, for whom"
     },
     {
+      "qNum": 36,
       "type": "mcq",
       "stem": "Which factor has the correct factor reward identified?",
       "answer": "D",
@@ -3804,6 +4309,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 37,
       "type": "mcq",
       "stem": "The supply of which good is likely to be most price elastic?",
       "answer": "C",
@@ -3813,6 +4319,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 38,
       "type": "mcq",
       "stem": "In the diagram, which demand curve has perfectly elastic demand?",
       "answer": "D",
@@ -3822,6 +4329,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 39,
       "type": "mcq",
       "stem": "A clothing manufacturer expands by taking over a clothing retailer. Which type of merger is this?",
       "answer": "C",
@@ -3831,6 +4339,7 @@ const QUESTIONS = {
       "optionD": "horizontal"
     },
     {
+      "qNum": 40,
       "type": "mcq",
       "stem": "A shop worker was made redundant due to the introduction of self-service checkouts. Which type of unemployment is this?",
       "answer": "D",
@@ -3840,6 +4349,7 @@ const QUESTIONS = {
       "optionD": "technological"
     },
     {
+      "qNum": 41,
       "type": "mcq",
       "stem": "The diagram shows a firm’s total cost (TC) curve.What is the total variable cost if the firm produces 10 units of output?",
       "answer": "C",
@@ -3849,6 +4359,7 @@ const QUESTIONS = {
       "optionD": "50"
     },
     {
+      "qNum": 42,
       "type": "mcq",
       "stem": "What is an example of a free good?",
       "answer": "D",
@@ -3858,6 +4369,7 @@ const QUESTIONS = {
       "optionD": "sunshine"
     },
     {
+      "qNum": 43,
       "type": "mcq",
       "stem": "The diagram shows a production possibility curve (PPC). Which of these points shows the largest possible output of product Y currently achievable?",
       "answer": "B",
@@ -3867,6 +4379,7 @@ const QUESTIONS = {
       "optionD": "D"
     },
     {
+      "qNum": 44,
       "type": "mcq",
       "stem": "What is defined as ‘a reduction in gross domestic product (GDP) for more than two successive quarters’?",
       "answer": "C",
@@ -3876,6 +4389,7 @@ const QUESTIONS = {
       "optionD": "rising unemployment"
     },
     {
+      "qNum": 45,
       "type": "mcq",
       "stem": "Which activity takes place in the tertiary sector?",
       "answer": "B",
@@ -3887,51 +4401,61 @@ const QUESTIONS = {
   ],
   "ECON-2.5": [
     {
+      "qNum": 1,
       "type": "blank",
       "stem": "__________ means limited resources cannot satisfy unlimited human wants.",
       "answer": "scarcity"
     },
     {
+      "qNum": 2,
       "type": "blank",
       "stem": "Opportunity cost is the ________________ alternative/choice forgone.",
       "answer": "next best"
     },
     {
+      "qNum": 3,
       "type": "blank",
       "stem": "______ good is man-made resource used to produce other G&S.",
       "answer": "capital"
     },
     {
+      "qNum": 4,
       "type": "blank",
       "stem": "__________ is the willingness and ability to organize resources, including risk-taking and decision-making.",
       "answer": "enterprise"
     },
     {
+      "qNum": 5,
       "type": "blank",
       "stem": "Free goods are goods that are unlimited in supply, do not use scarce resources to produce, having no _____________.",
       "answer": "opportunity cost"
     },
     {
+      "qNum": 6,
       "type": "blank",
       "stem": "Social cost is the sum of private cost and _________ cost.",
       "answer": "external"
     },
     {
+      "qNum": 7,
       "type": "blank",
       "stem": "________ income is the income left after deduction of income tax.",
       "answer": "disposable"
     },
     {
+      "qNum": 8,
       "type": "blank",
       "stem": "A product is a _________ when its purchase can replace the want for another good or service.",
       "answer": "substitute"
     },
     {
+      "qNum": 9,
       "type": "blank",
       "stem": "________ is a payment provided by government to producers to to help reduce their costs of production.",
       "answer": "subsidy"
     },
     {
+      "qNum": 10,
       "type": "blank",
       "stem": "Market ________ is achieved when market demand equals market supply",
       "answer": "equiilibrium"

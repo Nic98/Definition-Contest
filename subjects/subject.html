@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
   <script src="../questions.js"></script>
+  <script src="../image-map.js"></script>
 </head>
 <body>
 <div class="page-shell">
@@ -29,6 +30,9 @@
     </div>
 
     <div class="q-stem" id="stem"></div>
+
+    <!-- Question image (populated by JS, shown below stem) -->
+    <div class="q-image-wrap" id="qImageWrap" style="display:none;"></div>
 
     <!-- MCQ options (CHI only) -->
     <div class="opts-display" id="optsDisplay" style="display:none;"></div>
@@ -67,6 +71,11 @@
     <button class="btn btn-ghost" onclick="goBack()">← Go Back</button>
   </div>
 
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="Question image">
 </div>
 <script>
   const p          = new URLSearchParams(window.location.search);
@@ -118,6 +127,22 @@
       'Q' + (idx + 1) + ' / ' + pool.length;
 
     document.getElementById('stem').textContent = q.stem;
+
+    // ── Image (below stem, above options) ──
+    const imageWrap = document.getElementById('qImageWrap');
+    const imageKey  = subjectKey + '_' + q.qNum;
+    const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
+    if (imageFile) {
+      const imgPath = '../image/' + imageFile;
+      imageWrap.innerHTML =
+        `<img class="q-image" src="${imgPath}" alt="Question image"
+              onerror="this.parentElement.style.display='none'"
+              onclick="openLightbox('${imgPath}')">`;
+      imageWrap.style.display = 'block';
+    } else {
+      imageWrap.innerHTML = '';
+      imageWrap.style.display = 'none';
+    }
 
     // Options (MCQ)
     const optsEl = document.getElementById('optsDisplay');
@@ -204,6 +229,17 @@
   }
 
   function goBack() { history.back(); }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 
   renderQuestion();
 </script>

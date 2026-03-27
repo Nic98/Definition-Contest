@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
   <script src="../questions.js"></script>
+  <script src="../image-map.js"></script>
   <style>
     /* Progress bar under timer */
     .batch-progress {
@@ -141,6 +142,11 @@
     </div>
   </div>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="Question image">
+  </div>
+
   <script>
     // ── Params ────────────────────────────────────────────────────
     const p         = new URLSearchParams(window.location.search);
@@ -250,12 +256,24 @@
                     onclick="selectOpt(${globalIdx},'${l}')">${l}.&nbsp;${esc(txt)}</button>`;
         }).join('');
 
+        // Image lookup
+        const imageKey  = q.subjectKey + '_' + q.qNum;
+        const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
+        const imageHtml = imageFile
+          ? `<div class="q-image-wrap">
+               <img class="q-image" src="../image/${imageFile}" alt="Question image"
+                    onerror="this.parentElement.style.display='none'"
+                    onclick="openLightbox('../image/${imageFile}')">
+             </div>`
+          : '';
+
         card.innerHTML = `
           <div class="r2-card-header">
             <span class="r2-qnum">Q${globalIdx + 1}</span>
             <span class="r2-subject-badge">${esc(q.subjectDisplay)}</span>
           </div>
           <div class="r2-stem">${esc(q.stem)}</div>
+          ${imageHtml}
           <div class="mcq-grid">${opts}</div>`;
         list.appendChild(card);
       });
@@ -416,6 +434,17 @@
     function esc(s) {
       return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
+
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
   </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
   <script src="../questions.js"></script>
+  <script src="../image-map.js"></script>
 </head>
 <body>
 <div class="wide-shell">
@@ -143,6 +144,21 @@
       }
 
       card.innerHTML = html;
+
+      // Image (below stem, above answer)
+      const imageKey  = activeSubject + '_' + q.qNum;
+      const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
+      if (imageFile) {
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'q-image-wrap';
+        imgWrap.style.margin = '8px 0';
+        imgWrap.innerHTML =
+          `<img class="q-image" src="../image/${imageFile}" alt="Question image"
+                onerror="this.parentElement.style.display='none'"
+                onclick="openLightbox('../image/${imageFile}')">`;
+        card.appendChild(imgWrap);
+      }
+
       container.appendChild(card);
     });
   }
@@ -152,6 +168,23 @@
   }
 
   selectSubject('CS');
+</script>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="Question image">
+</div>
+<script>
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 </script>
 </body>
 </html>
