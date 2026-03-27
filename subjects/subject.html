@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round One — Question</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="../questions.js"></script>
+</head>
+<body>
+  <nav class="top-nav">
+    <button class="btn-nav" onclick="goBack()">← Back</button>
+    <a href="../index.html" class="btn-nav">🏠 Home</a>
+  </nav>
+
+  <h1>Definition Contest</h1>
+
+  <div class="meta-row">
+    <div class="meta-pill">Class: <span id="classLabel">—</span></div>
+    <div class="meta-pill">Subject: <span id="subjectLabel">—</span></div>
+  </div>
+
+  <!-- Question card -->
+  <div class="question-card" id="questionCard">
+    <div id="qCounter" style="font-size:0.82rem; color:#9ca3af; margin-bottom:10px;"></div>
+
+    <!-- Stem -->
+    <div class="stem" id="stem"></div>
+
+    <!-- MCQ options (shown only for CHI) -->
+    <div class="options-display" id="optionsDisplay" style="display:none;"></div>
+
+    <!-- Answer reveal -->
+    <button class="btn-reveal" onclick="revealAnswer()" id="revealBtn">
+      🔍 Reveal Answer
+    </button>
+    <div class="answer-box" id="answerBox"></div>
+
+    <!-- Judge grading -->
+    <div class="correct-row" style="margin-top:16px;">
+      <input type="checkbox" id="isCorrect">
+      <label for="isCorrect"><strong>Correct</strong> — tick if the answer is correct</label>
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <button class="btn-submit" onclick="submitAnswer()">Submit &amp; Next →</button>
+      <button class="btn" style="background:#e5e7eb; color:#374151;" onclick="nextQuestion()">
+        Skip (New Question)
+      </button>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div id="errorState" style="display:none; text-align:center; padding:40px 20px; color:#6b7280;">
+    <p style="font-size:1.1rem;">No questions available for this subject.</p>
+    <button onclick="goBack()">← Go Back</button>
+  </div>
+
+  <script>
+    // ── URL params ──────────────────────────────────────────────
+    const params      = new URLSearchParams(window.location.search);
+    const subjectKey  = params.get('subject') || '';
+    const cls         = params.get('class')   || localStorage.getItem('dc_class') || '';
+
+    if (!cls || !subjectKey) { window.location.href = 'round-one-class.html'; }
+
+    // ── Labels ──────────────────────────────────────────────────
+    document.getElementById('classLabel').textContent   = cls;
+    document.getElementById('subjectLabel').textContent = (SUBJECT_META[subjectKey] || {}).display || subjectKey;
+
+    // ── Question pool ───────────────────────────────────────────
+    // CHI has no blank questions → use mcq; all others use blank
+    const targetType = (subjectKey === 'CHI') ? 'mcq' : 'blank';
+    const pool = (QUESTIONS[subjectKey] || []).filter(q => q.type === targetType);
+
+    let currentQ    = null;
+    let usedIndices = new Set();
+
+    function pickQuestion() {
+      if (!pool.length) return null;
+      // Reset once all questions have been shown
+      if (usedIndices.size >= pool.length) usedIndices.clear();
+      let idx;
+      do { idx = Math.floor(Math.random() * pool.length); }
+      while (usedIndices.has(idx) && usedIndices.size < pool.length);
+      usedIndices.add(idx);
+      return { q: pool[idx], idx };
+    }
+
+    function renderQuestion() {
+      const picked = pickQuestion();
+      if (!picked) {
+        document.getElementById('questionCard').style.display = 'none';
+        document.getElementById('errorState').style.display   = 'block';
+        return;
+      }
+      currentQ = picked;
+      const { q, idx } = picked;
+
+      // Counter
+      document.getElementById('qCounter').textContent =
+        'Question ' + (idx + 1) + ' of ' + pool.length;
+
+      // Stem
+      document.getElementById('stem').textContent = q.stem;
+
+      // Options (MCQ / CHI only)
+      const optsEl = document.getElementById('optionsDisplay');
+      optsEl.innerHTML = '';
+      if (q.type === 'mcq') {
+        optsEl.style.display = 'grid';
+        ['A','B','C','D'].forEach(letter => {
+          const text = q['option' + letter];
+          if (!text) return;
+          const div = document.createElement('div');
+          div.className = 'opt-label';
+          div.textContent = letter + '.  ' + text;
+          optsEl.appendChild(div);
+        });
+      } else {
+        optsEl.style.display = 'none';
+      }
+
+      // Reset answer reveal & checkbox
+      const ansBox = document.getElementById('answerBox');
+      ansBox.className = 'answer-box';
+      ansBox.textContent = '';
+      document.getElementById('revealBtn').style.display = 'inline-block';
+      document.getElementById('isCorrect').checked = false;
+    }
+
+    function revealAnswer() {
+      const q = currentQ?.q;
+      if (!q) return;
+      const ansBox = document.getElementById('answerBox');
+      if (q.type === 'mcq') {
+        const optText = q['option' + q.answer] || '';
+        ansBox.textContent = 'Answer: ' + q.answer + ' — ' + optText;
+      } else {
+        ansBox.textContent = 'Answer: ' + q.answer;
+      }
+      ansBox.className = 'answer-box visible';
+      document.getElementById('revealBtn').style.display = 'none';
+    }
+
+    function nextQuestion() {
+      renderQuestion();
+    }
+
+    function submitAnswer() {
+      const isCorrect = document.getElementById('isCorrect').checked;
+      const q = currentQ?.q;
+      if (!q) return;
+
+      // Build submission counter key
+      const counterKey = 'dc_r1_counter::' + cls;
+      const n = (parseInt(localStorage.getItem(counterKey) || '0') || 0) + 1;
+      localStorage.setItem(counterKey, String(n));
+
+      const subjectDisplay = (SUBJECT_META[subjectKey] || {}).display || subjectKey;
+      const result = {
+        round: 1,
+        class: cls,
+        subject_key: subjectKey,
+        subject_display: subjectDisplay,
+        submission_number: n,
+        question: {
+          type: q.type,
+          stem: q.stem,
+          answer: q.answer
+        },
+        is_correct: isCorrect,
+        submitted_at: new Date().toISOString()
+      };
+
+      downloadJSON(result,
+        'R1_' + cls + '_' + n + '_' + subjectKey.replace(/[^A-Za-z0-9]/g,'_') + '.json'
+      );
+
+      // Replace current history entry so pressing Back from round-one.html
+      // goes to round-one-class.html, not back to this question page.
+      setTimeout(() => {
+        location.replace('round-one.html?class=' + encodeURIComponent(cls));
+      }, 400);
+    }
+
+    function downloadJSON(obj, filename) {
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a);
+      a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function goBack() {
+      // Use history.back() so subject.html is popped from history,
+      // not pushed again — prevents the back-button bounce loop.
+      history.back();
+    }
+
+    // ── Init ────────────────────────────────────────────────────
+    renderQuestion();
+  </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Bank</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="../questions.js"></script>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <a href="../index.html" class="btn-nav">🏠 Home</a>
+  </nav>
+
+  <h1>📚 Question Bank</h1>
+  <p style="text-align:center; color:#555; margin-bottom:20px;">
+    Browse all subjects and questions
+  </p>
+
+  <div class="qb-layout">
+
+    <!-- ── Sidebar: subject list ─────────────────────────────── -->
+    <div class="qb-sidebar" id="sidebar"></div>
+
+    <!-- ── Main: questions for selected subject ─────────────── -->
+    <div class="qb-main">
+
+      <input class="qb-search" id="searchBox"
+             placeholder="🔍 Search questions or answers…"
+             oninput="renderQuestions()">
+
+      <div class="qb-tabs" id="tabBar">
+        <button class="qb-tab active" data-type="all"   onclick="setTab('all')">All</button>
+        <button class="qb-tab"        data-type="blank" onclick="setTab('blank')">Fill-in-Blank</button>
+        <button class="qb-tab"        data-type="mcq"   onclick="setTab('mcq')">MCQ</button>
+      </div>
+
+      <div class="qb-count" id="qbCount"></div>
+      <div id="qbCards"></div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ─────────────────────────────────────────────────
+    const SUBJECT_ORDER = [
+      "CS","BIO","BUS","AD","CHI",
+      "EAP","EAP-2.5",
+      "PHY","PHY-2.5",
+      "CHE","CHE-2.5",
+      "ECON","ECON-2.5",
+      "MATH-0580","MATH-0606","MATH-0606-2.5","MATH-9709"
+    ];
+
+    const GROUPS = [
+      { label: "General",   keys: ["CS","BIO","BUS","AD","CHI"] },
+      { label: "EAP",       keys: ["EAP","EAP-2.5"] },
+      { label: "Physics",   keys: ["PHY","PHY-2.5"] },
+      { label: "Chemistry", keys: ["CHE","CHE-2.5"] },
+      { label: "Economics", keys: ["ECON","ECON-2.5"] },
+      { label: "Math",      keys: ["MATH-0580","MATH-0606","MATH-0606-2.5","MATH-9709"] }
+    ];
+
+    let activeSubject = SUBJECT_ORDER[0];
+    let activeTab     = 'all';
+
+    // ── Build sidebar ─────────────────────────────────────────
+    const sidebar = document.getElementById('sidebar');
+    GROUPS.forEach(group => {
+      const lbl = document.createElement('div');
+      lbl.className   = 'group-label';
+      lbl.textContent = group.label;
+      sidebar.appendChild(lbl);
+
+      group.keys.forEach(key => {
+        const meta = SUBJECT_META[key];
+        if (!meta) return;
+        const pool  = QUESTIONS[key] || [];
+        const btn   = document.createElement('button');
+        btn.id      = 'sb-' + key;
+        btn.dataset.key = key;
+        btn.textContent = meta.display + ' (' + pool.length + ')';
+        btn.onclick = () => selectSubject(key);
+        sidebar.appendChild(btn);
+      });
+    });
+
+    function selectSubject(key) {
+      activeSubject = key;
+      document.querySelectorAll('.qb-sidebar button[data-key]').forEach(b => {
+        b.classList.toggle('active', b.dataset.key === key);
+      });
+      document.getElementById('searchBox').value = '';
+      renderQuestions();
+    }
+
+    function setTab(type) {
+      activeTab = type;
+      document.querySelectorAll('.qb-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.type === type);
+      });
+      renderQuestions();
+    }
+
+    // ── Render questions ──────────────────────────────────────
+    function renderQuestions() {
+      const pool   = QUESTIONS[activeSubject] || [];
+      const search = document.getElementById('searchBox').value.trim().toLowerCase();
+
+      const filtered = pool.filter(q => {
+        if (activeTab !== 'all' && q.type !== activeTab) return false;
+        if (search) {
+          const haystack = (q.stem + ' ' + q.answer + ' ' +
+            (q.optionA || '') + ' ' + (q.optionB || '') + ' ' +
+            (q.optionC || '') + ' ' + (q.optionD || '')).toLowerCase();
+          if (!haystack.includes(search)) return false;
+        }
+        return true;
+      });
+
+      document.getElementById('qbCount').textContent =
+        'Showing ' + filtered.length + ' of ' + pool.length + ' questions';
+
+      const container = document.getElementById('qbCards');
+      container.innerHTML = '';
+
+      if (!filtered.length) {
+        container.innerHTML =
+          '<div style="text-align:center;padding:40px 0;color:#9ca3af;">No questions found.</div>';
+        return;
+      }
+
+      filtered.forEach((q, i) => {
+        const card = document.createElement('div');
+        card.className = 'qb-card ' + (q.type === 'blank' ? 'blank-card' : 'mcq-card');
+
+        let inner = `<div class="qb-stem">
+          <span style="font-size:0.75rem;font-weight:700;color:${q.type==='blank'?'#2563eb':'#7c3aed'};
+            text-transform:uppercase;letter-spacing:0.05em;margin-right:8px;">
+            ${q.type === 'blank' ? 'Fill-in' : 'MCQ'}
+          </span>${esc(q.stem)}
+        </div>`;
+
+        if (q.type === 'mcq') {
+          inner += '<div class="qb-opts">';
+          ['A','B','C','D'].forEach(letter => {
+            const text = q['option' + letter];
+            if (!text) return;
+            const isCorrect = q.answer === letter;
+            inner += `<div style="${isCorrect ?
+              'font-weight:700;color:#15803d;' : ''}">${letter}. ${esc(text)}</div>`;
+          });
+          inner += '</div>';
+          inner += `<span class="qb-answer">✓ ${esc(q.answer)}</span>`;
+        } else {
+          inner += `<span class="qb-answer">Answer: ${esc(q.answer)}</span>`;
+        }
+
+        card.innerHTML = inner;
+        container.appendChild(card);
+      });
+    }
+
+    function esc(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Init ──────────────────────────────────────────────────
+    selectSubject(SUBJECT_ORDER[0]);
+  </script>
+</body>
+</html>

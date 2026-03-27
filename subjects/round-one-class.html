@@ -1,50 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Definition Contest - Round One Class Selection</title>
-    <link rel="stylesheet" href="../style.css">
-    <script src="../components/creator.js"></script>
-    <script src="../components/backbutton.js"></script>
-    <script src="../components/roundOneFlow.js"></script>
-    <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round One — Select Class</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
 </head>
 <body>
-    <h1>Definition Contest - Round One</h1>
-    <div style="max-width: 480px; margin: 20px auto; padding: 20px; border: 1px solid rgba(0,0,0,0.12); border-radius: 12px; background: rgba(255,255,255,0.9);">
-        <h2 style="margin-top: 0;">Select Class</h2>
-        <p>Please select the class before choosing a subject.</p>
-        <form id="classSelectionForm" action="round-one.html" method="get">
-            <label style="display:flex; flex-direction:column; gap:8px; margin: 16px 0;">
-                <span><strong>Class</strong></span>
-                <select id="classSelectionInput" name="class" style="padding:10px; font-size:16px;" required>
-                    <option value="">Select a class</option>
-                <option value="PreDP1">PreDP1</option>
-                <option value="PreDP2">PreDP2</option>
-                <option value="PreDP3">PreDP3</option>
-                <option value="PreDP4">PreDP4</option>
-                <option value="PA1">PA1</option>
-                <option value="PA2">PA2</option>
-                <option value="PA3">PA3</option>
-                <option value="PA4">PA4</option>
-                <option value="PA5">PA5</option>
-                <option value="PA6">PA6</option>
-                <option value="PA7">PA7</option>
-                <option value="PA8">PA8</option>
-                <option value="PA9">PA9</option>
-                <option value="PA10">PA10</option>
-                <option value="PA11">PA11</option>
-                <option value="PreAP">PreAP</option>
-                </select>
-            </label>
-            <div id="classSelectionError" style="color:#b00020; min-height: 20px; margin-bottom: 8px;"></div>
-            <button id="classSelectionContinue" type="submit" style="padding: 10px 16px; font-size: 16px; cursor: pointer;">Continue to Subjects</button>
-        </form>
-    </div>
+  <nav class="top-nav">
+    <a href="../index.html" class="btn-nav">🏠 Home</a>
+  </nav>
 
-    <script>
-        RoundOneFlow.wireClassSelectionPage();
-    </script>
+  <h1>Definition Contest</h1>
+  <p style="text-align:center;color:#555;margin-bottom:20px;">Round One</p>
+
+  <div class="entry-card">
+    <h2>Select Class</h2>
+    <p style="color:#555; margin-bottom:20px;">
+      Choose the competing class before selecting a subject.
+    </p>
+    <div class="entry-field">
+      <label for="classSelect">Class</label>
+      <select id="classSelect">
+        <option value="">— Select a class —</option>
+        <optgroup label="PreDP">
+          <option value="PreDP1">PreDP1</option>
+          <option value="PreDP2">PreDP2</option>
+          <option value="PreDP3">PreDP3</option>
+          <option value="PreDP4">PreDP4</option>
+        </optgroup>
+        <optgroup label="PA">
+          <option value="PA1">PA1</option>
+          <option value="PA2">PA2</option>
+          <option value="PA3">PA3</option>
+          <option value="PA4">PA4</option>
+          <option value="PA5">PA5</option>
+          <option value="PA6">PA6</option>
+          <option value="PA7">PA7</option>
+          <option value="PA8">PA8</option>
+          <option value="PA9">PA9</option>
+          <option value="PA10">PA10</option>
+          <option value="PA11">PA11</option>
+          <option value="PA12">PA12</option>
+        </optgroup>
+        <optgroup label="Pre-AP">
+          <option value="PreAP">PreAP</option>
+        </optgroup>
+      </select>
+    </div>
+    <div id="errorMsg" style="color:#dc2626; min-height:20px; margin-bottom:10px; font-size:0.9rem;"></div>
+    <button class="btn-submit" onclick="proceed()">Continue to Subjects →</button>
+  </div>
+
+  <script>
+    // Restore last used class
+    const saved = localStorage.getItem('dc_class');
+    if (saved) document.getElementById('classSelect').value = saved;
+
+    function proceed() {
+      const cls = document.getElementById('classSelect').value;
+      if (!cls) {
+        document.getElementById('errorMsg').textContent = 'Please select a class first.';
+        return;
+      }
+      localStorage.setItem('dc_class', cls);
+      window.location.href = 'round-one.html?class=' + encodeURIComponent(cls);
+    }
+
+    // Allow Enter key
+    document.getElementById('classSelect').addEventListener('keydown', e => {
+      if (e.key === 'Enter') proceed();
+    });
+  </script>
 </body>
 </html>

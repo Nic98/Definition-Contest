@@ -1,38 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Definition Contest - Round One</title>
-    <link rel="stylesheet" href="../style.css">
-    <script src="../components/creator.js"></script>
-    <script src="../components/backbutton.js"></script>
-    <script src="../components/roundOneFlow.js"></script>
-    <link rel="icon" href="../whbc-icon.png" type="image/x-icon"> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round One — Choose Subject</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="../questions.js"></script>
 </head>
 <body>
-    <h1>Definition Contest - Round One</h1>
-    <div style="display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 18px;">
-        <div style="padding: 10px 14px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; background: rgba(255,255,255,0.85);">
-            <strong>Selected Class:</strong> <span id="selectedClassValue">-</span>
-        </div>
-        <button id="changeClassBtn" style="padding: 10px 16px; font-size: 16px; cursor: pointer;">Change Class</button>
-    </div>
-    <p style="text-align:center; margin: 0 0 16px 0;">Choose a subject for the selected class.</p>
-    <div class="subject-list">
-        <a href="art-design.html">Art & Design</a>
-        <a href="biology.html">Biology</a>
-        <a href="business.html">Business</a>
-        <a href="chemistry.html">Chemistry</a>
-        <a href="EAP.html">EAP</a>
-        <a href="chinese.html">Classical Chinese</a>
-        <a href="CS.html">Computer Science</a>
-        <a href="economics.html">Economics</a>
-        <a href="physics.html">Physics</a>
-        <a href="math.html">Math</a>
-    </div>
-    <script>
-        RoundOneFlow.wireRoundOneSubjectMenu();
-    </script>
+  <nav class="top-nav">
+    <button class="btn-nav" onclick="history.back()">← Back</button>
+    <a href="../index.html" class="btn-nav">🏠 Home</a>
+  </nav>
+
+  <h1>Definition Contest</h1>
+
+  <div class="meta-row">
+    <div class="meta-pill">Class: <span id="classLabel">—</span></div>
+    <button class="btn-change" onclick="changeClass()" style="font-size:0.85rem; padding:5px 14px;">Change Class</button>
+  </div>
+
+  <p style="text-align:center; color:#555; margin-bottom:16px;">
+    Select a subject for this round.
+  </p>
+
+  <div id="subjectGrid" class="subject-list"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let cls = params.get('class') || localStorage.getItem('dc_class') || '';
+
+    if (!cls) {
+      window.location.href = 'round-one-class.html';
+    } else {
+      localStorage.setItem('dc_class', cls);
+      document.getElementById('classLabel').textContent = cls;
+      buildGrid();
+    }
+
+    function changeClass() {
+      window.location.href = 'round-one-class.html';
+    }
+
+    function buildGrid() {
+      const subjects = getSubjectsForClass(cls);
+      const grid = document.getElementById('subjectGrid');
+      grid.innerHTML = '';
+      subjects.forEach(key => {
+        const meta = SUBJECT_META[key];
+        if (!meta) return;
+        const a = document.createElement('a');
+        a.href = 'subject.html?subject=' + encodeURIComponent(key)
+                + '&class=' + encodeURIComponent(cls);
+        a.textContent = meta.display;
+        a.className = 'round-one-btn';
+        grid.appendChild(a);
+      });
+    }
+  </script>
 </body>
 </html>
