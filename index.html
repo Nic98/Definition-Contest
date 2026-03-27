@@ -3,31 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Definition Contest</title>
+  <title>Definition Contest — WHBC</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="whbc-icon.png" type="image/x-icon">
 </head>
 <body>
 
-  <h1>Definition Contest</h1>
-  <p style="text-align:center; color:#555; margin-bottom:20px;">WHBC Academic Challenge</p>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🏆 WHBC Academic Challenge</div>
+      <h1>Definition Contest</h1>
+      <p class="hero-sub">Test your knowledge across all subjects in real-time competition</p>
 
-  <img src="poster.jpeg"
-       style="width:100%; border-radius:10px; margin-bottom:24px; display:block;"
-       alt="Poster">
+      <div class="hero-cards">
+        <a href="subjects/round-one-class.html" class="hero-card r1">
+          <span class="hc-icon">🎯</span>
+          <div>
+            <div style="font-size:0.72rem;opacity:0.7;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Fill-in-Blank</div>
+            Round One
+          </div>
+        </a>
+        <a href="subjects/round-two-entry.html" class="hero-card r2">
+          <span class="hc-icon">⚡</span>
+          <div>
+            <div style="font-size:0.72rem;opacity:0.7;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">60-Second MCQ</div>
+            Round Two
+          </div>
+        </a>
+      </div>
 
-  <div class="subject-list" style="max-width:520px; margin:0 auto;">
-    <a href="subjects/round-one-class.html" class="round-one-btn">🎯 Round One</a>
-    <a href="subjects/round-two-entry.html" class="round-two-btn">🏆 Round Two</a>
-    <a href="subjects/question-bank.html"
-       style="background:#059669; grid-column: 1 / -1;">
-      📚 Question Bank
-    </a>
-  </div>
+      <div class="hero-card-row">
+        <a href="subjects/question-bank.html" class="hero-card sm bank">
+          <span>📚</span> Question Bank
+        </a>
+        <a href="subjects/results.html" class="hero-card sm results">
+          <span>📊</span> Results &amp; Stats
+        </a>
+      </div>
+    </div>
 
-  <p style="text-align:center; color:#aaa; font-size:0.8rem; margin-top:32px;">
-    Website made by WHBC Computer Science Group
-  </p>
+    <img src="poster.jpeg" class="hero-poster" alt="Contest Poster">
+    <div class="hero-footer">Website made by WHBC Computer Science Group</div>
+  </section>
 
 </body>
 </html>

@@ -3987,3 +3987,57 @@ function getSubjectsForClass(className) {
   else                                                    math = "MATH-0606";
   return [...base, math];
 }
+
+// ════════════════════════════════════════════════════════════════
+// RESULTS LOGGING — localStorage persistence
+// ════════════════════════════════════════════════════════════════
+const R1_KEY = 'dc_r1_log';
+const R2_KEY = 'dc_r2_log';
+
+function logR1(record) {
+  try {
+    const log = JSON.parse(localStorage.getItem(R1_KEY) || '[]');
+    log.push({ ...record, id: Date.now() + '_' + Math.random().toString(36).slice(2) });
+    localStorage.setItem(R1_KEY, JSON.stringify(log));
+  } catch(e) {}
+}
+
+function logR2(record) {
+  try {
+    const log = JSON.parse(localStorage.getItem(R2_KEY) || '[]');
+    log.push({ ...record, id: Date.now() + '_' + Math.random().toString(36).slice(2) });
+    localStorage.setItem(R2_KEY, JSON.stringify(log));
+  } catch(e) {}
+}
+
+function getLogs() {
+  try {
+    return {
+      r1: JSON.parse(localStorage.getItem(R1_KEY) || '[]'),
+      r2: JSON.parse(localStorage.getItem(R2_KEY) || '[]')
+    };
+  } catch(e) { return { r1: [], r2: [] }; }
+}
+
+function clearLogs() {
+  try {
+    localStorage.removeItem(R1_KEY);
+    localStorage.removeItem(R2_KEY);
+  } catch(e) {}
+}
+
+function importR1Logs(arr) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(R1_KEY) || '[]');
+    const merged   = [...existing, ...arr];
+    localStorage.setItem(R1_KEY, JSON.stringify(merged));
+  } catch(e) {}
+}
+
+function importR2Logs(arr) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(R2_KEY) || '[]');
+    const merged   = [...existing, ...arr];
+    localStorage.setItem(R2_KEY, JSON.stringify(merged));
+  } catch(e) {}
+}

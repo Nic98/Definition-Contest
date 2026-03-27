@@ -9,165 +9,149 @@
   <script src="../questions.js"></script>
 </head>
 <body>
+<div class="wide-shell">
 
   <nav class="top-nav">
     <a href="../index.html" class="btn-nav">🏠 Home</a>
   </nav>
 
-  <h1>📚 Question Bank</h1>
-  <p style="text-align:center; color:#555; margin-bottom:20px;">
-    Browse all subjects and questions
-  </p>
+  <div class="section-header">
+    <h2>📚 Question Bank</h2>
+    <p>Browse all 572 questions across every subject</p>
+  </div>
 
-  <div class="qb-layout">
+  <div class="qb-wrap">
 
-    <!-- ── Sidebar: subject list ─────────────────────────────── -->
+    <!-- Sidebar -->
     <div class="qb-sidebar" id="sidebar"></div>
 
-    <!-- ── Main: questions for selected subject ─────────────── -->
-    <div class="qb-main">
-
+    <!-- Main panel -->
+    <div>
       <input class="qb-search" id="searchBox"
-             placeholder="🔍 Search questions or answers…"
-             oninput="renderQuestions()">
+             placeholder="Search questions, answers…"
+             oninput="render()">
 
-      <div class="qb-tabs" id="tabBar">
-        <button class="qb-tab active" data-type="all"   onclick="setTab('all')">All</button>
-        <button class="qb-tab"        data-type="blank" onclick="setTab('blank')">Fill-in-Blank</button>
-        <button class="qb-tab"        data-type="mcq"   onclick="setTab('mcq')">MCQ</button>
+      <div class="qb-toolbar">
+        <div class="qb-tabs">
+          <button class="qb-tab active" data-t="all"   onclick="setTab('all')">All</button>
+          <button class="qb-tab"        data-t="blank" onclick="setTab('blank')">Fill-in</button>
+          <button class="qb-tab"        data-t="mcq"   onclick="setTab('mcq')">MCQ</button>
+        </div>
+        <span class="qb-count" id="qbCount"></span>
       </div>
 
-      <div class="qb-count" id="qbCount"></div>
-      <div id="qbCards"></div>
+      <div id="qbList"></div>
     </div>
   </div>
 
-  <script>
-    // ── State ─────────────────────────────────────────────────
-    const SUBJECT_ORDER = [
-      "CS","BIO","BUS","AD","CHI",
-      "EAP","EAP-2.5",
-      "PHY","PHY-2.5",
-      "CHE","CHE-2.5",
-      "ECON","ECON-2.5",
-      "MATH-0580","MATH-0606","MATH-0606-2.5","MATH-9709"
-    ];
+</div>
+<script>
+  const GROUPS = [
+    { label:'General',   keys:['CS','BIO','BUS','AD','CHI'] },
+    { label:'EAP',       keys:['EAP','EAP-2.5'] },
+    { label:'Physics',   keys:['PHY','PHY-2.5'] },
+    { label:'Chemistry', keys:['CHE','CHE-2.5'] },
+    { label:'Economics', keys:['ECON','ECON-2.5'] },
+    { label:'Math',      keys:['MATH-0580','MATH-0606','MATH-0606-2.5','MATH-9709'] }
+  ];
 
-    const GROUPS = [
-      { label: "General",   keys: ["CS","BIO","BUS","AD","CHI"] },
-      { label: "EAP",       keys: ["EAP","EAP-2.5"] },
-      { label: "Physics",   keys: ["PHY","PHY-2.5"] },
-      { label: "Chemistry", keys: ["CHE","CHE-2.5"] },
-      { label: "Economics", keys: ["ECON","ECON-2.5"] },
-      { label: "Math",      keys: ["MATH-0580","MATH-0606","MATH-0606-2.5","MATH-9709"] }
-    ];
+  let activeSubject = 'CS';
+  let activeTab     = 'all';
 
-    let activeSubject = SUBJECT_ORDER[0];
-    let activeTab     = 'all';
+  // Build sidebar
+  const sidebar = document.getElementById('sidebar');
+  GROUPS.forEach(g => {
+    const lbl = document.createElement('div');
+    lbl.className   = 'qb-group-label';
+    lbl.textContent = g.label;
+    sidebar.appendChild(lbl);
+    g.keys.forEach(key => {
+      const meta = SUBJECT_META[key];
+      if (!meta) return;
+      const pool = QUESTIONS[key] || [];
+      const btn  = document.createElement('button');
+      btn.className    = 'qb-subj-btn';
+      btn.id           = 'sb-' + key;
+      btn.dataset.key  = key;
+      btn.textContent  = meta.display + ' (' + pool.length + ')';
+      btn.onclick      = () => selectSubject(key);
+      sidebar.appendChild(btn);
+    });
+  });
 
-    // ── Build sidebar ─────────────────────────────────────────
-    const sidebar = document.getElementById('sidebar');
-    GROUPS.forEach(group => {
-      const lbl = document.createElement('div');
-      lbl.className   = 'group-label';
-      lbl.textContent = group.label;
-      sidebar.appendChild(lbl);
+  function selectSubject(key) {
+    activeSubject = key;
+    document.querySelectorAll('.qb-subj-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.key === key);
+    });
+    document.getElementById('searchBox').value = '';
+    render();
+  }
 
-      group.keys.forEach(key => {
-        const meta = SUBJECT_META[key];
-        if (!meta) return;
-        const pool  = QUESTIONS[key] || [];
-        const btn   = document.createElement('button');
-        btn.id      = 'sb-' + key;
-        btn.dataset.key = key;
-        btn.textContent = meta.display + ' (' + pool.length + ')';
-        btn.onclick = () => selectSubject(key);
-        sidebar.appendChild(btn);
-      });
+  function setTab(t) {
+    activeTab = t;
+    document.querySelectorAll('.qb-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.t === t);
+    });
+    render();
+  }
+
+  function render() {
+    const pool   = QUESTIONS[activeSubject] || [];
+    const search = document.getElementById('searchBox').value.toLowerCase().trim();
+
+    const filtered = pool.filter(q => {
+      if (activeTab !== 'all' && q.type !== activeTab) return false;
+      if (search) {
+        const hay = (q.stem+' '+q.answer+' '+(q.optionA||'')+' '+(q.optionB||'')+' '+(q.optionC||'')+' '+(q.optionD||'')).toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
     });
 
-    function selectSubject(key) {
-      activeSubject = key;
-      document.querySelectorAll('.qb-sidebar button[data-key]').forEach(b => {
-        b.classList.toggle('active', b.dataset.key === key);
-      });
-      document.getElementById('searchBox').value = '';
-      renderQuestions();
+    document.getElementById('qbCount').textContent =
+      filtered.length + ' of ' + pool.length + ' questions';
+
+    const container = document.getElementById('qbList');
+    container.innerHTML = '';
+
+    if (!filtered.length) {
+      container.innerHTML = '<div style="text-align:center;padding:50px;color:var(--text-faint);font-weight:600;">No questions found.</div>';
+      return;
     }
 
-    function setTab(type) {
-      activeTab = type;
-      document.querySelectorAll('.qb-tab').forEach(t => {
-        t.classList.toggle('active', t.dataset.type === type);
-      });
-      renderQuestions();
-    }
+    filtered.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'qb-card ' + q.type;
 
-    // ── Render questions ──────────────────────────────────────
-    function renderQuestions() {
-      const pool   = QUESTIONS[activeSubject] || [];
-      const search = document.getElementById('searchBox').value.trim().toLowerCase();
+      let html = `<span class="qb-type-tag ${q.type}">${q.type === 'blank' ? 'Fill-in' : 'MCQ'}</span>
+                  <div class="qb-stem">${esc(q.stem)}</div>`;
 
-      const filtered = pool.filter(q => {
-        if (activeTab !== 'all' && q.type !== activeTab) return false;
-        if (search) {
-          const haystack = (q.stem + ' ' + q.answer + ' ' +
-            (q.optionA || '') + ' ' + (q.optionB || '') + ' ' +
-            (q.optionC || '') + ' ' + (q.optionD || '')).toLowerCase();
-          if (!haystack.includes(search)) return false;
-        }
-        return true;
-      });
-
-      document.getElementById('qbCount').textContent =
-        'Showing ' + filtered.length + ' of ' + pool.length + ' questions';
-
-      const container = document.getElementById('qbCards');
-      container.innerHTML = '';
-
-      if (!filtered.length) {
-        container.innerHTML =
-          '<div style="text-align:center;padding:40px 0;color:#9ca3af;">No questions found.</div>';
-        return;
+      if (q.type === 'mcq') {
+        html += '<div class="qb-opts-grid">';
+        ['A','B','C','D'].forEach(l => {
+          const txt = q['option' + l];
+          if (!txt) return;
+          const isAns = q.answer === l;
+          html += `<div style="${isAns?'font-weight:700;color:#15803d;':''}">${l}. ${esc(txt)}</div>`;
+        });
+        html += '</div>';
+        const optText = q['option' + q.answer] || '';
+        html += `<span class="qb-answer-tag">✓ ${esc(q.answer)}${optText?' — '+esc(optText):''}</span>`;
+      } else {
+        html += `<span class="qb-answer-tag">✓ ${esc(q.answer)}</span>`;
       }
 
-      filtered.forEach((q, i) => {
-        const card = document.createElement('div');
-        card.className = 'qb-card ' + (q.type === 'blank' ? 'blank-card' : 'mcq-card');
+      card.innerHTML = html;
+      container.appendChild(card);
+    });
+  }
 
-        let inner = `<div class="qb-stem">
-          <span style="font-size:0.75rem;font-weight:700;color:${q.type==='blank'?'#2563eb':'#7c3aed'};
-            text-transform:uppercase;letter-spacing:0.05em;margin-right:8px;">
-            ${q.type === 'blank' ? 'Fill-in' : 'MCQ'}
-          </span>${esc(q.stem)}
-        </div>`;
+  function esc(s) {
+    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 
-        if (q.type === 'mcq') {
-          inner += '<div class="qb-opts">';
-          ['A','B','C','D'].forEach(letter => {
-            const text = q['option' + letter];
-            if (!text) return;
-            const isCorrect = q.answer === letter;
-            inner += `<div style="${isCorrect ?
-              'font-weight:700;color:#15803d;' : ''}">${letter}. ${esc(text)}</div>`;
-          });
-          inner += '</div>';
-          inner += `<span class="qb-answer">✓ ${esc(q.answer)}</span>`;
-        } else {
-          inner += `<span class="qb-answer">Answer: ${esc(q.answer)}</span>`;
-        }
-
-        card.innerHTML = inner;
-        container.appendChild(card);
-      });
-    }
-
-    function esc(s) {
-      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    // ── Init ──────────────────────────────────────────────────
-    selectSubject(SUBJECT_ORDER[0]);
-  </script>
+  selectSubject('CS');
+</script>
 </body>
 </html>

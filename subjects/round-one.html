@@ -9,55 +9,60 @@
   <script src="../questions.js"></script>
 </head>
 <body>
+<div class="page-shell">
+
   <nav class="top-nav">
     <button class="btn-nav" onclick="history.back()">← Back</button>
     <a href="../index.html" class="btn-nav">🏠 Home</a>
   </nav>
 
-  <h1>Definition Contest</h1>
-
-  <div class="meta-row">
-    <div class="meta-pill">Class: <span id="classLabel">—</span></div>
-    <button class="btn-change" onclick="changeClass()" style="font-size:0.85rem; padding:5px 14px;">Change Class</button>
+  <div class="section-header">
+    <h2>🎯 Round One</h2>
+    <p>Select a subject for this round</p>
   </div>
 
-  <p style="text-align:center; color:#555; margin-bottom:16px;">
-    Select a subject for this round.
-  </p>
+  <div class="meta-row">
+    <span class="pill">Class: <strong id="classLabel" style="margin-left:4px;">—</strong></span>
+    <button class="btn btn-ghost btn-sm" onclick="changeClass()">Change Class</button>
+  </div>
 
-  <div id="subjectGrid" class="subject-list"></div>
+  <div id="subjectGrid" class="subject-grid"></div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    let cls = params.get('class') || localStorage.getItem('dc_class') || '';
+</div>
+<script>
+  const SUBJECT_ICONS = {
+    "CS":"💻","BIO":"🧬","BUS":"📈","AD":"🎨","CHI":"📜",
+    "EAP":"📝","EAP-2.5":"📝","PHY":"⚛️","PHY-2.5":"⚛️",
+    "CHE":"🧪","CHE-2.5":"🧪","ECON":"💹","ECON-2.5":"💹",
+    "MATH-0580":"📐","MATH-0606":"📐","MATH-0606-2.5":"📐","MATH-9709":"📐"
+  };
 
-    if (!cls) {
-      window.location.href = 'round-one-class.html';
-    } else {
-      localStorage.setItem('dc_class', cls);
-      document.getElementById('classLabel').textContent = cls;
-      buildGrid();
-    }
+  const p   = new URLSearchParams(window.location.search);
+  const cls = p.get('class') || localStorage.getItem('dc_class') || '';
 
-    function changeClass() {
-      window.location.href = 'round-one-class.html';
-    }
+  if (!cls) { window.location.href = 'round-one-class.html'; }
+  else {
+    localStorage.setItem('dc_class', cls);
+    document.getElementById('classLabel').textContent = cls;
+    buildGrid();
+  }
 
-    function buildGrid() {
-      const subjects = getSubjectsForClass(cls);
-      const grid = document.getElementById('subjectGrid');
-      grid.innerHTML = '';
-      subjects.forEach(key => {
-        const meta = SUBJECT_META[key];
-        if (!meta) return;
-        const a = document.createElement('a');
-        a.href = 'subject.html?subject=' + encodeURIComponent(key)
-                + '&class=' + encodeURIComponent(cls);
-        a.textContent = meta.display;
-        a.className = 'round-one-btn';
-        grid.appendChild(a);
-      });
-    }
-  </script>
+  function changeClass() { window.location.href = 'round-one-class.html'; }
+
+  function buildGrid() {
+    const subjects = getSubjectsForClass(cls);
+    const grid     = document.getElementById('subjectGrid');
+    subjects.forEach(key => {
+      const meta = SUBJECT_META[key];
+      if (!meta) return;
+      const a    = document.createElement('a');
+      a.href     = 'subject.html?subject=' + encodeURIComponent(key)
+                 + '&class=' + encodeURIComponent(cls);
+      a.className = 'subj-btn';
+      a.innerHTML = `<span class="sb-icon">${SUBJECT_ICONS[key]||'📖'}</span>${meta.display}`;
+      grid.appendChild(a);
+    });
+  }
+</script>
 </body>
 </html>

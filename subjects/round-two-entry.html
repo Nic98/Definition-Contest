@@ -8,87 +8,76 @@
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
 </head>
 <body>
+<div class="page-shell">
+
   <nav class="top-nav">
     <button class="btn-nav" onclick="history.back()">← Back</button>
     <a href="../index.html" class="btn-nav">🏠 Home</a>
   </nav>
 
-  <h1>Definition Contest</h1>
-  <p style="text-align:center; color:#555; margin-bottom:20px;">Round Two</p>
+  <div class="section-header">
+    <h2>⚡ Round Two</h2>
+    <p>60-second multiple choice challenge</p>
+  </div>
 
   <div class="entry-card">
     <h2>Session Setup</h2>
-    <p style="color:#555; margin-bottom:20px;">
-      Enter the judge's name and the competing class before starting the 60-second round.
-    </p>
+    <p>Enter the judge's name and class before starting the timer.</p>
 
-    <div class="entry-field">
+    <div class="form-field">
       <label for="classSelect">Class</label>
       <select id="classSelect">
         <option value="">— Select a class —</option>
         <optgroup label="PreDP">
-          <option value="PreDP1">PreDP1</option>
-          <option value="PreDP2">PreDP2</option>
-          <option value="PreDP3">PreDP3</option>
-          <option value="PreDP4">PreDP4</option>
+          <option>PreDP1</option><option>PreDP2</option>
+          <option>PreDP3</option><option>PreDP4</option>
         </optgroup>
         <optgroup label="PA">
-          <option value="PA1">PA1</option>
-          <option value="PA2">PA2</option>
-          <option value="PA3">PA3</option>
-          <option value="PA4">PA4</option>
-          <option value="PA5">PA5</option>
-          <option value="PA6">PA6</option>
-          <option value="PA7">PA7</option>
-          <option value="PA8">PA8</option>
-          <option value="PA9">PA9</option>
-          <option value="PA10">PA10</option>
-          <option value="PA11">PA11</option>
-          <option value="PA12">PA12</option>
+          <option>PA1</option><option>PA2</option><option>PA3</option><option>PA4</option>
+          <option>PA5</option><option>PA6</option><option>PA7</option><option>PA8</option>
+          <option>PA9</option><option>PA10</option><option>PA11</option><option>PA12</option>
         </optgroup>
         <optgroup label="Pre-AP">
-          <option value="PreAP">PreAP</option>
+          <option>PreAP</option>
         </optgroup>
       </select>
     </div>
 
-    <div class="entry-field">
+    <div class="form-field">
       <label for="judgeName">Judge Name</label>
       <input id="judgeName" type="text" placeholder="Enter judge name" autocomplete="off">
     </div>
 
-    <div id="errorMsg" style="color:#dc2626; min-height:20px; margin-bottom:10px; font-size:0.9rem;"></div>
+    <div class="form-error" id="err"></div>
 
-    <button class="btn-start" onclick="start()">Start Round Two →</button>
+    <button class="btn btn-purple btn-full btn-lg" onclick="start()">
+      ⚡ Start Round Two
+    </button>
   </div>
 
-  <script>
-    // Restore saved values
-    const savedClass = localStorage.getItem('dc_class');
-    const savedJudge = localStorage.getItem('dc_judge');
-    if (savedClass) document.getElementById('classSelect').value = savedClass;
-    if (savedJudge) document.getElementById('judgeName').value  = savedJudge;
+</div>
+<script>
+  const savedClass = localStorage.getItem('dc_class');
+  const savedJudge = localStorage.getItem('dc_judge');
+  if (savedClass) document.getElementById('classSelect').value = savedClass;
+  if (savedJudge) document.getElementById('judgeName').value   = savedJudge;
 
-    function start() {
-      const cls   = document.getElementById('classSelect').value.trim();
-      const judge = document.getElementById('judgeName').value.trim();
-      const err   = document.getElementById('errorMsg');
-
-      if (!cls)   { err.textContent = 'Please select a class.';       return; }
-      if (!judge) { err.textContent = 'Please enter the judge name.'; return; }
-      err.textContent = '';
-
-      localStorage.setItem('dc_class', cls);
-      localStorage.setItem('dc_judge', judge);
-
-      window.location.href = 'round-two-v2.html'
-        + '?class=' + encodeURIComponent(cls)
-        + '&name='  + encodeURIComponent(judge);
-    }
-
-    document.getElementById('judgeName').addEventListener('keydown', e => {
-      if (e.key === 'Enter') start();
-    });
-  </script>
+  function start() {
+    const cls   = document.getElementById('classSelect').value.trim();
+    const judge = document.getElementById('judgeName').value.trim();
+    const err   = document.getElementById('err');
+    if (!cls)   { err.textContent = 'Please select a class.';        return; }
+    if (!judge) { err.textContent = 'Please enter the judge name.';  return; }
+    err.textContent = '';
+    localStorage.setItem('dc_class', cls);
+    localStorage.setItem('dc_judge', judge);
+    window.location.href = 'round-two-v2.html'
+      + '?class=' + encodeURIComponent(cls)
+      + '&name='  + encodeURIComponent(judge);
+  }
+  document.getElementById('judgeName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') start();
+  });
+</script>
 </body>
 </html>
