@@ -268,13 +268,13 @@
                     onclick="selectOpt(${globalIdx},'${l}')">${l}.&nbsp;${esc(txt)}</button>`;
         }).join('');
 
-        const imageKey  = q.subjectKey + '_' + q.qNum;
-        const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
-        const imageHtml = imageFile
+        // Image (supports both uploaded image_url and local IMAGE_MAP)
+        const imgSrc    = getImageSrc(q, q.subjectKey);
+        const imageHtml = imgSrc
           ? `<div class="q-image-wrap">
-               <img class="q-image" src="../image/${imageFile}" alt="Question image"
+               <img class="q-image" src="${imgSrc}" alt="Question image"
                     onerror="this.parentElement.style.display='none'"
-                    onclick="openLightbox('../image/${imageFile}')">
+                    onclick="openLightbox('${imgSrc}')">
              </div>`
           : '';
 

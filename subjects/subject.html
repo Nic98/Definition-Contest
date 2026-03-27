@@ -150,16 +150,14 @@
     document.getElementById('qCounter').textContent = 'Q' + (idx + 1) + ' / ' + pool.length;
     document.getElementById('stem').textContent     = q.stem;
 
-    // Image
+    // Image (supports both uploaded image_url and local IMAGE_MAP)
     const imageWrap = document.getElementById('qImageWrap');
-    const imageKey  = subjectKey + '_' + q.qNum;
-    const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
-    if (imageFile) {
-      const imgPath = '../image/' + imageFile;
+    const imgSrc    = getImageSrc(q, subjectKey);
+    if (imgSrc) {
       imageWrap.innerHTML =
-        `<img class="q-image" src="${imgPath}" alt="Question image"
+        `<img class="q-image" src="${imgSrc}" alt="Question image"
               onerror="this.parentElement.style.display='none'"
-              onclick="openLightbox('${imgPath}')">`;
+              onclick="openLightbox('${imgSrc}')">`;
       imageWrap.style.display = 'block';
     } else {
       imageWrap.innerHTML = '';

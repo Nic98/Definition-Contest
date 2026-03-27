@@ -187,17 +187,16 @@
 
       card.innerHTML = html;
 
-      // Image
-      const imageKey  = activeSubject + '_' + q.qNum;
-      const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
-      if (imageFile) {
+      // Image (supports both uploaded image_url and local IMAGE_MAP)
+      const imgSrc = getImageSrc(q, activeSubject);
+      if (imgSrc) {
         const imgWrap = document.createElement('div');
         imgWrap.className = 'q-image-wrap';
         imgWrap.style.margin = '8px 0';
         imgWrap.innerHTML =
-          `<img class="q-image" src="../image/${imageFile}" alt="Question image"
+          `<img class="q-image" src="${imgSrc}" alt="Question image"
                 onerror="this.parentElement.style.display='none'"
-                onclick="openLightbox('../image/${imageFile}')">`;
+                onclick="openLightbox('${imgSrc}')">`;
         card.appendChild(imgWrap);
       }
 

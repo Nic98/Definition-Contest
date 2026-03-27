@@ -10,37 +10,212 @@
   <script src="../questions.js"></script>
   <script src="../supabase-config.js"></script>
   <style>
-    /* ── Modal ── */
+    /* ══════════════════════════════════════════════
+       MODAL OVERLAY
+    ══════════════════════════════════════════════ */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.55); z-index: 200;
+      background: rgba(15,23,42,.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
       align-items: center; justify-content: center;
+      padding: 16px;
     }
     .modal-overlay.open { display: flex; }
+
     .modal {
-      background: var(--surface); border-radius: 16px;
-      padding: 28px; width: min(560px, 94vw);
-      max-height: 90vh; overflow-y: auto;
-      box-shadow: var(--shadow-xl);
+      background: var(--surface);
+      border-radius: 20px;
+      width: min(580px, 100%);
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 32px 64px rgba(0,0,0,.28);
+      animation: modalIn .2s ease;
     }
-    .modal h3 { margin: 0 0 20px; font-size: 1.15rem; }
-    .form-row { margin-bottom: 14px; }
-    .form-row label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; color: var(--text-muted); }
-    .form-row input, .form-row select, .form-row textarea {
+    @keyframes modalIn {
+      from { opacity:0; transform: translateY(16px) scale(.97); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* Header */
+    .modal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 24px 0;
+    }
+    .modal-head h3 { margin: 0; font-size: 1.18rem; font-weight: 800; }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: none; background: var(--bg);
+      color: var(--text-muted); font-size: 1.2rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text); }
+
+    /* Body */
+    .modal-body { padding: 20px 24px 24px; }
+
+    /* Section label */
+    .f-label {
+      font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-muted); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .f-label .optional {
+      font-weight: 500; text-transform: none; letter-spacing: 0;
+      color: var(--text-faint); font-size: 0.78rem;
+    }
+    .f-section { margin-bottom: 18px; }
+
+    /* Text inputs */
+    .f-input {
       width: 100%; box-sizing: border-box;
-      padding: 9px 12px; border: 1.5px solid var(--border);
-      border-radius: 8px; font-size: 0.92rem;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.93rem;
       background: var(--bg); color: var(--text);
       font-family: inherit;
+      transition: border-color .15s;
     }
-    .form-row textarea { min-height: 72px; resize: vertical; }
-    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
-      outline: none; border-color: var(--primary);
+    .f-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,138,.1); }
+    textarea.f-input { min-height: 90px; resize: vertical; line-height: 1.55; }
+
+    /* Type selector */
+    .type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .type-card {
+      padding: 14px 10px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      cursor: pointer;
+      text-align: center;
+      font-family: inherit;
+      transition: all .15s;
     }
-    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-    #mcqFields { display: none; }
-    /* ── Admin card ── */
+    .type-card .tc-icon { font-size: 1.6rem; display: block; margin-bottom: 5px; }
+    .type-card .tc-name { font-size: 0.88rem; font-weight: 700; color: var(--text); display: block; }
+    .type-card .tc-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; display: block; }
+    .type-card:hover { border-color: var(--primary); background: var(--surface); }
+    .type-card.active {
+      border-color: var(--primary);
+      background: #eff6ff;
+      box-shadow: 0 0 0 3px rgba(30,58,138,.08);
+    }
+    .type-card.active .tc-name { color: var(--primary); }
+
+    /* MCQ options */
+    .mcq-options { display: flex; flex-direction: column; gap: 8px; }
+    .mcq-opt-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .mcq-opt-row:hover { border-color: var(--primary); }
+    .mcq-opt-row.correct {
+      border-color: #16a34a;
+      background: #f0fdf4;
+      box-shadow: 0 0 0 3px rgba(22,163,74,.08);
+    }
+    .mcq-opt-letter {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--border); color: var(--text-muted);
+      font-size: 0.82rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all .15s;
+    }
+    .mcq-opt-row.correct .mcq-opt-letter {
+      background: #16a34a; color: #fff;
+    }
+    .mcq-opt-input {
+      flex: 1; border: none; background: transparent;
+      font-size: 0.92rem; color: var(--text);
+      font-family: inherit;
+    }
+    .mcq-opt-input:focus { outline: none; }
+    .mcq-opt-tick {
+      font-size: 1rem; color: #16a34a;
+      opacity: 0; transition: opacity .15s;
+    }
+    .mcq-opt-row.correct .mcq-opt-tick { opacity: 1; }
+    .mcq-hint {
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-top: 7px;
+    }
+
+    /* Fill-in answer */
+    .answer-wrap { position: relative; }
+    .answer-wrap .answer-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; pointer-events: none;
+    }
+    .answer-wrap .f-input { padding-left: 36px; }
+
+    /* Image upload zone */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      background: var(--bg);
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-zone .uz-icon { font-size: 2rem; margin-bottom: 8px; }
+    .upload-zone .uz-text { font-size: 0.88rem; font-weight: 600; color: var(--text-muted); }
+    .upload-zone .uz-sub  { font-size: 0.75rem; color: var(--text-faint); margin-top: 4px; }
+
+    /* Image preview */
+    .img-preview-wrap {
+      margin-top: 12px; display: none; position: relative;
+    }
+    .img-preview-wrap img {
+      width: 100%; max-height: 200px; object-fit: contain;
+      border-radius: 10px; border: 1.5px solid var(--border);
+    }
+    .img-preview-remove {
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(0,0,0,.6); color: #fff;
+      border: none; border-radius: 6px;
+      padding: 4px 9px; font-size: 0.78rem;
+      cursor: pointer; font-family: inherit;
+    }
+    .img-preview-remove:hover { background: #dc2626; }
+    .img-upload-progress {
+      margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);
+      font-weight: 600; text-align: center; display: none;
+    }
+
+    /* Divider */
+    .f-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    /* Modal footer */
+    .modal-foot {
+      display: flex; gap: 10px; justify-content: flex-end;
+      padding: 0 24px 24px;
+    }
+    .modal-err {
+      color: #dc2626; font-size: 0.82rem; font-weight: 600;
+      margin: 0 24px 12px; display: none;
+      background: #fee2e2; border-radius: 8px; padding: 8px 12px;
+    }
+
+    /* ══════════════════════════════════════════════
+       ADMIN CARDS
+    ══════════════════════════════════════════════ */
     .adm-card {
       background: var(--surface); border: 1.5px solid var(--border);
       border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
@@ -48,27 +223,34 @@
     .adm-card-top { display: flex; align-items: flex-start; gap: 10px; }
     .adm-card-stem { flex: 1; font-size: 0.92rem; line-height: 1.5; }
     .adm-card-stem .answer { font-size: 0.8rem; color: var(--green); font-weight: 700; margin-top: 4px; }
+    .adm-card-img {
+      width: 56px; height: 40px; object-fit: cover;
+      border-radius: 6px; border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
     .adm-card-btns { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-edit { font-size: 0.78rem; padding: 5px 11px; }
     .btn-del  { font-size: 0.78rem; padding: 5px 11px; background: #fee2e2; color: #dc2626; border: 1.5px solid #fca5a5; border-radius: 7px; cursor: pointer; }
     .btn-del:hover { background: #fca5a5; }
-    /* ── Loading / empty ── */
+
+    /* ══════════════════════════════════════════════
+       MISC
+    ══════════════════════════════════════════════ */
     .adm-loading { text-align: center; padding: 60px 20px; color: var(--text-muted); font-weight: 600; }
-    /* ── Password gate ── */
     .pw-gate {
       max-width: 400px; margin: 80px auto; background: var(--surface);
       border-radius: 16px; padding: 32px; box-shadow: var(--shadow-lg); text-align: center;
     }
     .pw-gate h2 { margin: 0 0 8px; }
     .pw-gate p  { color: var(--text-muted); margin: 0 0 20px; font-size: 0.9rem; }
-    .pw-gate input { width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 1rem;
+    .pw-gate input {
+      width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 1rem;
       border: 1.5px solid var(--border); border-radius: 9px; margin-bottom: 12px;
-      background: var(--bg); color: var(--text); font-family: inherit; }
+      background: var(--bg); color: var(--text); font-family: inherit;
+    }
     .pw-gate input:focus { outline: none; border-color: var(--primary); }
-    /* ── Toolbar ── */
     .adm-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
     .adm-toolbar .adm-count { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-left: auto; }
-    /* ── Toast ── */
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
       background: #1e293b; color: #f1f5f9; padding: 10px 22px;
@@ -93,9 +275,8 @@
   </div>
 </div>
 
-<!-- Main panel (hidden until auth) -->
+<!-- Main panel -->
 <div id="mainPanel" style="display:none;">
-
 <div class="wide-shell">
   <nav class="top-nav">
     <a href="../index.html" class="btn-nav">🏠 Home</a>
@@ -109,11 +290,7 @@
   </div>
 
   <div class="qb-wrap">
-
-    <!-- Sidebar -->
     <div class="qb-sidebar" id="sidebar"></div>
-
-    <!-- Main -->
     <div>
       <div class="adm-toolbar">
         <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Question</button>
@@ -121,70 +298,137 @@
                style="margin:0;max-width:220px;" oninput="renderList()">
         <span class="adm-count" id="admCount"></span>
       </div>
-
-      <div id="listArea">
-        <div class="adm-loading">Loading questions…</div>
-      </div>
+      <div id="listArea"><div class="adm-loading">Loading questions…</div></div>
     </div>
   </div>
 </div>
+</div>
 
-</div><!-- /mainPanel -->
-
-<!-- Add / Edit Modal -->
+<!-- ════════════════════════════════════════════
+     ADD / EDIT MODAL
+════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <h3 id="modalTitle">Add Question</h3>
 
-    <div class="form-row">
-      <label>Subject</label>
-      <select id="fSubject" onchange="syncSubjectFromModal()">
-        <option value="">— Select subject —</option>
-      </select>
+    <!-- Header -->
+    <div class="modal-head">
+      <h3 id="modalTitle">New Question</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
 
-    <div class="form-grid-2">
-      <div class="form-row">
-        <label>Type</label>
-        <select id="fType" onchange="toggleMCQFields()">
-          <option value="blank">Fill-in-Blank</option>
-          <option value="mcq">MCQ</option>
-        </select>
+    <div class="modal-body">
+
+      <!-- Subject -->
+      <div class="f-section">
+        <div class="f-label">Subject</div>
+        <select class="f-input" id="fSubject"></select>
       </div>
-      <div class="form-row">
-        <label>Q Number (optional)</label>
-        <input type="number" id="fQNum" placeholder="e.g. 42">
+
+      <!-- Type selector -->
+      <div class="f-section">
+        <div class="f-label">Question Type</div>
+        <div class="type-selector">
+          <button class="type-card active" id="cardBlank" onclick="setType('blank')">
+            <span class="tc-icon">📝</span>
+            <span class="tc-name">Fill-in-Blank</span>
+            <span class="tc-desc">Student fills in the missing word</span>
+          </button>
+          <button class="type-card" id="cardMCQ" onclick="setType('mcq')">
+            <span class="tc-icon">☑️</span>
+            <span class="tc-name">Multiple Choice</span>
+            <span class="tc-desc">Student picks A / B / C / D</span>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="form-row">
-      <label>Question Stem</label>
-      <textarea id="fStem" placeholder="Enter the question text…"></textarea>
-    </div>
+      <!-- Question stem -->
+      <div class="f-section">
+        <div class="f-label">Question</div>
+        <textarea class="f-input" id="fStem"
+          placeholder="e.g. The CPU stands for Central Processing _____."></textarea>
+      </div>
 
-    <div class="form-row">
-      <label>Answer</label>
-      <input type="text" id="fAnswer" placeholder="For MCQ enter A / B / C / D">
-    </div>
+      <!-- Fill-in answer -->
+      <div class="f-section" id="blankSection">
+        <div class="f-label">Answer</div>
+        <div class="answer-wrap">
+          <span class="answer-icon">✓</span>
+          <input class="f-input" type="text" id="fAnswerBlank"
+                 placeholder="e.g. Unit">
+        </div>
+      </div>
 
-    <div id="mcqFields">
-      <div class="form-row"><label>Option A</label><input type="text" id="fOptA"></div>
-      <div class="form-row"><label>Option B</label><input type="text" id="fOptB"></div>
-      <div class="form-row"><label>Option C</label><input type="text" id="fOptC"></div>
-      <div class="form-row"><label>Option D</label><input type="text" id="fOptD"></div>
-    </div>
+      <!-- MCQ options (hidden by default) -->
+      <div class="f-section" id="mcqSection" style="display:none;">
+        <div class="f-label">
+          Options
+          <span class="optional">— click a row to mark as correct answer</span>
+        </div>
+        <div class="mcq-options">
+          <div class="mcq-opt-row" id="optRow-A" onclick="setCorrect('A')">
+            <div class="mcq-opt-letter">A</div>
+            <input class="mcq-opt-input" type="text" id="fOptA" placeholder="Option A"
+                   onclick="event.stopPropagation()">
+            <span class="mcq-opt-tick">✓</span>
+          </div>
+          <div class="mcq-opt-row" id="optRow-B" onclick="setCorrect('B')">
+            <div class="mcq-opt-letter">B</div>
+            <input class="mcq-opt-input" type="text" id="fOptB" placeholder="Option B"
+                   onclick="event.stopPropagation()">
+            <span class="mcq-opt-tick">✓</span>
+          </div>
+          <div class="mcq-opt-row" id="optRow-C" onclick="setCorrect('C')">
+            <div class="mcq-opt-letter">C</div>
+            <input class="mcq-opt-input" type="text" id="fOptC" placeholder="Option C"
+                   onclick="event.stopPropagation()">
+            <span class="mcq-opt-tick">✓</span>
+          </div>
+          <div class="mcq-opt-row" id="optRow-D" onclick="setCorrect('D')">
+            <div class="mcq-opt-letter">D</div>
+            <input class="mcq-opt-input" type="text" id="fOptD" placeholder="Option D"
+                   onclick="event.stopPropagation()">
+            <span class="mcq-opt-tick">✓</span>
+          </div>
+        </div>
+        <div class="mcq-hint" id="mcqHint">Click a row to set the correct answer</div>
+      </div>
 
-    <div class="form-row">
-      <label>Image Key (optional, e.g. ECON_18)</label>
-      <input type="text" id="fImageKey" placeholder="SUBJECT_qNum">
-    </div>
+      <!-- Image upload -->
+      <hr class="f-divider">
+      <div class="f-section">
+        <div class="f-label">
+          Image
+          <span class="optional">optional</span>
+        </div>
+        <div class="upload-zone" id="uploadZone"
+             ondragover="event.preventDefault(); this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDrop(event)">
+          <input type="file" id="imgFile" accept="image/*" onchange="handleFileSelect(this.files[0])">
+          <div class="uz-icon">🖼️</div>
+          <div class="uz-text">Click to upload or drag & drop</div>
+          <div class="uz-sub">PNG, JPG, GIF, WEBP — max 5 MB</div>
+        </div>
+        <div class="img-preview-wrap" id="imgPreviewWrap">
+          <img id="imgPreview" src="" alt="Preview">
+          <button class="img-preview-remove" onclick="removeImage()">✕ Remove</button>
+        </div>
+        <div class="img-upload-progress" id="imgUploadProgress">⏳ Uploading image…</div>
+      </div>
 
-    <div id="modalError" style="color:#dc2626;font-size:0.85rem;margin-top:4px;display:none;"></div>
+    </div><!-- /modal-body -->
 
-    <div class="modal-actions">
+    <!-- Error -->
+    <div class="modal-err" id="modalErr"></div>
+
+    <!-- Footer -->
+    <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveQuestion()">Save</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveQuestion()">
+        Add Question
+      </button>
     </div>
+
   </div>
 </div>
 
@@ -193,38 +437,37 @@
 
 <script>
   const ADMIN_PASSWORD = 'WHBC2025';
-  const AUTH_KEY = 'dc_admin_auth';
+  const AUTH_KEY       = 'dc_admin_auth';
 
-  // ── Auth ────────────────────────────────────────────────────────
+  // ── Auth ─────────────────────────────────────────────────────────
   function checkPassword() {
-    const pw = document.getElementById('pwInput').value;
-    if (pw === ADMIN_PASSWORD) {
+    if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
       sessionStorage.setItem(AUTH_KEY, '1');
-      document.getElementById('pwGate').style.display     = 'none';
-      document.getElementById('mainPanel').style.display  = 'block';
+      document.getElementById('pwGate').style.display    = 'none';
+      document.getElementById('mainPanel').style.display = 'block';
       initAdmin();
     } else {
-      document.getElementById('pwInput').value = '';
-      document.getElementById('pwInput').placeholder = 'Wrong password, try again';
+      const inp = document.getElementById('pwInput');
+      inp.value = ''; inp.placeholder = 'Wrong password, try again';
+      inp.style.borderColor = '#dc2626';
     }
   }
-  function logout() {
-    sessionStorage.removeItem(AUTH_KEY);
-    location.reload();
-  }
-
-  // Check if already authenticated
+  function logout() { sessionStorage.removeItem(AUTH_KEY); location.reload(); }
   if (sessionStorage.getItem(AUTH_KEY) === '1') {
     document.getElementById('pwGate').style.display    = 'none';
     document.getElementById('mainPanel').style.display = 'block';
   }
 
-  // ── State ───────────────────────────────────────────────────────
-  let allQuestions = {};    // { subjectKey: [q, …] }
+  // ── State ─────────────────────────────────────────────────────────
+  let allQuestions = {};
   let activeSubject = '';
-  let editingId = null;     // null = add mode, string = edit mode
+  let editingId     = null;
+  let currentType   = 'blank';
+  let correctAnswer = '';
+  let pendingFile   = null;   // File object waiting to be uploaded
+  let existingImageUrl = '';  // URL of image already saved (edit mode)
 
-  // ── Init ────────────────────────────────────────────────────────
+  // ── Init ──────────────────────────────────────────────────────────
   async function initAdmin() {
     buildSidebar();
     populateSubjectSelect();
@@ -232,24 +475,21 @@
   }
 
   async function loadData() {
-    document.getElementById('listArea').innerHTML =
-      '<div class="adm-loading">Loading…</div>';
+    document.getElementById('listArea').innerHTML = '<div class="adm-loading">Loading…</div>';
     try {
       allQuestions = await dbFetchAll();
     } catch(e) {
-      // fallback to questions.js
       allQuestions = {};
       for (const [k, qs] of Object.entries(QUESTIONS)) allQuestions[k] = [...qs];
     }
     if (!activeSubject) {
-      const first = Object.keys(allQuestions)[0] || Object.keys(SUBJECT_META)[0];
-      activeSubject = first;
+      activeSubject = Object.keys(allQuestions)[0] || Object.keys(SUBJECT_META)[0];
     }
-    highlightSidebarItem();
+    highlightSidebar();
     renderList();
   }
 
-  // ── Sidebar ─────────────────────────────────────────────────────
+  // ── Sidebar ───────────────────────────────────────────────────────
   const GROUPS = [
     { label:'General',   keys:['CS','BIO','BUS','AD','CHI'] },
     { label:'EAP',       keys:['EAP','EAP-2.5'] },
@@ -260,23 +500,18 @@
   ];
 
   function buildSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.innerHTML = '';
+    const s = document.getElementById('sidebar');
+    s.innerHTML = '';
     GROUPS.forEach(g => {
       const lbl = document.createElement('div');
-      lbl.className = 'qb-group-label';
-      lbl.textContent = g.label;
-      sidebar.appendChild(lbl);
+      lbl.className = 'qb-group-label'; lbl.textContent = g.label;
+      s.appendChild(lbl);
       g.keys.forEach(key => {
-        const meta = SUBJECT_META[key];
-        if (!meta) return;
+        const meta = SUBJECT_META[key]; if (!meta) return;
         const btn = document.createElement('button');
-        btn.className   = 'qb-subj-btn';
-        btn.id          = 'sb-' + key;
-        btn.dataset.key = key;
-        btn.textContent = meta.display;
-        btn.onclick     = () => selectSubject(key);
-        sidebar.appendChild(btn);
+        btn.className = 'qb-subj-btn'; btn.id = 'sb-'+key; btn.dataset.key = key;
+        btn.onclick = () => selectSubject(key);
+        s.appendChild(btn);
       });
     });
   }
@@ -284,16 +519,16 @@
   function selectSubject(key) {
     activeSubject = key;
     document.getElementById('searchBox').value = '';
-    highlightSidebarItem();
+    highlightSidebar();
     renderList();
   }
 
-  function highlightSidebarItem() {
+  function highlightSidebar() {
     document.querySelectorAll('.qb-subj-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.key === activeSubject);
-      const qs = allQuestions[b.dataset.key] || [];
       const meta = SUBJECT_META[b.dataset.key];
-      if (meta) b.textContent = meta.display + ' (' + qs.length + ')';
+      const cnt  = (allQuestions[b.dataset.key] || []).length;
+      if (meta) b.textContent = meta.display + ' (' + cnt + ')';
     });
   }
 
@@ -307,15 +542,14 @@
     });
   }
 
-  // ── Render list ─────────────────────────────────────────────────
+  // ── Render list ───────────────────────────────────────────────────
   function renderList() {
     const pool   = allQuestions[activeSubject] || [];
     const search = document.getElementById('searchBox').value.toLowerCase().trim();
     const filtered = pool.filter(q => {
       if (!search) return true;
-      const hay = [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
-        .filter(Boolean).join(' ').toLowerCase();
-      return hay.includes(search);
+      return [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
+        .filter(Boolean).join(' ').toLowerCase().includes(search);
     });
 
     document.getElementById('admCount').textContent =
@@ -323,7 +557,7 @@
 
     const area = document.getElementById('listArea');
     if (!filtered.length) {
-      area.innerHTML = '<div class="adm-loading" style="padding:40px;">No questions. Click "+ Add Question" to create one.</div>';
+      area.innerHTML = '<div class="adm-loading" style="padding:40px;">No questions found.</div>';
       return;
     }
 
@@ -332,10 +566,16 @@
       const card = document.createElement('div');
       card.className = 'adm-card';
 
-      const tag  = q.type === 'mcq' ? 'MCQ' : 'Fill-in';
+      const tag = q.type === 'mcq' ? 'MCQ' : 'Fill-in';
       const ansDisplay = q.type === 'mcq'
-        ? q.answer + ' — ' + (q['option'+q.answer] || q['optionA']||'')
+        ? q.answer + ' — ' + (q['option' + q.answer] || '')
         : q.answer;
+
+      const imgSrc = getImageSrc(q, activeSubject);
+      const imgHtml = imgSrc
+        ? `<img class="adm-card-img" src="${esc(imgSrc)}" alt="img"
+               onerror="this.style.display='none'">`
+        : '';
 
       card.innerHTML = `
         <div class="adm-card-top">
@@ -344,29 +584,87 @@
             ${esc(q.stem)}
             <div class="answer">✓ ${esc(ansDisplay)}</div>
           </div>
+          ${imgHtml}
           <div class="adm-card-btns">
-            <button class="btn btn-ghost btn-edit" onclick="openEditModal('${q.id||''}')">✏️ Edit</button>
-            <button class="btn-del" onclick="deleteQ('${q.id||''}','${esc(q.stem).slice(0,30)}')">🗑️</button>
+            <button class="btn btn-ghost btn-edit" onclick="openEditModal('${esc(q.id||'')}')">✏️ Edit</button>
+            <button class="btn-del" onclick="deleteQ('${esc(q.id||'')}','${esc(q.stem).slice(0,30)}')">🗑️</button>
           </div>
         </div>`;
       area.appendChild(card);
     });
   }
 
-  // ── Modal helpers ───────────────────────────────────────────────
-  function toggleMCQFields() {
-    const isMCQ = document.getElementById('fType').value === 'mcq';
-    document.getElementById('mcqFields').style.display = isMCQ ? 'block' : 'none';
+  // ── Modal: type toggle ────────────────────────────────────────────
+  function setType(t) {
+    currentType = t;
+    document.getElementById('cardBlank').classList.toggle('active', t === 'blank');
+    document.getElementById('cardMCQ').classList.toggle('active',   t === 'mcq');
+    document.getElementById('blankSection').style.display = t === 'blank' ? 'block' : 'none';
+    document.getElementById('mcqSection').style.display   = t === 'mcq'   ? 'block' : 'none';
   }
-  function syncSubjectFromModal() {}  // placeholder
 
+  // ── Modal: correct answer (MCQ) ───────────────────────────────────
+  function setCorrect(letter) {
+    correctAnswer = letter;
+    ['A','B','C','D'].forEach(l => {
+      document.getElementById('optRow-' + l).classList.toggle('correct', l === letter);
+    });
+    document.getElementById('mcqHint').textContent = 'Correct answer: ' + letter;
+    document.getElementById('mcqHint').style.color = '#16a34a';
+  }
+
+  // ── Modal: image upload ───────────────────────────────────────────
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) handleFileSelect(file);
+  }
+
+  function handleFileSelect(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showErr('Image must be smaller than 5 MB.'); return;
+    }
+    pendingFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('imgPreview').src   = e.target.result;
+      document.getElementById('imgPreviewWrap').style.display = 'block';
+      document.getElementById('uploadZone').style.display     = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage() {
+    pendingFile      = null;
+    existingImageUrl = '';
+    document.getElementById('imgPreview').src   = '';
+    document.getElementById('imgPreviewWrap').style.display = 'none';
+    document.getElementById('uploadZone').style.display     = 'block';
+    document.getElementById('imgFile').value = '';
+  }
+
+  // ── Modal: open / close ───────────────────────────────────────────
   function openAddModal() {
-    editingId = null;
-    document.getElementById('modalTitle').textContent = 'Add Question';
-    document.getElementById('modalSaveBtn').textContent = 'Add';
-    clearForm();
-    document.getElementById('fSubject').value = activeSubject;
+    editingId = null; pendingFile = null; existingImageUrl = '';
+    document.getElementById('modalTitle').textContent       = 'New Question';
+    document.getElementById('modalSaveBtn').textContent     = 'Add Question';
+    document.getElementById('fSubject').value               = activeSubject;
+    document.getElementById('fStem').value                  = '';
+    document.getElementById('fAnswerBlank').value           = '';
+    ['A','B','C','D'].forEach(l => {
+      document.getElementById('fOpt' + l).value = '';
+      document.getElementById('optRow-' + l).classList.remove('correct');
+    });
+    correctAnswer = '';
+    document.getElementById('mcqHint').textContent = 'Click a row to set the correct answer';
+    document.getElementById('mcqHint').style.color = '';
+    setType('blank');
+    removeImage();
+    hideErr();
     document.getElementById('modalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('fStem').focus(), 50);
   }
 
   function openEditModal(id) {
@@ -374,22 +672,38 @@
     const q = pool.find(x => x.id === id);
     if (!q) { showToast('Question not found'); return; }
 
-    editingId = id;
-    document.getElementById('modalTitle').textContent = 'Edit Question';
-    document.getElementById('modalSaveBtn').textContent = 'Save Changes';
+    editingId        = id;
+    pendingFile      = null;
+    existingImageUrl = q.imageUrl || '';
 
-    document.getElementById('fSubject').value  = activeSubject;
-    document.getElementById('fType').value     = q.type;
-    document.getElementById('fQNum').value     = q.qNum || '';
-    document.getElementById('fStem').value     = q.stem;
-    document.getElementById('fAnswer').value   = q.answer;
-    document.getElementById('fOptA').value     = q.optionA  || '';
-    document.getElementById('fOptB').value     = q.optionB  || '';
-    document.getElementById('fOptC').value     = q.optionC  || '';
-    document.getElementById('fOptD').value     = q.optionD  || '';
-    document.getElementById('fImageKey').value = q.imageKey || '';
-    toggleMCQFields();
-    hideModalError();
+    document.getElementById('modalTitle').textContent   = 'Edit Question';
+    document.getElementById('modalSaveBtn').textContent = 'Save Changes';
+    document.getElementById('fSubject').value           = activeSubject;
+    document.getElementById('fStem').value              = q.stem;
+
+    setType(q.type);
+
+    if (q.type === 'blank') {
+      document.getElementById('fAnswerBlank').value = q.answer;
+    } else {
+      ['A','B','C','D'].forEach(l => {
+        document.getElementById('fOpt' + l).value = q['option' + l] || '';
+      });
+      correctAnswer = q.answer;
+      setCorrect(q.answer);
+    }
+
+    // Restore image
+    const imgSrc = getImageSrc(q, activeSubject);
+    if (imgSrc) {
+      document.getElementById('imgPreview').src              = imgSrc;
+      document.getElementById('imgPreviewWrap').style.display = 'block';
+      document.getElementById('uploadZone').style.display    = 'none';
+    } else {
+      removeImage();
+    }
+
+    hideErr();
     document.getElementById('modalOverlay').classList.add('open');
   }
 
@@ -397,51 +711,60 @@
     document.getElementById('modalOverlay').classList.remove('open');
   }
 
-  function clearForm() {
-    ['fSubject','fType','fQNum','fStem','fAnswer','fOptA','fOptB','fOptC','fOptD','fImageKey']
-      .forEach(id => { document.getElementById(id).value = ''; });
-    document.getElementById('fType').value = 'blank';
-    toggleMCQFields();
-    hideModalError();
-  }
-
-  function showModalError(msg) {
-    const el = document.getElementById('modalError');
-    el.textContent = msg; el.style.display = 'block';
-  }
-  function hideModalError() {
-    document.getElementById('modalError').style.display = 'none';
-  }
-
-  // ── Save ────────────────────────────────────────────────────────
+  // ── Modal: save ───────────────────────────────────────────────────
   async function saveQuestion() {
     const subjectKey = document.getElementById('fSubject').value;
-    const type       = document.getElementById('fType').value;
     const stem       = document.getElementById('fStem').value.trim();
-    const answer     = document.getElementById('fAnswer').value.trim();
-    const qNum       = parseInt(document.getElementById('fQNum').value) || null;
-    const optA       = document.getElementById('fOptA').value.trim() || null;
-    const optB       = document.getElementById('fOptB').value.trim() || null;
-    const optC       = document.getElementById('fOptC').value.trim() || null;
-    const optD       = document.getElementById('fOptD').value.trim() || null;
-    const imageKey   = document.getElementById('fImageKey').value.trim() || null;
+    const type       = currentType;
 
-    if (!subjectKey) { showModalError('Please select a subject.'); return; }
-    if (!stem)       { showModalError('Question stem is required.'); return; }
-    if (!answer)     { showModalError('Answer is required.'); return; }
-    if (type === 'mcq' && (!optA || !optB)) {
-      showModalError('MCQ requires at least options A and B.'); return;
+    let answer = '', optA = '', optB = '', optC = '', optD = '';
+
+    if (type === 'blank') {
+      answer = document.getElementById('fAnswerBlank').value.trim();
+    } else {
+      optA   = document.getElementById('fOptA').value.trim();
+      optB   = document.getElementById('fOptB').value.trim();
+      optC   = document.getElementById('fOptC').value.trim();
+      optD   = document.getElementById('fOptD').value.trim();
+      answer = correctAnswer;
     }
 
-    const q = { type, qNum, stem, answer, optionA: optA, optionB: optB, optionC: optC, optionD: optD, imageKey };
+    if (!subjectKey) { showErr('Please select a subject.'); return; }
+    if (!stem)       { showErr('Question text is required.'); return; }
+    if (!answer)     { showErr(type === 'mcq' ? 'Click a row to set the correct answer.' : 'Answer is required.'); return; }
+    if (type === 'mcq' && (!optA || !optB)) { showErr('MCQ requires at least options A and B.'); return; }
 
     const btn = document.getElementById('modalSaveBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
+    hideErr();
+
+    // Upload image if there's a pending file
+    let imageUrl = existingImageUrl || null;
+    if (pendingFile) {
+      document.getElementById('imgUploadProgress').style.display = 'block';
+      try {
+        imageUrl = await uploadImage(pendingFile, subjectKey);
+      } catch(e) {
+        showErr('Image upload failed: ' + e.message);
+        btn.disabled = false; btn.textContent = editingId ? 'Save Changes' : 'Add Question';
+        document.getElementById('imgUploadProgress').style.display = 'none';
+        return;
+      }
+      document.getElementById('imgUploadProgress').style.display = 'none';
+    }
+
+    const q = {
+      type, stem, answer,
+      optionA: optA || null,
+      optionB: optB || null,
+      optionC: optC || null,
+      optionD: optD || null,
+      imageUrl
+    };
 
     try {
       if (editingId) {
         await dbUpdate(editingId, subjectKey, q);
-        // Update local cache
         const pool = allQuestions[subjectKey] || [];
         const idx  = pool.findIndex(x => x.id === editingId);
         if (idx !== -1) pool[idx] = { ...pool[idx], ...q, id: editingId };
@@ -450,43 +773,42 @@
         const saved = await dbAdd(subjectKey, q);
         if (!allQuestions[subjectKey]) allQuestions[subjectKey] = [];
         allQuestions[subjectKey].push(saved);
-        // Update active subject if needed
-        if (subjectKey !== activeSubject) {
-          selectSubject(subjectKey);
-        }
+        if (subjectKey !== activeSubject) selectSubject(subjectKey);
         showToast('✅ Question added');
       }
       closeModal();
-      highlightSidebarItem();
+      highlightSidebar();
       renderList();
     } catch(e) {
-      showModalError('Error: ' + e.message);
+      showErr('Error: ' + e.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = editingId ? 'Save Changes' : 'Add';
+      btn.textContent = editingId ? 'Save Changes' : 'Add Question';
     }
   }
 
-  // ── Delete ───────────────────────────────────────────────────────
+  // ── Delete ────────────────────────────────────────────────────────
   async function deleteQ(id, preview) {
-    if (!confirm('Delete question: "' + preview + '…"?\n\nThis cannot be undone.')) return;
+    if (!confirm('Delete: "' + preview + '…"?\n\nThis cannot be undone.')) return;
     try {
       await dbDelete(id);
-      const pool = allQuestions[activeSubject] || [];
-      allQuestions[activeSubject] = pool.filter(q => q.id !== id);
-      highlightSidebarItem();
+      allQuestions[activeSubject] = (allQuestions[activeSubject] || []).filter(q => q.id !== id);
+      highlightSidebar();
       renderList();
       showToast('🗑️ Question deleted');
-    } catch(e) {
-      showToast('❌ ' + e.message);
-    }
+    } catch(e) { showToast('❌ ' + e.message); }
   }
 
-  // ── Toast ────────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────
+  function showErr(msg) {
+    const el = document.getElementById('modalErr');
+    el.textContent = msg; el.style.display = 'block';
+  }
+  function hideErr() { document.getElementById('modalErr').style.display = 'none'; }
+
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
@@ -494,12 +816,14 @@
     return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // Close modal on overlay click
+  // Close on overlay click
   document.getElementById('modalOverlay').addEventListener('click', e => {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
 
-  // Init if already authenticated
   if (sessionStorage.getItem(AUTH_KEY) === '1') initAdmin();
 </script>
 </body>
