@@ -6,7 +6,9 @@
   <title>Question Bank</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../questions.js"></script>
+  <script src="../supabase-config.js"></script>
   <script src="../image-map.js"></script>
 </head>
 <body>
@@ -14,11 +16,12 @@
 
   <nav class="top-nav">
     <a href="../index.html" class="btn-nav">🏠 Home</a>
+    <a href="admin.html" class="btn-nav" style="margin-left:auto;">⚙️ Admin</a>
   </nav>
 
   <div class="section-header">
     <h2>📚 Question Bank</h2>
-    <p>Browse all 572 questions across every subject</p>
+    <p id="bankSubtitle">Loading questions…</p>
   </div>
 
   <div class="qb-wrap">
@@ -41,11 +44,23 @@
         <span class="qb-count" id="qbCount"></span>
       </div>
 
+      <!-- Loading state -->
+      <div id="loadingState" style="text-align:center;padding:60px 20px;color:var(--text-muted);font-weight:600;">
+        <div style="font-size:2rem;margin-bottom:10px;">⏳</div>
+        Loading questions from database…
+      </div>
+
       <div id="qbList"></div>
     </div>
   </div>
 
 </div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="Question image">
+</div>
+
 <script>
   const GROUPS = [
     { label:'General',   keys:['CS','BIO','BUS','AD','CHI'] },
@@ -58,27 +73,52 @@
 
   let activeSubject = 'CS';
   let activeTab     = 'all';
+  let QDB           = {};   // questions loaded from Supabase (or fallback)
 
-  // Build sidebar
-  const sidebar = document.getElementById('sidebar');
-  GROUPS.forEach(g => {
-    const lbl = document.createElement('div');
-    lbl.className   = 'qb-group-label';
-    lbl.textContent = g.label;
-    sidebar.appendChild(lbl);
-    g.keys.forEach(key => {
-      const meta = SUBJECT_META[key];
-      if (!meta) return;
-      const pool = QUESTIONS[key] || [];
-      const btn  = document.createElement('button');
-      btn.className    = 'qb-subj-btn';
-      btn.id           = 'sb-' + key;
-      btn.dataset.key  = key;
-      btn.textContent  = meta.display + ' (' + pool.length + ')';
-      btn.onclick      = () => selectSubject(key);
-      sidebar.appendChild(btn);
+  // ── Init: fetch from Supabase, fall back to questions.js ────────
+  async function init() {
+    try {
+      QDB = await dbFetchAll();
+      const total = Object.values(QDB).reduce((s, a) => s + a.length, 0);
+      document.getElementById('bankSubtitle').textContent =
+        'Browse ' + total + ' questions across every subject';
+    } catch(e) {
+      console.warn('Supabase unavailable, using local data:', e.message);
+      QDB = {};
+      for (const [k, qs] of Object.entries(QUESTIONS)) QDB[k] = [...qs];
+      const total = Object.values(QDB).reduce((s, a) => s + a.length, 0);
+      document.getElementById('bankSubtitle').textContent =
+        'Browse ' + total + ' questions (offline mode)';
+    }
+
+    document.getElementById('loadingState').style.display = 'none';
+    buildSidebar();
+    selectSubject('CS');
+  }
+
+  // ── Sidebar ─────────────────────────────────────────────────────
+  function buildSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.innerHTML = '';
+    GROUPS.forEach(g => {
+      const lbl = document.createElement('div');
+      lbl.className   = 'qb-group-label';
+      lbl.textContent = g.label;
+      sidebar.appendChild(lbl);
+      g.keys.forEach(key => {
+        const meta = SUBJECT_META[key];
+        if (!meta) return;
+        const pool = QDB[key] || [];
+        const btn  = document.createElement('button');
+        btn.className    = 'qb-subj-btn';
+        btn.id           = 'sb-' + key;
+        btn.dataset.key  = key;
+        btn.textContent  = meta.display + ' (' + pool.length + ')';
+        btn.onclick      = () => selectSubject(key);
+        sidebar.appendChild(btn);
+      });
     });
-  });
+  }
 
   function selectSubject(key) {
     activeSubject = key;
@@ -97,14 +137,16 @@
     render();
   }
 
+  // ── Render ───────────────────────────────────────────────────────
   function render() {
-    const pool   = QUESTIONS[activeSubject] || [];
+    const pool   = QDB[activeSubject] || [];
     const search = document.getElementById('searchBox').value.toLowerCase().trim();
 
     const filtered = pool.filter(q => {
       if (activeTab !== 'all' && q.type !== activeTab) return false;
       if (search) {
-        const hay = (q.stem+' '+q.answer+' '+(q.optionA||'')+' '+(q.optionB||'')+' '+(q.optionC||'')+' '+(q.optionD||'')).toLowerCase();
+        const hay = [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
+          .filter(Boolean).join(' ').toLowerCase();
         if (!hay.includes(search)) return false;
       }
       return true;
@@ -145,7 +187,7 @@
 
       card.innerHTML = html;
 
-      // Image (below stem, above answer)
+      // Image
       const imageKey  = activeSubject + '_' + q.qNum;
       const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
       if (imageFile) {
@@ -167,14 +209,6 @@
     return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  selectSubject('CS');
-</script>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightboxImg" src="" alt="Question image">
-</div>
-<script>
   function openLightbox(src) {
     document.getElementById('lightboxImg').src = src;
     document.getElementById('lightbox').classList.add('open');
@@ -185,6 +219,8 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeLightbox();
   });
+
+  init();
 </script>
 </body>
 </html>

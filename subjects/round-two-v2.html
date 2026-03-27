@@ -6,10 +6,11 @@
   <title>Round Two — Exam</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../questions.js"></script>
+  <script src="../supabase-config.js"></script>
   <script src="../image-map.js"></script>
   <style>
-    /* Progress bar under timer */
     .batch-progress {
       display: flex;
       align-items: center;
@@ -23,10 +24,7 @@
       color: var(--text-muted);
       white-space: nowrap;
     }
-    .bp-dots {
-      display: flex;
-      gap: 5px;
-    }
+    .bp-dots { display: flex; gap: 5px; }
     .bp-dot {
       width: 11px; height: 11px;
       border-radius: 50%;
@@ -34,19 +32,13 @@
       border: 2px solid var(--border);
       transition: all 0.2s;
     }
-    .bp-dot.answered  { background: var(--green-light);   border-color: var(--green); }
-    .bp-dot.current   { background: var(--purple-light);  border-color: var(--purple); animation: dotPulse 1s infinite alternate; }
+    .bp-dot.answered { background: var(--green-light);  border-color: var(--green); }
+    .bp-dot.current  { background: var(--purple-light); border-color: var(--purple); animation: dotPulse 1s infinite alternate; }
     @keyframes dotPulse { from { transform: scale(1); } to { transform: scale(1.25); } }
 
-    /* Next-batch button area */
-    .next-batch-bar {
-      display: none;
-      text-align: center;
-      padding: 20px 0 8px;
-    }
+    .next-batch-bar { display: none; text-align: center; padding: 20px 0 8px; }
     .next-batch-bar.show { display: block; }
 
-    /* Score modal fix — vertical stack, scrollable */
     .score-modal {
       max-height: 90vh;
       overflow-y: auto;
@@ -54,28 +46,11 @@
       flex-direction: column;
       align-items: center;
     }
-    .score-actions {
-      width: 100%;
-    }
-    .score-actions .btn {
-      width: 100%;
-      margin-bottom: 8px;
-      justify-content: center;
-    }
+    .score-actions { width: 100%; }
+    .score-actions .btn { width: 100%; margin-bottom: 8px; justify-content: center; }
     .score-actions .btn:last-child { margin-bottom: 0; }
-    .score-actions .score-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 12px 0;
-      width: 100%;
-    }
-    .score-actions .score-next-label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
+    .score-actions .score-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; width: 100%; }
+    .score-actions .score-next-label { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 10px; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -97,24 +72,30 @@
 
   <div class="page-shell" style="padding-top:12px;">
 
-    <!-- Batch progress dots + info -->
-    <div class="batch-progress" id="batchProgress">
-      <span class="bp-label" id="batchLabel">Batch 1</span>
-      <div class="bp-dots" id="batchDots"></div>
-      <span class="bp-label" id="globalProgress" style="margin-left:auto;"></span>
+    <!-- Loading state -->
+    <div id="loadingState" style="text-align:center;padding:80px 20px;color:var(--text-muted);">
+      <div style="font-size:2rem;margin-bottom:10px;">⏳</div>
+      <p style="font-weight:600;">Loading questions…</p>
     </div>
 
-    <!-- Active question cards -->
-    <div id="questionList"></div>
+    <!-- Exam content (hidden until loaded) -->
+    <div id="examContent" style="display:none;">
+      <div class="batch-progress" id="batchProgress">
+        <span class="bp-label" id="batchLabel">Batch 1</span>
+        <div class="bp-dots" id="batchDots"></div>
+        <span class="bp-label" id="globalProgress" style="margin-left:auto;"></span>
+      </div>
 
-    <!-- "Next 5" button shown when all current 5 are answered -->
-    <div class="next-batch-bar" id="nextBatchBar">
-      <button class="btn btn-purple btn-lg" onclick="loadNextBatch()">
-        Next 5 Questions →
-      </button>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-top:8px;">
-        Or wait for the timer — it keeps running!
-      </p>
+      <div id="questionList"></div>
+
+      <div class="next-batch-bar" id="nextBatchBar">
+        <button class="btn btn-purple btn-lg" onclick="loadNextBatch()">
+          Next 5 Questions →
+        </button>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:8px;">
+          Or wait for the timer — it keeps running!
+        </p>
+      </div>
     </div>
 
   </div>
@@ -148,7 +129,6 @@
   </div>
 
   <script>
-    // ── Params ────────────────────────────────────────────────────
     const p         = new URLSearchParams(window.location.search);
     const cls       = p.get('class') || localStorage.getItem('dc_class') || '';
     const judgeName = p.get('name')  || localStorage.getItem('dc_judge') || 'Unknown';
@@ -159,24 +139,94 @@
     document.getElementById('tbJudge').textContent        = judgeName;
     document.getElementById('nextRoundLabel').textContent = cls + ' · ' + judgeName;
 
-    // Block back during exam
     history.pushState({ exam: true }, '');
     window.addEventListener('popstate', () => {
       if (!timerDone) history.pushState({ exam: true }, '');
     });
 
-    // ── Build full shuffled pool ──────────────────────────────────
-    const subjects = getSubjectsForClass(cls);
-    const fullPool = [];
-    subjects.forEach(subKey => {
-      const meta = SUBJECT_META[subKey];
-      if (!meta) return;
-      (QUESTIONS[subKey] || []).filter(q => q.type === 'mcq').forEach(q => {
-        fullPool.push({ ...q, subjectKey: subKey, subjectDisplay: meta.display });
-      });
-    });
+    // ── Global state ──────────────────────────────────────────────
+    const BATCH_SIZE   = 5;
+    const TOTAL        = 60;
+    let shuffledPool   = [];
+    let timerDone      = false;
+    let resultData     = null;
+    let interval       = null;
 
-    // Fisher-Yates shuffle
+    const allAnswered  = {};
+    const allDisplayed = [];
+    let   batchStart   = 0;
+    let   batchNum     = 1;
+    let   currentBatch  = [];
+    let   batchAnswered = new Set();
+
+    // ── Load questions (Supabase first, fallback to questions.js) ─
+    async function initExam() {
+      const subjects = getSubjectsForClass(cls);
+      const fullPool = [];
+
+      try {
+        // Fetch all needed subjects in parallel
+        const results = await Promise.all(
+          subjects.map(subKey => dbFetchSubject(subKey).then(qs => ({ subKey, qs })))
+        );
+        results.forEach(({ subKey, qs }) => {
+          const meta = SUBJECT_META[subKey];
+          if (!meta) return;
+          qs.filter(q => q.type === 'mcq').forEach(q => {
+            fullPool.push({ ...q, subjectKey: subKey, subjectDisplay: meta.display });
+          });
+        });
+      } catch(e) {
+        console.warn('Supabase unavailable, using local data:', e.message);
+        subjects.forEach(subKey => {
+          const meta = SUBJECT_META[subKey];
+          if (!meta) return;
+          (QUESTIONS[subKey] || []).filter(q => q.type === 'mcq').forEach(q => {
+            fullPool.push({ ...q, subjectKey: subKey, subjectDisplay: meta.display });
+          });
+        });
+      }
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('examContent').style.display  = 'block';
+
+      shuffledPool = shuffle(fullPool);
+
+      const list = document.getElementById('questionList');
+      if (!shuffledPool.length) {
+        document.getElementById('batchProgress').style.display = 'none';
+        list.innerHTML = `
+          <div style="text-align:center;padding:80px 20px;color:var(--text-muted);">
+            <div style="font-size:3rem;margin-bottom:16px;">📭</div>
+            <p style="font-size:1.1rem;font-weight:600;margin-bottom:16px;">
+              No MCQ questions for this class in Round Two.
+            </p>
+            <a href="round-two-entry.html" class="btn btn-ghost">← Go Back</a>
+          </div>`;
+        document.querySelector('.timer-bar').style.display        = 'none';
+        document.querySelector('.timer-bar-spacer').style.display = 'none';
+      } else {
+        startTimer();
+        loadNextBatch();
+      }
+    }
+
+    // ── Timer ─────────────────────────────────────────────────────
+    let timeLeft = TOTAL;
+    const timerEl = document.getElementById('timerDisplay');
+    function fmt(s) { return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+    function startTimer() {
+      interval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = fmt(timeLeft);
+        if      (timeLeft <= 10) timerEl.className = 'timer-display danger';
+        else if (timeLeft <= 20) timerEl.className = 'timer-display warning';
+        if (timeLeft <= 0) { clearInterval(interval); autoSubmit(); }
+      }, 1000);
+    }
+
+    // ── Shuffle ───────────────────────────────────────────────────
     function shuffle(arr) {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -186,45 +236,10 @@
       return a;
     }
 
-    const shuffledPool = shuffle(fullPool);
-    const BATCH_SIZE   = 5;
-
-    // Global state
-    const allAnswered  = {};  // globalIndex → letter
-    const allDisplayed = [];  // questions that have been shown (in order)
-    let   batchStart   = 0;   // index into shuffledPool for next batch
-    let   batchNum     = 1;
-    let   timerDone    = false;
-    let   resultData   = null;
-
-    // Current batch tracking
-    let   currentBatch  = [];       // array of { q, globalIdx }
-    let   batchAnswered = new Set(); // globalIdx answered in this batch
-
-    // ── Empty state ───────────────────────────────────────────────
-    const list = document.getElementById('questionList');
-    if (!shuffledPool.length) {
-      document.getElementById('batchProgress').style.display = 'none';
-      list.innerHTML = `
-        <div style="text-align:center;padding:80px 20px;color:var(--text-muted);">
-          <div style="font-size:3rem;margin-bottom:16px;">📭</div>
-          <p style="font-size:1.1rem;font-weight:600;margin-bottom:16px;">
-            No MCQ questions for this class in Round Two.
-          </p>
-          <a href="round-two-entry.html" class="btn btn-ghost">← Go Back</a>
-        </div>`;
-      document.querySelector('.timer-bar').style.display       = 'none';
-      document.querySelector('.timer-bar-spacer').style.display = 'none';
-    } else {
-      loadNextBatch(); // show first 5
-    }
-
-    // ── Load next batch of 5 ─────────────────────────────────────
+    // ── Batch loading ─────────────────────────────────────────────
     function loadNextBatch() {
-      // Hide "Next 5" bar
       document.getElementById('nextBatchBar').classList.remove('show');
 
-      // Wrap around if we've exhausted the pool
       if (batchStart >= shuffledPool.length) {
         const reshuffled = shuffle(shuffledPool);
         shuffledPool.splice(0, shuffledPool.length, ...reshuffled);
@@ -235,14 +250,11 @@
       batchStart += slice.length;
       batchNum++;
 
-      currentBatch  = slice.map((q, i) => ({
-        q,
-        globalIdx: allDisplayed.length + i
-      }));
+      currentBatch  = slice.map((q, i) => ({ q, globalIdx: allDisplayed.length + i }));
       currentBatch.forEach(item => allDisplayed.push(item.q));
       batchAnswered = new Set();
 
-      // Clear list and render new cards
+      const list = document.getElementById('questionList');
       list.innerHTML = '';
       currentBatch.forEach(({ q, globalIdx }) => {
         const card = document.createElement('div');
@@ -256,7 +268,6 @@
                     onclick="selectOpt(${globalIdx},'${l}')">${l}.&nbsp;${esc(txt)}</button>`;
         }).join('');
 
-        // Image lookup
         const imageKey  = q.subjectKey + '_' + q.qNum;
         const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
         const imageHtml = imageFile
@@ -282,7 +293,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ── Select option ────────────────────────────────────────────
+    // ── Select option ─────────────────────────────────────────────
     function selectOpt(gi, letter) {
       if (timerDone) return;
       allAnswered[gi] = letter;
@@ -294,7 +305,6 @@
 
       updateProgress();
 
-      // Check if all cards in this batch are answered
       const allDone = currentBatch.every(({ globalIdx }) => batchAnswered.has(globalIdx));
       if (allDone) {
         document.getElementById('nextBatchBar').classList.add('show');
@@ -302,47 +312,28 @@
       }
     }
 
-    // ── Progress dots ────────────────────────────────────────────
+    // ── Progress dots ─────────────────────────────────────────────
     function updateProgress() {
-      // Batch label
-      document.getElementById('batchLabel').textContent =
-        'Batch ' + (batchNum - 1) + ' of 5';
+      document.getElementById('batchLabel').textContent = 'Batch ' + (batchNum - 1) + ' of 5';
 
-      // Dots for current batch
       const dotsEl = document.getElementById('batchDots');
       dotsEl.innerHTML = '';
       currentBatch.forEach(({ globalIdx }, i) => {
         const d = document.createElement('div');
         const answered = batchAnswered.has(globalIdx);
-        // Find which is "current" (first unanswered)
         const firstUnanswered = currentBatch.findIndex(({ globalIdx: gi }) => !batchAnswered.has(gi));
         d.className = 'bp-dot' +
           (answered ? ' answered' : (i === firstUnanswered ? ' current' : ''));
         dotsEl.appendChild(d);
       });
 
-      // Global counter
-      const total    = Object.keys(allAnswered).length;
-      const shown    = allDisplayed.length;
+      const total = Object.keys(allAnswered).length;
+      const shown = allDisplayed.length;
       document.getElementById('globalProgress').textContent =
         total + ' answered · ' + shown + ' shown';
     }
 
-    // ── Timer ─────────────────────────────────────────────────────
-    const TOTAL   = 60;
-    let timeLeft  = TOTAL;
-    const timerEl = document.getElementById('timerDisplay');
-
-    function fmt(s) { return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
-
-    const interval = setInterval(() => {
-      timeLeft--;
-      timerEl.textContent = fmt(timeLeft);
-      if      (timeLeft <= 10) timerEl.className = 'timer-display danger';
-      else if (timeLeft <= 20) timerEl.className = 'timer-display warning';
-      if (timeLeft <= 0) { clearInterval(interval); autoSubmit(); }
-    }, 1000);
-
+    // ── Submit ────────────────────────────────────────────────────
     function confirmSubmit() {
       if (timerDone) return;
       clearInterval(interval);
@@ -353,12 +344,10 @@
       finalize();
     }
 
-    // ── Finalize ──────────────────────────────────────────────────
     function finalize() {
       timerDone = true;
       document.getElementById('nextBatchBar').classList.remove('show');
 
-      // Highlight answers on visible cards
       currentBatch.forEach(({ q, globalIdx }) => {
         const selected = allAnswered[globalIdx];
         document.querySelectorAll(`[data-gi="${globalIdx}"]`).forEach(btn => {
@@ -369,7 +358,6 @@
         });
       });
 
-      // Build result from all displayed questions
       const answersArr = allDisplayed.map((q, gi) => ({
         subject_key:    q.subjectKey,
         subject_display:q.subjectDisplay,
@@ -408,7 +396,7 @@
       document.getElementById('submitBtn').textContent = 'Submitted ✓';
     }
 
-    // ── Post-exam ──────────────────────────────────────────────────
+    // ── Post-exam ─────────────────────────────────────────────────
     function downloadResult() {
       if (!resultData) return;
       const ts = new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
@@ -434,7 +422,6 @@
     function esc(s) {
       return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
-
     function openLightbox(src) {
       document.getElementById('lightboxImg').src = src;
       document.getElementById('lightbox').classList.add('open');
@@ -445,6 +432,8 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeLightbox();
     });
+
+    initExam();
   </script>
 </body>
 </html>

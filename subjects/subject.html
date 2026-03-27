@@ -6,7 +6,9 @@
   <title>Round One — Question</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../questions.js"></script>
+  <script src="../supabase-config.js"></script>
   <script src="../image-map.js"></script>
 </head>
 <body>
@@ -22,8 +24,14 @@
     <span class="pill">Subject: <strong id="subjectLabel" style="margin-left:4px;">—</strong></span>
   </div>
 
+  <!-- Loading state -->
+  <div id="loadingState" style="text-align:center;padding:80px 20px;color:var(--text-muted);">
+    <div style="font-size:2rem;margin-bottom:10px;">⏳</div>
+    <p style="font-weight:600;">Loading questions…</p>
+  </div>
+
   <!-- Question card -->
-  <div class="q-card" id="qCard">
+  <div class="q-card" id="qCard" style="display:none;">
     <div class="q-card-header">
       <span class="q-label" id="qTypeLabel">Fill-in</span>
       <span class="q-counter" id="qCounter"></span>
@@ -31,13 +39,10 @@
 
     <div class="q-stem" id="stem"></div>
 
-    <!-- Question image (populated by JS, shown below stem) -->
     <div class="q-image-wrap" id="qImageWrap" style="display:none;"></div>
 
-    <!-- MCQ options (CHI only) -->
     <div class="opts-display" id="optsDisplay" style="display:none;"></div>
 
-    <!-- Answer reveal -->
     <div class="answer-reveal" id="answerReveal">
       <div class="ar-label">Answer</div>
       <div class="ar-text" id="answerText"></div>
@@ -77,6 +82,7 @@
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <img id="lightboxImg" src="" alt="Question image">
 </div>
+
 <script>
   const p          = new URLSearchParams(window.location.search);
   const subjectKey = p.get('subject') || '';
@@ -88,18 +94,37 @@
   document.getElementById('classLabel').textContent   = cls;
   document.getElementById('subjectLabel').textContent = subjectDisplay;
 
-  // Pool: CHI uses mcq, all others use blank
   const targetType = (subjectKey === 'CHI') ? 'mcq' : 'blank';
-  const pool       = (QUESTIONS[subjectKey] || []).filter(q => q.type === targetType);
 
+  let pool        = [];
   let currentQ    = null;
   let usedIndices = new Set();
 
+  // ── Load questions (Supabase first, fallback to questions.js) ───
+  async function initQuestions() {
+    try {
+      const qs = await dbFetchSubject(subjectKey);
+      pool = qs.filter(q => q.type === targetType);
+    } catch(e) {
+      console.warn('Supabase unavailable, using local data:', e.message);
+      pool = (QUESTIONS[subjectKey] || []).filter(q => q.type === targetType);
+    }
+
+    document.getElementById('loadingState').style.display = 'none';
+
+    if (!pool.length) {
+      document.getElementById('errState').style.display = 'block';
+    } else {
+      document.getElementById('qCard').style.display = 'block';
+      renderQuestion();
+    }
+  }
+
+  // ── Question logic ───────────────────────────────────────────────
   function pickQuestion() {
     if (!pool.length) return null;
     if (usedIndices.size >= pool.length) usedIndices.clear();
-    let idx;
-    let tries = 0;
+    let idx, tries = 0;
     do {
       idx = Math.floor(Math.random() * pool.length);
       tries++;
@@ -111,24 +136,21 @@
   function renderQuestion() {
     const picked = pickQuestion();
     if (!picked) {
-      document.getElementById('qCard').style.display  = 'none';
+      document.getElementById('qCard').style.display   = 'none';
       document.getElementById('errState').style.display = 'block';
       return;
     }
     currentQ = picked;
     const { q, idx } = picked;
 
-    // Type label
     const labelEl = document.getElementById('qTypeLabel');
     labelEl.textContent = q.type === 'blank' ? 'Fill-in-Blank' : 'MCQ';
     labelEl.className   = 'q-label ' + q.type;
 
-    document.getElementById('qCounter').textContent =
-      'Q' + (idx + 1) + ' / ' + pool.length;
+    document.getElementById('qCounter').textContent = 'Q' + (idx + 1) + ' / ' + pool.length;
+    document.getElementById('stem').textContent     = q.stem;
 
-    document.getElementById('stem').textContent = q.stem;
-
-    // ── Image (below stem, above options) ──
+    // Image
     const imageWrap = document.getElementById('qImageWrap');
     const imageKey  = subjectKey + '_' + q.qNum;
     const imageFile = (typeof IMAGE_MAP !== 'undefined') ? IMAGE_MAP[imageKey] : undefined;
@@ -144,7 +166,7 @@
       imageWrap.style.display = 'none';
     }
 
-    // Options (MCQ)
+    // MCQ options
     const optsEl = document.getElementById('optsDisplay');
     optsEl.innerHTML = '';
     if (q.type === 'mcq') {
@@ -161,7 +183,6 @@
       optsEl.style.display = 'none';
     }
 
-    // Reset reveal & checkbox
     document.getElementById('answerReveal').className = 'answer-reveal';
     document.getElementById('revealBtn').style.display = 'inline-flex';
     document.getElementById('isCorrect').checked = false;
@@ -194,26 +215,23 @@
     localStorage.setItem(counterKey, String(n));
 
     const record = {
-      round:            1,
-      class:            cls,
-      subject_key:      subjectKey,
-      subject_display:  subjectDisplay,
+      round:             1,
+      class:             cls,
+      subject_key:       subjectKey,
+      subject_display:   subjectDisplay,
       submission_number: n,
-      stem:             q.stem,
-      answer:           q.answer,
-      is_correct:       isCorrect,
-      submitted_at:     new Date().toISOString()
+      stem:              q.stem,
+      answer:            q.answer,
+      is_correct:        isCorrect,
+      submitted_at:      new Date().toISOString()
     };
 
-    // Save to localStorage log
     logR1(record);
 
-    // Also trigger a JSON download so original workflow still works
     const safeClass   = cls.replace(/[^A-Za-z0-9]/g,'_');
     const safeSubject = subjectKey.replace(/[^A-Za-z0-9]/g,'_');
     downloadJSON(record, 'R1_' + safeClass + '_' + n + '_' + safeSubject + '.json');
 
-    // Replace history entry so Back doesn't loop
     setTimeout(() => {
       location.replace('round-one.html?class=' + encodeURIComponent(cls));
     }, 400);
@@ -241,7 +259,7 @@
     if (e.key === 'Escape') closeLightbox();
   });
 
-  renderQuestion();
+  initQuestions();
 </script>
 </body>
 </html>

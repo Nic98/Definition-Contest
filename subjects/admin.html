@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Question Bank</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../questions.js"></script>
+  <script src="../supabase-config.js"></script>
+  <style>
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border-radius: 16px;
+      padding: 28px; width: min(560px, 94vw);
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+    }
+    .modal h3 { margin: 0 0 20px; font-size: 1.15rem; }
+    .form-row { margin-bottom: 14px; }
+    .form-row label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; color: var(--text-muted); }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; box-sizing: border-box;
+      padding: 9px 12px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 0.92rem;
+      background: var(--bg); color: var(--text);
+      font-family: inherit;
+    }
+    .form-row textarea { min-height: 72px; resize: vertical; }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+      outline: none; border-color: var(--primary);
+    }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    #mcqFields { display: none; }
+    /* ── Admin card ── */
+    .adm-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .adm-card-top { display: flex; align-items: flex-start; gap: 10px; }
+    .adm-card-stem { flex: 1; font-size: 0.92rem; line-height: 1.5; }
+    .adm-card-stem .answer { font-size: 0.8rem; color: var(--green); font-weight: 700; margin-top: 4px; }
+    .adm-card-btns { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-edit { font-size: 0.78rem; padding: 5px 11px; }
+    .btn-del  { font-size: 0.78rem; padding: 5px 11px; background: #fee2e2; color: #dc2626; border: 1.5px solid #fca5a5; border-radius: 7px; cursor: pointer; }
+    .btn-del:hover { background: #fca5a5; }
+    /* ── Loading / empty ── */
+    .adm-loading { text-align: center; padding: 60px 20px; color: var(--text-muted); font-weight: 600; }
+    /* ── Password gate ── */
+    .pw-gate {
+      max-width: 400px; margin: 80px auto; background: var(--surface);
+      border-radius: 16px; padding: 32px; box-shadow: var(--shadow-lg); text-align: center;
+    }
+    .pw-gate h2 { margin: 0 0 8px; }
+    .pw-gate p  { color: var(--text-muted); margin: 0 0 20px; font-size: 0.9rem; }
+    .pw-gate input { width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 1rem;
+      border: 1.5px solid var(--border); border-radius: 9px; margin-bottom: 12px;
+      background: var(--bg); color: var(--text); font-family: inherit; }
+    .pw-gate input:focus { outline: none; border-color: var(--primary); }
+    /* ── Toolbar ── */
+    .adm-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .adm-toolbar .adm-count { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-left: auto; }
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #1e293b; color: #f1f5f9; padding: 10px 22px;
+      border-radius: 10px; font-size: 0.88rem; font-weight: 600;
+      transition: transform .25s; z-index: 300; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- Password gate -->
+<div id="pwGate" class="pw-gate">
+  <div style="font-size:2.4rem;margin-bottom:12px;">🔐</div>
+  <h2>Admin Panel</h2>
+  <p>Enter the admin password to manage questions.</p>
+  <input type="password" id="pwInput" placeholder="Password"
+         onkeydown="if(event.key==='Enter') checkPassword()">
+  <button class="btn btn-primary" style="width:100%;" onclick="checkPassword()">Enter</button>
+  <div style="margin-top:12px;">
+    <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">← Back to Home</a>
+  </div>
+</div>
+
+<!-- Main panel (hidden until auth) -->
+<div id="mainPanel" style="display:none;">
+
+<div class="wide-shell">
+  <nav class="top-nav">
+    <a href="../index.html" class="btn-nav">🏠 Home</a>
+    <a href="question-bank.html" class="btn-nav">📚 Question Bank</a>
+    <button class="btn-nav" style="margin-left:auto;color:#dc2626;" onclick="logout()">🔓 Logout</button>
+  </nav>
+
+  <div class="section-header">
+    <h2>⚙️ Admin — Question Manager</h2>
+    <p>Add, edit, and delete questions in the live database</p>
+  </div>
+
+  <div class="qb-wrap">
+
+    <!-- Sidebar -->
+    <div class="qb-sidebar" id="sidebar"></div>
+
+    <!-- Main -->
+    <div>
+      <div class="adm-toolbar">
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Question</button>
+        <input class="qb-search" id="searchBox" placeholder="Search…"
+               style="margin:0;max-width:220px;" oninput="renderList()">
+        <span class="adm-count" id="admCount"></span>
+      </div>
+
+      <div id="listArea">
+        <div class="adm-loading">Loading questions…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /mainPanel -->
+
+<!-- Add / Edit Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Add Question</h3>
+
+    <div class="form-row">
+      <label>Subject</label>
+      <select id="fSubject" onchange="syncSubjectFromModal()">
+        <option value="">— Select subject —</option>
+      </select>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-row">
+        <label>Type</label>
+        <select id="fType" onchange="toggleMCQFields()">
+          <option value="blank">Fill-in-Blank</option>
+          <option value="mcq">MCQ</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Q Number (optional)</label>
+        <input type="number" id="fQNum" placeholder="e.g. 42">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Question Stem</label>
+      <textarea id="fStem" placeholder="Enter the question text…"></textarea>
+    </div>
+
+    <div class="form-row">
+      <label>Answer</label>
+      <input type="text" id="fAnswer" placeholder="For MCQ enter A / B / C / D">
+    </div>
+
+    <div id="mcqFields">
+      <div class="form-row"><label>Option A</label><input type="text" id="fOptA"></div>
+      <div class="form-row"><label>Option B</label><input type="text" id="fOptB"></div>
+      <div class="form-row"><label>Option C</label><input type="text" id="fOptC"></div>
+      <div class="form-row"><label>Option D</label><input type="text" id="fOptD"></div>
+    </div>
+
+    <div class="form-row">
+      <label>Image Key (optional, e.g. ECON_18)</label>
+      <input type="text" id="fImageKey" placeholder="SUBJECT_qNum">
+    </div>
+
+    <div id="modalError" style="color:#dc2626;font-size:0.85rem;margin-top:4px;display:none;"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveQuestion()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const ADMIN_PASSWORD = 'WHBC2025';
+  const AUTH_KEY = 'dc_admin_auth';
+
+  // ── Auth ────────────────────────────────────────────────────────
+  function checkPassword() {
+    const pw = document.getElementById('pwInput').value;
+    if (pw === ADMIN_PASSWORD) {
+      sessionStorage.setItem(AUTH_KEY, '1');
+      document.getElementById('pwGate').style.display     = 'none';
+      document.getElementById('mainPanel').style.display  = 'block';
+      initAdmin();
+    } else {
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwInput').placeholder = 'Wrong password, try again';
+    }
+  }
+  function logout() {
+    sessionStorage.removeItem(AUTH_KEY);
+    location.reload();
+  }
+
+  // Check if already authenticated
+  if (sessionStorage.getItem(AUTH_KEY) === '1') {
+    document.getElementById('pwGate').style.display    = 'none';
+    document.getElementById('mainPanel').style.display = 'block';
+  }
+
+  // ── State ───────────────────────────────────────────────────────
+  let allQuestions = {};    // { subjectKey: [q, …] }
+  let activeSubject = '';
+  let editingId = null;     // null = add mode, string = edit mode
+
+  // ── Init ────────────────────────────────────────────────────────
+  async function initAdmin() {
+    buildSidebar();
+    populateSubjectSelect();
+    await loadData();
+  }
+
+  async function loadData() {
+    document.getElementById('listArea').innerHTML =
+      '<div class="adm-loading">Loading…</div>';
+    try {
+      allQuestions = await dbFetchAll();
+    } catch(e) {
+      // fallback to questions.js
+      allQuestions = {};
+      for (const [k, qs] of Object.entries(QUESTIONS)) allQuestions[k] = [...qs];
+    }
+    if (!activeSubject) {
+      const first = Object.keys(allQuestions)[0] || Object.keys(SUBJECT_META)[0];
+      activeSubject = first;
+    }
+    highlightSidebarItem();
+    renderList();
+  }
+
+  // ── Sidebar ─────────────────────────────────────────────────────
+  const GROUPS = [
+    { label:'General',   keys:['CS','BIO','BUS','AD','CHI'] },
+    { label:'EAP',       keys:['EAP','EAP-2.5'] },
+    { label:'Physics',   keys:['PHY','PHY-2.5'] },
+    { label:'Chemistry', keys:['CHE','CHE-2.5'] },
+    { label:'Economics', keys:['ECON','ECON-2.5'] },
+    { label:'Math',      keys:['MATH-0580','MATH-0606','MATH-0606-2.5','MATH-9709'] }
+  ];
+
+  function buildSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.innerHTML = '';
+    GROUPS.forEach(g => {
+      const lbl = document.createElement('div');
+      lbl.className = 'qb-group-label';
+      lbl.textContent = g.label;
+      sidebar.appendChild(lbl);
+      g.keys.forEach(key => {
+        const meta = SUBJECT_META[key];
+        if (!meta) return;
+        const btn = document.createElement('button');
+        btn.className   = 'qb-subj-btn';
+        btn.id          = 'sb-' + key;
+        btn.dataset.key = key;
+        btn.textContent = meta.display;
+        btn.onclick     = () => selectSubject(key);
+        sidebar.appendChild(btn);
+      });
+    });
+  }
+
+  function selectSubject(key) {
+    activeSubject = key;
+    document.getElementById('searchBox').value = '';
+    highlightSidebarItem();
+    renderList();
+  }
+
+  function highlightSidebarItem() {
+    document.querySelectorAll('.qb-subj-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.key === activeSubject);
+      const qs = allQuestions[b.dataset.key] || [];
+      const meta = SUBJECT_META[b.dataset.key];
+      if (meta) b.textContent = meta.display + ' (' + qs.length + ')';
+    });
+  }
+
+  function populateSubjectSelect() {
+    const sel = document.getElementById('fSubject');
+    sel.innerHTML = '<option value="">— Select subject —</option>';
+    Object.entries(SUBJECT_META).forEach(([key, meta]) => {
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = meta.display + ' (' + key + ')';
+      sel.appendChild(opt);
+    });
+  }
+
+  // ── Render list ─────────────────────────────────────────────────
+  function renderList() {
+    const pool   = allQuestions[activeSubject] || [];
+    const search = document.getElementById('searchBox').value.toLowerCase().trim();
+    const filtered = pool.filter(q => {
+      if (!search) return true;
+      const hay = [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
+        .filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(search);
+    });
+
+    document.getElementById('admCount').textContent =
+      filtered.length + ' / ' + pool.length + ' questions';
+
+    const area = document.getElementById('listArea');
+    if (!filtered.length) {
+      area.innerHTML = '<div class="adm-loading" style="padding:40px;">No questions. Click "+ Add Question" to create one.</div>';
+      return;
+    }
+
+    area.innerHTML = '';
+    filtered.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'adm-card';
+
+      const tag  = q.type === 'mcq' ? 'MCQ' : 'Fill-in';
+      const ansDisplay = q.type === 'mcq'
+        ? q.answer + ' — ' + (q['option'+q.answer] || q['optionA']||'')
+        : q.answer;
+
+      card.innerHTML = `
+        <div class="adm-card-top">
+          <span class="qb-type-tag ${q.type}" style="flex-shrink:0;align-self:flex-start;">${tag}</span>
+          <div class="adm-card-stem">
+            ${esc(q.stem)}
+            <div class="answer">✓ ${esc(ansDisplay)}</div>
+          </div>
+          <div class="adm-card-btns">
+            <button class="btn btn-ghost btn-edit" onclick="openEditModal('${q.id||''}')">✏️ Edit</button>
+            <button class="btn-del" onclick="deleteQ('${q.id||''}','${esc(q.stem).slice(0,30)}')">🗑️</button>
+          </div>
+        </div>`;
+      area.appendChild(card);
+    });
+  }
+
+  // ── Modal helpers ───────────────────────────────────────────────
+  function toggleMCQFields() {
+    const isMCQ = document.getElementById('fType').value === 'mcq';
+    document.getElementById('mcqFields').style.display = isMCQ ? 'block' : 'none';
+  }
+  function syncSubjectFromModal() {}  // placeholder
+
+  function openAddModal() {
+    editingId = null;
+    document.getElementById('modalTitle').textContent = 'Add Question';
+    document.getElementById('modalSaveBtn').textContent = 'Add';
+    clearForm();
+    document.getElementById('fSubject').value = activeSubject;
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function openEditModal(id) {
+    const pool = allQuestions[activeSubject] || [];
+    const q = pool.find(x => x.id === id);
+    if (!q) { showToast('Question not found'); return; }
+
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'Edit Question';
+    document.getElementById('modalSaveBtn').textContent = 'Save Changes';
+
+    document.getElementById('fSubject').value  = activeSubject;
+    document.getElementById('fType').value     = q.type;
+    document.getElementById('fQNum').value     = q.qNum || '';
+    document.getElementById('fStem').value     = q.stem;
+    document.getElementById('fAnswer').value   = q.answer;
+    document.getElementById('fOptA').value     = q.optionA  || '';
+    document.getElementById('fOptB').value     = q.optionB  || '';
+    document.getElementById('fOptC').value     = q.optionC  || '';
+    document.getElementById('fOptD').value     = q.optionD  || '';
+    document.getElementById('fImageKey').value = q.imageKey || '';
+    toggleMCQFields();
+    hideModalError();
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  function clearForm() {
+    ['fSubject','fType','fQNum','fStem','fAnswer','fOptA','fOptB','fOptC','fOptD','fImageKey']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('fType').value = 'blank';
+    toggleMCQFields();
+    hideModalError();
+  }
+
+  function showModalError(msg) {
+    const el = document.getElementById('modalError');
+    el.textContent = msg; el.style.display = 'block';
+  }
+  function hideModalError() {
+    document.getElementById('modalError').style.display = 'none';
+  }
+
+  // ── Save ────────────────────────────────────────────────────────
+  async function saveQuestion() {
+    const subjectKey = document.getElementById('fSubject').value;
+    const type       = document.getElementById('fType').value;
+    const stem       = document.getElementById('fStem').value.trim();
+    const answer     = document.getElementById('fAnswer').value.trim();
+    const qNum       = parseInt(document.getElementById('fQNum').value) || null;
+    const optA       = document.getElementById('fOptA').value.trim() || null;
+    const optB       = document.getElementById('fOptB').value.trim() || null;
+    const optC       = document.getElementById('fOptC').value.trim() || null;
+    const optD       = document.getElementById('fOptD').value.trim() || null;
+    const imageKey   = document.getElementById('fImageKey').value.trim() || null;
+
+    if (!subjectKey) { showModalError('Please select a subject.'); return; }
+    if (!stem)       { showModalError('Question stem is required.'); return; }
+    if (!answer)     { showModalError('Answer is required.'); return; }
+    if (type === 'mcq' && (!optA || !optB)) {
+      showModalError('MCQ requires at least options A and B.'); return;
+    }
+
+    const q = { type, qNum, stem, answer, optionA: optA, optionB: optB, optionC: optC, optionD: optD, imageKey };
+
+    const btn = document.getElementById('modalSaveBtn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+
+    try {
+      if (editingId) {
+        await dbUpdate(editingId, subjectKey, q);
+        // Update local cache
+        const pool = allQuestions[subjectKey] || [];
+        const idx  = pool.findIndex(x => x.id === editingId);
+        if (idx !== -1) pool[idx] = { ...pool[idx], ...q, id: editingId };
+        showToast('✅ Question updated');
+      } else {
+        const saved = await dbAdd(subjectKey, q);
+        if (!allQuestions[subjectKey]) allQuestions[subjectKey] = [];
+        allQuestions[subjectKey].push(saved);
+        // Update active subject if needed
+        if (subjectKey !== activeSubject) {
+          selectSubject(subjectKey);
+        }
+        showToast('✅ Question added');
+      }
+      closeModal();
+      highlightSidebarItem();
+      renderList();
+    } catch(e) {
+      showModalError('Error: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = editingId ? 'Save Changes' : 'Add';
+    }
+  }
+
+  // ── Delete ───────────────────────────────────────────────────────
+  async function deleteQ(id, preview) {
+    if (!confirm('Delete question: "' + preview + '…"?\n\nThis cannot be undone.')) return;
+    try {
+      await dbDelete(id);
+      const pool = allQuestions[activeSubject] || [];
+      allQuestions[activeSubject] = pool.filter(q => q.id !== id);
+      highlightSidebarItem();
+      renderList();
+      showToast('🗑️ Question deleted');
+    } catch(e) {
+      showToast('❌ ' + e.message);
+    }
+  }
+
+  // ── Toast ────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function esc(s) {
+    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Close modal on overlay click
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  });
+
+  // Init if already authenticated
+  if (sessionStorage.getItem(AUTH_KEY) === '1') initAdmin();
+</script>
+</body>
+</html>
