@@ -6,7 +6,9 @@
   <title>Round One — Choose Subject</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../questions.js"></script>
+  <script src="../supabase-config.js"></script>
 </head>
 <body>
 <div class="page-shell">
@@ -49,9 +51,20 @@
 
   function changeClass() { window.location.href = 'round-one-class.html'; }
 
-  function buildGrid() {
+  async function buildGrid() {
     const subjects = getSubjectsForClass(cls);
     const grid     = document.getElementById('subjectGrid');
+
+    // Fetch counts from Supabase, fall back to local data
+    let counts = {};
+    try {
+      const all = await dbFetchAll();
+      subjects.forEach(key => { counts[key] = (all[key] || []).length; });
+    } catch(e) {
+      subjects.forEach(key => { counts[key] = (QUESTIONS[key] || []).length; });
+    }
+
+    grid.innerHTML = '';
     subjects.forEach(key => {
       const meta = SUBJECT_META[key];
       if (!meta) return;
@@ -59,7 +72,10 @@
       a.href     = 'subject.html?subject=' + encodeURIComponent(key)
                  + '&class=' + encodeURIComponent(cls);
       a.className = 'subj-btn';
-      a.innerHTML = `<span class="sb-icon">${SUBJECT_ICONS[key]||'📖'}</span>${meta.display}`;
+      const cnt  = counts[key] || 0;
+      a.innerHTML = `<span class="sb-icon">${SUBJECT_ICONS[key]||'📖'}</span>
+                     ${meta.display}
+                     <span style="font-size:0.75rem;opacity:0.6;margin-left:4px;">(${cnt})</span>`;
       grid.appendChild(a);
     });
   }
