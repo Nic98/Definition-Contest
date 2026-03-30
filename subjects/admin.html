@@ -297,8 +297,9 @@
          onkeydown="if(event.key==='Enter') checkCode()"
          oninput="this.value=this.value.toUpperCase()">
   <button class="btn btn-primary" style="width:100%;" onclick="checkCode()">进入管理</button>
-  <div style="margin-top:12px;">
-    <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">← 返回主页</a>
+  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+    <button class="btn btn-ghost" style="font-size:0.85rem;" onclick="backToPassword()">← 重新输入密码</button>
+    <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">🏠 主页</a>
   </div>
 </div>
 
@@ -308,7 +309,8 @@
   <nav class="top-nav">
     <a href="../index.html" class="btn-nav">🏠 Home</a>
     <a href="question-bank.html" class="btn-nav">📚 Question Bank</a>
-    <button class="btn-nav" style="margin-left:auto;color:#dc2626;" onclick="logout()">🔓 Logout</button>
+    <button class="btn-nav" style="margin-left:auto;" onclick="changeSubject()">🔄 换科目</button>
+    <button class="btn-nav" style="color:#dc2626;" onclick="logout()">🔓 退出</button>
   </nav>
 
   <div class="section-header">
@@ -522,6 +524,28 @@
       inp.style.borderColor = '#dc2626';
       setTimeout(() => { inp.placeholder = '科目缩写'; inp.style.borderColor = ''; }, 2000);
     }
+  }
+
+  function backToPassword() {
+    sessionStorage.removeItem(PW_KEY);
+    sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem(SUBJ_KEY);
+    document.getElementById('subjGate').style.display = 'none';
+    document.getElementById('pwGate').style.display   = 'block';
+    document.getElementById('pwInput').value          = '';
+    document.getElementById('pwInput').focus();
+  }
+
+  function changeSubject() {
+    // Clear subject selection only — keep global password
+    sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem(SUBJ_KEY);
+    document.getElementById('mainPanel').style.display  = 'none';
+    document.getElementById('subjGate').style.display  = 'block';
+    document.getElementById('subjInput').value         = '';
+    document.getElementById('subjInput').focus();
+    // Reset state
+    allQuestions = {}; activeSubject = ''; allowedKeys = null;
   }
 
   function logout() {
@@ -852,10 +876,18 @@
       try {
         imageUrl = await uploadImage(pendingFile, subjectKey);
       } catch(e) {
-        showErr('Image upload failed: ' + e.message);
-        btn.disabled = false; btn.textContent = editingId ? 'Save Changes' : 'Add Question';
         document.getElementById('imgUploadProgress').style.display = 'none';
-        return;
+        // Bucket missing → warn and continue saving without image
+        const msg = (e.message || '').toLowerCase();
+        if (msg.includes('bucket') || msg.includes('not found')) {
+          showToast('⚠️ 图片跳过（Storage Bucket 未创建）');
+          imageUrl = existingImageUrl || null;
+          pendingFile = null;
+        } else {
+          showErr('Image upload failed: ' + e.message);
+          btn.disabled = false; btn.textContent = editingId ? 'Save Changes' : 'Add Question';
+          return;
+        }
       }
       document.getElementById('imgUploadProgress').style.display = 'none';
     }
