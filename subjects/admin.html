@@ -590,6 +590,7 @@
   let allQuestions = {};
   let activeSubject = '';
   let editingId     = null;
+  let editingQNum   = null;   // preserve q_num so IMAGE_MAP keeps working after edits
   let currentType   = 'blank';
   let correctAnswer = '';
   let pendingFile   = null;
@@ -809,7 +810,7 @@
 
   // ── Modal: open / close ───────────────────────────────────────────
   function openAddModal() {
-    editingId = null; pendingFile = null; existingImageUrl = '';
+    editingId = null; editingQNum = null; pendingFile = null; existingImageUrl = '';
     document.getElementById('modalTitle').textContent       = 'New Question';
     document.getElementById('modalSaveBtn').textContent     = 'Add Question';
     document.getElementById('fSubject').value               = activeSubject;
@@ -835,6 +836,7 @@
     if (!q) { showToast('Question not found'); return; }
 
     editingId        = id;
+    editingQNum      = q.qNum ?? null;
     pendingFile      = null;
     existingImageUrl = q.imageUrl || '';
 
@@ -925,6 +927,7 @@
 
     const q = {
       type, stem, answer,
+      qNum:    editingQNum,
       optionA: optA || null,
       optionB: optB || null,
       optionC: optC || null,
