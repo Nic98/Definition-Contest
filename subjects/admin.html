@@ -928,17 +928,20 @@
         imageUrl = await uploadImage(pendingFile, subjectKey);
       } catch(e) {
         document.getElementById('imgUploadProgress').style.display = 'none';
-        // Bucket missing → warn and continue saving without image
+        console.warn('Image upload error:', e);
+        // Any upload error is non-fatal — skip image and save the question
         const msg = (e.message || '').toLowerCase();
+        let hint = '';
         if (msg.includes('bucket') || msg.includes('not found')) {
-          showToast('⚠️ 图片跳过（Storage Bucket 未创建）');
-          imageUrl = existingImageUrl || null;
-          pendingFile = null;
+          hint = '请在 Supabase → Storage 创建 question-images bucket';
+        } else if (msg.includes('policy') || msg.includes('security') || msg.includes('denied') || msg.includes('403')) {
+          hint = '请在 Supabase → Storage → question-images → Policies 添加上传权限';
         } else {
-          showErr('Image upload failed: ' + e.message);
-          btn.disabled = false; btn.textContent = editingId ? 'Save Changes' : 'Add Question';
-          return;
+          hint = e.message;
         }
+        showToast('⚠️ 图片未上传：' + hint);
+        imageUrl = existingImageUrl || null;
+        pendingFile = null;
       }
       document.getElementById('imgUploadProgress').style.display = 'none';
     }

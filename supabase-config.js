@@ -51,13 +51,21 @@ function qToRow(subjectKey, q) {
   return row;
 }
 
-// ── Cache helpers ─────────────────────────────────────────────────
+// ── Cache helpers (5-minute TTL) ──────────────────────────────────
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 function _cacheGet(key) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e) { return null; }
+  try {
+    const v = localStorage.getItem(key);
+    if (!v) return null;
+    const { data, ts } = JSON.parse(v);
+    if (Date.now() - ts > CACHE_TTL) { localStorage.removeItem(key); return null; }
+    return data;
+  } catch(e) { return null; }
 }
 function _cacheSet(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+  try { localStorage.setItem(key, JSON.stringify({ data: val, ts: Date.now() })); } catch(e) {}
 }
 function dbClearCache() {
   try {
