@@ -241,17 +241,23 @@
     ══════════════════════════════════════════════ */
     .adm-loading { text-align: center; padding: 60px 20px; color: var(--text-muted); font-weight: 600; }
     .pw-gate {
-      max-width: 400px; margin: 80px auto; background: var(--surface);
-      border-radius: 16px; padding: 32px; box-shadow: var(--shadow-lg); text-align: center;
+      max-width: 400px; margin: 80px auto;
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.85);
+      border-radius: 20px; padding: 36px 32px; box-shadow: var(--shadow-lg); text-align: center;
     }
-    .pw-gate h2 { margin: 0 0 8px; }
-    .pw-gate p  { color: var(--text-muted); margin: 0 0 20px; font-size: 0.9rem; }
+    .pw-gate h2 { margin: 0 0 8px; color: #1c1c1e; }
+    .pw-gate p  { color: #636366; margin: 0 0 20px; font-size: 0.9rem; line-height: 1.6; }
     .pw-gate input {
-      width: 100%; box-sizing: border-box; padding: 10px 14px; font-size: 1rem;
-      border: 1.5px solid var(--border); border-radius: 9px; margin-bottom: 12px;
-      background: var(--bg); color: var(--text); font-family: inherit;
+      width: 100%; box-sizing: border-box; padding: 11px 14px; font-size: 1.05rem;
+      border: 1.5px solid rgba(0,0,0,0.15); border-radius: 10px; margin-bottom: 12px;
+      background: rgba(255,255,255,0.85); color: #1c1c1e; font-family: inherit;
+      letter-spacing: 0.04em; font-weight: 600; text-align: center;
+      transition: border-color .15s, box-shadow .15s;
     }
-    .pw-gate input:focus { outline: none; border-color: var(--primary); }
+    .pw-gate input:focus { outline: none; border-color: #007AFF; box-shadow: 0 0 0 3px rgba(0,122,255,.15); }
     .adm-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
     .adm-toolbar .adm-count { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-left: auto; }
     .toast {
@@ -265,16 +271,34 @@
 </head>
 <body>
 
-<!-- Password gate -->
+<!-- Step 1: Global password -->
 <div id="pwGate" class="pw-gate">
   <div style="font-size:2.4rem;margin-bottom:12px;">🔐</div>
-  <h2>Admin Panel</h2>
-  <p>Enter the admin password to manage questions.</p>
-  <input type="password" id="pwInput" placeholder="Password"
+  <h2>题库管理</h2>
+  <p>请输入管理密码</p>
+  <input type="password" id="pwInput" placeholder="密码"
+         autocomplete="off"
          onkeydown="if(event.key==='Enter') checkPassword()">
-  <button class="btn btn-primary" style="width:100%;" onclick="checkPassword()">Enter</button>
+  <button class="btn btn-primary" style="width:100%;" onclick="checkPassword()">验证</button>
   <div style="margin-top:12px;">
-    <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">← Back to Home</a>
+    <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">← 返回主页</a>
+  </div>
+</div>
+
+<!-- Step 2: Subject selector -->
+<div id="subjGate" class="pw-gate" style="display:none;">
+  <div style="font-size:2.4rem;margin-bottom:12px;">📚</div>
+  <h2>选择科目</h2>
+  <p>请输入您所授科目的缩写<br>
+     <span style="font-size:0.78rem;color:var(--text-faint);">CS · BIO · BUS · AD · CHI · EAP · PHY · CHEM · ECON · MATH</span>
+  </p>
+  <input type="text" id="subjInput" placeholder="科目缩写"
+         autocomplete="off" autocapitalize="characters" spellcheck="false"
+         onkeydown="if(event.key==='Enter') checkCode()"
+         oninput="this.value=this.value.toUpperCase()">
+  <button class="btn btn-primary" style="width:100%;" onclick="checkCode()">进入管理</button>
+  <div style="margin-top:12px;">
+    <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">← 返回主页</a>
   </div>
 </div>
 
@@ -289,7 +313,7 @@
 
   <div class="section-header">
     <h2>⚙️ Admin — Question Manager</h2>
-    <p>Add, edit, and delete questions in the live database</p>
+    <p id="adminSubtitle">Add, edit, and delete questions in the live database</p>
   </div>
 
   <div class="qb-wrap">
@@ -439,26 +463,89 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const ADMIN_PASSWORD = 'WHBC2025';
-  const AUTH_KEY       = 'dc_admin_auth';
+  const GLOBAL_PW  = 'WHBC2026';          // Step-1 gate
+  const PW_KEY     = 'dc_admin_pw';       // sessionStorage: global pw passed
+  const AUTH_KEY   = 'dc_admin_auth';     // sessionStorage: subject chosen
+  const SUBJ_KEY   = 'dc_admin_subjects'; // 'ALL' or JSON array of allowed keys
 
-  // ── Auth ─────────────────────────────────────────────────────────
+  // ── Subject code → subject keys mapping ───────────────────────────
+  // null = all subjects
+  const SUBJECT_CODES = {
+    'CS':   ['CS'],
+    'BIO':  ['BIO'],
+    'BUS':  ['BUS'],
+    'AD':   ['AD'],
+    'CHI':  ['CHI'],
+    'EAP':  ['EAP', 'EAP-2.5'],
+    'PHY':  ['PHY', 'PHY-2.5'],
+    'CHEM': ['CHE', 'CHE-2.5'],
+    'ECON': ['ECON', 'ECON-2.5'],
+    'MATH': ['MATH-0580', 'MATH-0606', 'MATH-0606-2.5', 'MATH-9709'],
+  };
+
+  // keys this session is allowed to edit (null = all)
+  let allowedKeys = null;
+
+  function canEdit(subjectKey) {
+    return allowedKeys === null || allowedKeys.includes(subjectKey);
+  }
+
+  // ── Step 1: global password ────────────────────────────────────────
   function checkPassword() {
-    if (document.getElementById('pwInput').value === ADMIN_PASSWORD) {
-      sessionStorage.setItem(AUTH_KEY, '1');
-      document.getElementById('pwGate').style.display    = 'none';
-      document.getElementById('mainPanel').style.display = 'block';
-      initAdmin();
+    const inp = document.getElementById('pwInput');
+    if (inp.value === GLOBAL_PW) {
+      sessionStorage.setItem(PW_KEY, '1');
+      document.getElementById('pwGate').style.display   = 'none';
+      document.getElementById('subjGate').style.display = 'block';
+      document.getElementById('subjInput').focus();
     } else {
-      const inp = document.getElementById('pwInput');
-      inp.value = ''; inp.placeholder = 'Wrong password, try again';
+      inp.value = ''; inp.placeholder = '❌ 密码错误，请重试';
       inp.style.borderColor = '#dc2626';
+      setTimeout(() => { inp.placeholder = '密码'; inp.style.borderColor = ''; }, 2000);
     }
   }
-  function logout() { sessionStorage.removeItem(AUTH_KEY); location.reload(); }
-  if (sessionStorage.getItem(AUTH_KEY) === '1') {
+
+  // ── Step 2: subject code ───────────────────────────────────────────
+  function checkCode() {
+    const code = document.getElementById('subjInput').value.trim().toUpperCase();
+    if (code in SUBJECT_CODES) {
+      const keys = SUBJECT_CODES[code];
+      sessionStorage.setItem(AUTH_KEY, '1');
+      sessionStorage.setItem(SUBJ_KEY, JSON.stringify(keys));
+      document.getElementById('subjGate').style.display  = 'none';
+      document.getElementById('mainPanel').style.display = 'block';
+      applyAllowedKeys();
+      initAdmin();
+    } else {
+      const inp = document.getElementById('subjInput');
+      inp.value = ''; inp.placeholder = '❌ 科目无效，请重试';
+      inp.style.borderColor = '#dc2626';
+      setTimeout(() => { inp.placeholder = '科目缩写'; inp.style.borderColor = ''; }, 2000);
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem(PW_KEY);
+    sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem(SUBJ_KEY);
+    location.reload();
+  }
+  function applyAllowedKeys() {
+    const raw = sessionStorage.getItem(SUBJ_KEY);
+    allowedKeys = (!raw || raw === 'ALL') ? null : JSON.parse(raw);
+  }
+
+  // ── Restore session on reload ──────────────────────────────────────
+  if (sessionStorage.getItem(PW_KEY) === '1' && sessionStorage.getItem(AUTH_KEY) === '1') {
+    // Both steps already passed — go straight to main panel
+    applyAllowedKeys();
     document.getElementById('pwGate').style.display    = 'none';
+    document.getElementById('subjGate').style.display  = 'none';
     document.getElementById('mainPanel').style.display = 'block';
+  } else if (sessionStorage.getItem(PW_KEY) === '1') {
+    // Password passed but no subject yet — show subject selector
+    document.getElementById('pwGate').style.display   = 'none';
+    document.getElementById('subjGate').style.display = 'block';
   }
 
   // ── State ─────────────────────────────────────────────────────────
@@ -472,6 +559,14 @@
 
   // ── Init ──────────────────────────────────────────────────────────
   async function initAdmin() {
+    // Show which subject(s) this session covers
+    const sub = document.getElementById('adminSubtitle');
+    if (allowedKeys === null) {
+      sub.textContent = '⭐ Super Admin — 所有科目均可管理';
+    } else {
+      const names = allowedKeys.map(k => SUBJECT_META[k]?.display || k).join(' / ');
+      sub.textContent = '📚 当前科目：' + names;
+    }
     buildSidebar();
     populateSubjectSelect();
     await loadData();
@@ -486,7 +581,11 @@
       for (const [k, qs] of Object.entries(QUESTIONS)) allQuestions[k] = [...qs];
     }
     if (!activeSubject) {
-      activeSubject = Object.keys(allQuestions)[0] || Object.keys(SUBJECT_META)[0];
+      // Start on the first subject the user is allowed to see
+      const candidates = allowedKeys !== null
+        ? allowedKeys
+        : Object.keys(allQuestions).length ? Object.keys(allQuestions) : Object.keys(SUBJECT_META);
+      activeSubject = candidates.find(k => SUBJECT_META[k]) || candidates[0] || '';
     }
     highlightSidebar();
     renderList();
@@ -506,11 +605,15 @@
     const s = document.getElementById('sidebar');
     s.innerHTML = '';
     GROUPS.forEach(g => {
+      // filter to only allowed keys for this session
+      const visibleKeys = g.keys.filter(key =>
+        SUBJECT_META[key] && (allowedKeys === null || allowedKeys.includes(key))
+      );
+      if (!visibleKeys.length) return;
       const lbl = document.createElement('div');
       lbl.className = 'qb-group-label'; lbl.textContent = g.label;
       s.appendChild(lbl);
-      g.keys.forEach(key => {
-        const meta = SUBJECT_META[key]; if (!meta) return;
+      visibleKeys.forEach(key => {
         const btn = document.createElement('button');
         btn.className = 'qb-subj-btn'; btn.id = 'sb-'+key; btn.dataset.key = key;
         btn.onclick = () => selectSubject(key);
@@ -539,6 +642,7 @@
     const sel = document.getElementById('fSubject');
     sel.innerHTML = '<option value="">— Select subject —</option>';
     Object.entries(SUBJECT_META).forEach(([key, meta]) => {
+      if (allowedKeys !== null && !allowedKeys.includes(key)) return;
       const opt = document.createElement('option');
       opt.value = key; opt.textContent = meta.display + ' (' + key + ')';
       sel.appendChild(opt);
