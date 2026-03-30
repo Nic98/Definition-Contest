@@ -226,10 +226,11 @@
     .adm-card-top { display: flex; align-items: flex-start; gap: 10px; }
     .adm-card-stem { flex: 1; font-size: 0.92rem; line-height: 1.5; }
     .adm-card-stem .answer { font-size: 0.8rem; color: var(--green); font-weight: 700; margin-top: 4px; }
-    .adm-card-img {
-      width: 80px; height: 60px; object-fit: cover;
-      border-radius: 8px; border: 1px solid rgba(0,0,0,0.10);
-      flex-shrink: 0;
+    .adm-card-img-full {
+      display: block; max-width: 320px; max-height: 200px;
+      object-fit: contain; border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.10);
+      margin: 8px 0 4px;
     }
     .adm-card-btns { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-edit { font-size: 0.78rem; padding: 5px 11px; }
@@ -734,7 +735,7 @@
 
       const imgSrc = getImageSrc(q, activeSubject);
       const imgHtml = imgSrc
-        ? `<img class="adm-card-img" src="${esc(imgSrc)}" alt="img"
+        ? `<img class="adm-card-img-full" src="${esc(imgSrc)}" alt="img"
                onerror="this.style.display='none'">`
         : '';
 
@@ -743,9 +744,9 @@
           <span class="qb-type-tag ${q.type}" style="flex-shrink:0;align-self:flex-start;">${tag}</span>
           <div class="adm-card-stem">
             ${esc(q.stem)}
+            ${imgHtml}
             <div class="answer">✓ ${esc(ansDisplay)}</div>
           </div>
-          ${imgHtml}
           <div class="adm-card-btns">
             <button class="btn btn-ghost btn-edit" onclick="openEditModal('${esc(q.id||'')}')">✏️ Edit</button>
             <button class="btn-del" onclick="deleteQ('${esc(q.id||'')}','${esc(q.stem).slice(0,30)}')">🗑️</button>
