@@ -8,6 +8,7 @@
   <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../questions.js"></script>
+  <script src="../image-map.js"></script>
   <script src="../supabase-config.js"></script>
   <style>
     /* ══════════════════════════════════════════════
@@ -389,6 +390,13 @@
         <div class="f-label">Question</div>
         <textarea class="f-input" id="fStem"
           placeholder="e.g. The CPU stands for Central Processing _____."></textarea>
+        <!-- Read-only image preview inline with stem -->
+        <div id="stemImgWrap" style="display:none;margin-top:8px;">
+          <img id="stemImg" src="" alt="Question image"
+               style="max-width:100%;max-height:200px;object-fit:contain;
+                      border-radius:8px;border:1px solid rgba(0,0,0,0.10);"
+               onerror="this.parentElement.style.display='none'">
+        </div>
       </div>
 
       <!-- Fill-in answer -->
@@ -784,6 +792,13 @@
     if (file && file.type.startsWith('image/')) handleFileSelect(file);
   }
 
+  function _setStemImage(src) {
+    const wrap = document.getElementById('stemImgWrap');
+    const img  = document.getElementById('stemImg');
+    if (src) { img.src = src; wrap.style.display = 'block'; }
+    else     { img.src = '';  wrap.style.display = 'none';  }
+  }
+
   function handleFileSelect(file) {
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
@@ -795,6 +810,7 @@
       document.getElementById('imgPreview').src   = e.target.result;
       document.getElementById('imgPreviewWrap').style.display = 'block';
       document.getElementById('uploadZone').style.display     = 'none';
+      _setStemImage(e.target.result);
     };
     reader.readAsDataURL(file);
   }
@@ -806,6 +822,7 @@
     document.getElementById('imgPreviewWrap').style.display = 'none';
     document.getElementById('uploadZone').style.display     = 'block';
     document.getElementById('imgFile').value = '';
+    _setStemImage(null);
   }
 
   // ── Modal: open / close ───────────────────────────────────────────
@@ -860,9 +877,10 @@
     // Restore image
     const imgSrc = getImageSrc(q, activeSubject);
     if (imgSrc) {
-      document.getElementById('imgPreview').src              = imgSrc;
+      document.getElementById('imgPreview').src               = imgSrc;
       document.getElementById('imgPreviewWrap').style.display = 'block';
-      document.getElementById('uploadZone').style.display    = 'none';
+      document.getElementById('uploadZone').style.display     = 'none';
+      _setStemImage(imgSrc);
     } else {
       removeImage();
     }

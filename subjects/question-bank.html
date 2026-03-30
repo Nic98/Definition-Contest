@@ -142,15 +142,20 @@
     const pool   = QDB[activeSubject] || [];
     const search = document.getElementById('searchBox').value.toLowerCase().trim();
 
-    const filtered = pool.filter(q => {
-      if (activeTab !== 'all' && q.type !== activeTab) return false;
-      if (search) {
-        const hay = [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
-          .filter(Boolean).join(' ').toLowerCase();
-        if (!hay.includes(search)) return false;
-      }
-      return true;
-    });
+    const filtered = pool
+      .filter(q => {
+        if (activeTab !== 'all' && q.type !== activeTab) return false;
+        if (search) {
+          const hay = [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
+            .filter(Boolean).join(' ').toLowerCase();
+          if (!hay.includes(search)) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.type === b.type) return 0;
+        return a.type === 'blank' ? -1 : 1;
+      });
 
     document.getElementById('qbCount').textContent =
       filtered.length + ' of ' + pool.length + ' questions';
@@ -167,8 +172,18 @@
       const card = document.createElement('div');
       card.className = 'qb-card ' + q.type;
 
+      const imgSrc = getImageSrc(q, activeSubject);
+      const imgHtml = imgSrc
+        ? `<div class="q-image-wrap" style="margin:8px 0;">
+             <img class="q-image" src="${esc(imgSrc)}" alt="Question image"
+                  onerror="this.parentElement.style.display='none'"
+                  onclick="openLightbox('${esc(imgSrc)}')">
+           </div>`
+        : '';
+
       let html = `<span class="qb-type-tag ${q.type}">${q.type === 'blank' ? 'Fill-in' : 'MCQ'}</span>
-                  <div class="qb-stem">${esc(q.stem)}</div>`;
+                  <div class="qb-stem">${esc(q.stem)}</div>
+                  ${imgHtml}`;
 
       if (q.type === 'mcq') {
         html += '<div class="qb-opts-grid">';
@@ -186,20 +201,6 @@
       }
 
       card.innerHTML = html;
-
-      // Image (supports both uploaded image_url and local IMAGE_MAP)
-      const imgSrc = getImageSrc(q, activeSubject);
-      if (imgSrc) {
-        const imgWrap = document.createElement('div');
-        imgWrap.className = 'q-image-wrap';
-        imgWrap.style.margin = '8px 0';
-        imgWrap.innerHTML =
-          `<img class="q-image" src="${imgSrc}" alt="Question image"
-                onerror="this.parentElement.style.display='none'"
-                onclick="openLightbox('${imgSrc}')">`;
-        card.appendChild(imgWrap);
-      }
-
       container.appendChild(card);
     });
   }
