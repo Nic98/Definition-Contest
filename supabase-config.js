@@ -54,16 +54,16 @@ function qToRow(subjectKey, q) {
 // ── Cache helpers ─────────────────────────────────────────────────
 
 function _cacheGet(key) {
-  try { const v = sessionStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e) { return null; }
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e) { return null; }
 }
 function _cacheSet(key, val) {
-  try { sessionStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
 }
 function dbClearCache() {
   try {
-    Object.keys(sessionStorage)
+    Object.keys(localStorage)
       .filter(k => k.startsWith('dc_sq_'))
-      .forEach(k => sessionStorage.removeItem(k));
+      .forEach(k => localStorage.removeItem(k));
   } catch(e) {}
 }
 
