@@ -172,8 +172,19 @@ async function uploadImage(file, subjectKey) {
 // Returns the best image src for a question, or null if none.
 function getImageSrc(q, subjectKey) {
   if (q.imageUrl) return q.imageUrl;
-  if (typeof IMAGE_MAP !== 'undefined') {
-    const file = IMAGE_MAP[subjectKey + '_' + q.qNum];
+  if (typeof IMAGE_MAP === 'undefined') return null;
+
+  let qNum = q.qNum;
+
+  // If qNum was nulled out by a previous admin edit, recover it from local
+  // QUESTIONS by matching on stem text.
+  if (!qNum && typeof QUESTIONS !== 'undefined' && QUESTIONS[subjectKey]) {
+    const match = QUESTIONS[subjectKey].find(lq => lq.stem === q.stem);
+    if (match) qNum = match.qNum;
+  }
+
+  if (qNum) {
+    const file = IMAGE_MAP[subjectKey + '_' + qNum];
     if (file) return '../image/' + file;
   }
   return null;
