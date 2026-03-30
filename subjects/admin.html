@@ -227,8 +227,8 @@
     .adm-card-stem { flex: 1; font-size: 0.92rem; line-height: 1.5; }
     .adm-card-stem .answer { font-size: 0.8rem; color: var(--green); font-weight: 700; margin-top: 4px; }
     .adm-card-img {
-      width: 56px; height: 40px; object-fit: cover;
-      border-radius: 6px; border: 1px solid var(--border);
+      width: 80px; height: 60px; object-fit: cover;
+      border-radius: 8px; border: 1px solid rgba(0,0,0,0.10);
       flex-shrink: 0;
     }
     .adm-card-btns { display: flex; gap: 6px; flex-shrink: 0; }
@@ -260,6 +260,15 @@
     .pw-gate input:focus { outline: none; border-color: #007AFF; box-shadow: 0 0 0 3px rgba(0,122,255,.15); }
     .adm-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
     .adm-toolbar .adm-count { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-left: auto; }
+    .adm-filter-group { display: flex; gap: 4px; }
+    .adm-filter {
+      padding: 5px 13px; border-radius: 20px; border: 1.5px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.6); color: #3a3a3c;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: all .15s;
+    }
+    .adm-filter:hover { border-color: #007AFF; color: #007AFF; }
+    .adm-filter.active { background: #007AFF; border-color: #007AFF; color: #fff; }
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
       background: #1e293b; color: #f1f5f9; padding: 10px 22px;
@@ -297,8 +306,7 @@
          onkeydown="if(event.key==='Enter') checkCode()"
          oninput="this.value=this.value.toUpperCase()">
   <button class="btn btn-primary" style="width:100%;" onclick="checkCode()">进入管理</button>
-  <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
-    <button class="btn btn-ghost" style="font-size:0.85rem;" onclick="backToPassword()">← 重新输入密码</button>
+  <div style="margin-top:12px;">
     <a href="../index.html" class="btn btn-ghost" style="font-size:0.85rem;">🏠 主页</a>
   </div>
 </div>
@@ -323,8 +331,13 @@
     <div>
       <div class="adm-toolbar">
         <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Question</button>
+        <div class="adm-filter-group">
+          <button class="adm-filter active" id="flt-all"   onclick="setFilter('all')">All</button>
+          <button class="adm-filter"        id="flt-blank" onclick="setFilter('blank')">Fill-in</button>
+          <button class="adm-filter"        id="flt-mcq"   onclick="setFilter('mcq')">MCQ</button>
+        </div>
         <input class="qb-search" id="searchBox" placeholder="Search…"
-               style="margin:0;max-width:220px;" oninput="renderList()">
+               style="margin:0;max-width:200px;" oninput="renderList()">
         <span class="adm-count" id="admCount"></span>
       </div>
       <div id="listArea"><div class="adm-loading">Loading questions…</div></div>
@@ -578,8 +591,17 @@
   let editingId     = null;
   let currentType   = 'blank';
   let correctAnswer = '';
-  let pendingFile   = null;   // File object waiting to be uploaded
-  let existingImageUrl = '';  // URL of image already saved (edit mode)
+  let pendingFile   = null;
+  let existingImageUrl = '';
+  let activeFilter  = 'all';  // 'all' | 'blank' | 'mcq'
+
+  function setFilter(f) {
+    activeFilter = f;
+    ['all','blank','mcq'].forEach(k =>
+      document.getElementById('flt-'+k).classList.toggle('active', k === f)
+    );
+    renderList();
+  }
 
   // ── Init ──────────────────────────────────────────────────────────
   async function initAdmin() {
@@ -677,7 +699,15 @@
   function renderList() {
     const pool   = allQuestions[activeSubject] || [];
     const search = document.getElementById('searchBox').value.toLowerCase().trim();
-    const filtered = pool.filter(q => {
+
+    // Sort: fill-in (blank) first, then mcq
+    const sorted = [...pool].sort((a, b) => {
+      if (a.type === b.type) return 0;
+      return a.type === 'blank' ? -1 : 1;
+    });
+
+    const filtered = sorted.filter(q => {
+      if (activeFilter !== 'all' && q.type !== activeFilter) return false;
       if (!search) return true;
       return [q.stem, q.answer, q.optionA, q.optionB, q.optionC, q.optionD]
         .filter(Boolean).join(' ').toLowerCase().includes(search);
