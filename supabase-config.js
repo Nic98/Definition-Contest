@@ -33,7 +33,7 @@ function rowToQ(row) {
 }
 
 function qToRow(subjectKey, q) {
-  return {
+  const row = {
     subject_key: subjectKey,
     type:        q.type,
     q_num:       q.qNum    || null,
@@ -44,8 +44,11 @@ function qToRow(subjectKey, q) {
     option_c:    q.optionC || null,
     option_d:    q.optionD || null,
     image_key:   q.imageKey  || null,
-    image_url:   q.imageUrl  || null
   };
+  // Only include image_url when it has a value — avoids schema errors
+  // if the column hasn't been added to the DB yet.
+  if (q.imageUrl) row.image_url = q.imageUrl;
+  return row;
 }
 
 // ── Cache helpers ─────────────────────────────────────────────────
