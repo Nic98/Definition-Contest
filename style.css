@@ -152,6 +152,9 @@ h3 { font-size: 1.1rem; }
   background: var(--grad-hero);
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .hero::before {
   content: '';
@@ -176,6 +179,7 @@ h3 { font-size: 1.1rem; }
   padding: 52px 24px 48px;
   text-align: center;
   color: #fff;
+  flex: 1;
 }
 .hero-badge {
   display: inline-flex;
@@ -290,7 +294,7 @@ h3 { font-size: 1.1rem; }
   color: var(--ios-blue);
   border: 1px solid rgba(255,255,255,0.85);
   border-radius: var(--radius-pill);
-  padding: 8px 16px;
+  padding: 16px 32px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -306,7 +310,7 @@ h3 { font-size: 1.1rem; }
 
 /* ── Site logo (WHBC name in nav) ────────────────────────────── */
 .site-logo {
-  height: 28px;
+  height: 128px;
   width: auto;
   object-fit: contain;
   margin-left: auto;
