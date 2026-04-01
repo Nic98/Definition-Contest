@@ -13,6 +13,15 @@ function getDB() {
   return _sbClient;
 }
 
+// Clear any old localStorage cache entries from previous versions
+(function _purgeLegacyCache() {
+  try {
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('dc_sq_'))
+      .forEach(k => localStorage.removeItem(k));
+  } catch(e) {}
+})();
+
 // ── Row converters ────────────────────────────────────────────────
 
 function rowToQ(row) {
@@ -51,28 +60,34 @@ function qToRow(subjectKey, q) {
   return row;
 }
 
-// ── Cache helpers (5-minute TTL) ──────────────────────────────────
+// ── Cache helpers ─────────────────────────────────────────────────
+//
+// Strategy: every new page load (including refresh) always fetches
+// fresh from Supabase. Within the SAME page session, subsequent
+// fetches of the same key use an in-memory cache so mid-game
+// navigation stays instant.
+//
+// This guarantees other devices always see the latest data after
+// refresh, while avoiding redundant network requests during a game.
 
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+// In-memory cache: cleared automatically on every page reload
+const _memCache = {};
+
+// Tracks which keys have already been fetched this session
+const _sessionFetched = new Set();
 
 function _cacheGet(key) {
-  try {
-    const v = localStorage.getItem(key);
-    if (!v) return null;
-    const { data, ts } = JSON.parse(v);
-    if (Date.now() - ts > CACHE_TTL) { localStorage.removeItem(key); return null; }
-    return data;
-  } catch(e) { return null; }
+  if (!_sessionFetched.has(key)) return null; // first load this session → bypass
+  return _memCache[key] ?? null;
 }
 function _cacheSet(key, val) {
-  try { localStorage.setItem(key, JSON.stringify({ data: val, ts: Date.now() })); } catch(e) {}
+  _memCache[key] = val;
+  _sessionFetched.add(key);
 }
 function dbClearCache() {
-  try {
-    Object.keys(localStorage)
-      .filter(k => k.startsWith('dc_sq_'))
-      .forEach(k => localStorage.removeItem(k));
-  } catch(e) {}
+  // Clear in-memory cache on admin writes (affects current device immediately)
+  Object.keys(_memCache).forEach(k => delete _memCache[k]);
+  _sessionFetched.clear();
 }
 
 // ── Read ──────────────────────────────────────────────────────────
