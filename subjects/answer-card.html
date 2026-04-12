@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round 1 答题卡 — WHBC Definition Jeopardy</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Arial", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f0ece6;
+      padding: 24px 16px;
+      color: #111;
+    }
+
+    /* ── Screen controls ─────────────────────────────────────── */
+    .controls {
+      max-width: 760px;
+      margin: 0 auto 20px;
+      background: #213b69;
+      color: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .controls h2 { font-size: 1rem; font-weight: 800; flex: 1; min-width: 160px; }
+    .controls button {
+      background: #fff; color: #213b69; border: none;
+      border-radius: 8px; padding: 8px 18px;
+      font-size: .85rem; font-weight: 800; cursor: pointer;
+    }
+    .controls button:hover { background: #f0ecf5; }
+    .controls .hint { font-size: .75rem; opacity: .7; flex-basis: 100%; }
+
+    .card-wrap { max-width: 760px; margin: 0 auto; }
+
+    /* ── Card ───────────────────────────────────────────────── */
+    .answer-card {
+      background: #fff;
+      border: 2px solid #213b69;
+      border-radius: 12px;
+      overflow: hidden;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Header */
+    .card-header {
+      background: #213b69;
+      color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-header .logo-text { font-size: 1rem; font-weight: 900; letter-spacing: .08em; }
+    .card-header .round-badge {
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: .75rem; font-weight: 700;
+    }
+    .card-header .title-cn { font-size: .9rem; font-weight: 800; margin-left: auto; }
+
+    /* Meta row — 50 / 50 */
+    .card-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1.5px solid #c8c0b0;
+    }
+    .meta-field {
+      padding: 8px 12px;
+      border-right: 1px solid #e0d9ce;
+    }
+    .meta-field:last-child { border-right: none; }
+    .meta-label {
+      color: #888; font-weight: 700; font-size: .65rem;
+      text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px;
+    }
+    .meta-line { border-bottom: 1.5px solid #888; height: 22px; }
+
+    /* Table: 4 columns = no | answer | no | answer */
+    .answer-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .78rem;
+    }
+    .answer-table th {
+      background: #f0ecf5;
+      color: #213b69;
+      font-weight: 800;
+      font-size: .68rem;
+      text-align: center;
+      padding: 6px 4px;
+      border-bottom: 1.5px solid #c8c0b0;
+      border-right: 1px solid #d8d0e0;
+    }
+    .answer-table th.ans-th { text-align: left; padding-left: 10px; }
+    .answer-table th.divider-th {
+      border-right: 2.5px solid #213b69;
+      width: 8px; padding: 0;
+      background: #213b69;
+    }
+    .answer-table td {
+      border-bottom: 1px solid #e8e2d9;
+      border-right: 1px solid #e8e2d9;
+      padding: 0;
+      vertical-align: middle;
+    }
+    .answer-table td.divider-td {
+      border-right: 2.5px solid #213b69;
+      width: 4px; padding: 0;
+      background: #213b69;
+    }
+    .answer-table tr:last-child td { border-bottom: none; }
+    .answer-table tbody tr:nth-child(even) td:not(.divider-td) { background: #faf8f5; }
+
+    .col-no  { width: 40px; text-align: center; }
+    .col-ans { width: calc(50% - 22px); }
+
+    .cell-no  { padding: 5px 4px; text-align: center; font-weight: 700; color: #213b69; font-size: .72rem; }
+    .cell-ans { padding: 5px 10px; }
+    .write-line { border-bottom: 1.5px solid #bbb; min-height: 45px; }
+
+    /* Footer */
+    .card-footer {
+      background: #f7f4ef;
+      border-top: 1.5px solid #c8c0b0;
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .68rem;
+      color: #888;
+    }
+
+    /* ── Print ───────────────────────────────────────────────── */
+    @media print {
+      body { background: #fff; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .controls { display: none; }
+      .card-wrap { max-width: 100%; }
+      .answer-card { border: 1.5pt solid #213b69; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <h2>🖨️ Round 1 答题卡 — 打印预览</h2>
+    <button onclick="window.print()">🖨️ 打印 / Print</button>
+    <p class="hint">共 36 题，双栏排列。打印前请选择<strong>纵向（Portrait）</strong>，缩放选「适应页面」。</p>
+  </div>
+
+  <div class="card-wrap">
+    <div class="answer-card">
+
+      <!-- Header -->
+      <div class="card-header">
+        <span class="logo-text">WHBC</span>
+        <span class="round-badge">Round 1</span>
+        <span style="font-size:.75rem;opacity:.7;">Definition Jeopardy</span>
+        <span class="title-cn">Round 1 答题卡</span>
+      </div>
+
+      <!-- Meta: 50/50 -->
+      <div class="card-meta">
+        <div class="meta-field">
+          <div class="meta-label">班级 Class</div>
+          <div class="meta-line"></div>
+        </div>
+        <div class="meta-field">
+          <div class="meta-label">裁判姓名 Judge</div>
+          <div class="meta-line"></div>
+        </div>
+      </div>
+
+      <!-- Table: # | Answer || # | Answer -->
+      <table class="answer-table">
+        <thead>
+          <tr>
+            <th class="col-no">#</th>
+            <th class="col-ans ans-th">学生答案（手写）<br><span style="font-weight:500;opacity:.7;">Student's Answer</span></th>
+            <th class="divider-th"></th>
+            <th class="col-no">#</th>
+            <th class="col-ans ans-th">学生答案（手写）<br><span style="font-weight:500;opacity:.7;">Student's Answer</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <span>📋 每格对应一位学生一道题 · 共 36 题</span>
+        <span style="margin-left:auto;">赛后请将此卡交还组委会</span>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  const tbody = document.getElementById('tableBody');
+  // 36 questions → 18 rows, left col = 1–18, right col = 19–36
+  for (let row = 1; row <= 18; row++) {
+    const left  = row;
+    const right = row + 18;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="col-no cell-no">${left}</td>
+      <td class="col-ans cell-ans"><div class="write-line"></div></td>
+      <td class="divider-td"></td>
+      <td class="col-no cell-no">${right}</td>
+      <td class="col-ans cell-ans"><div class="write-line"></div></td>`;
+    tbody.appendChild(tr);
+  }
+</script>
+</body>
+</html>

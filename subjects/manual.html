@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>裁判手册 — Judge Manual</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../whbc-icon.png" type="image/x-icon">
+  <style>
+    body { background: var(--bg, #f2ede3); }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .manual-hero {
+      background: linear-gradient(135deg, #0b1829 0%, #213b69 55%, #3d1018 100%);
+      color: #fff;
+      padding: 52px 20px 40px;
+      text-align: center;
+    }
+    .manual-hero h1 { font-size: clamp(1.6rem,5vw,2.4rem); font-weight:800; letter-spacing:.02em; margin:0 0 6px; }
+    .manual-hero .sub { font-size:.95rem; opacity:.7; margin:0; }
+    .manual-hero .badge-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
+    .manual-hero .badge { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:20px; padding:4px 14px; font-size:.78rem; letter-spacing:.04em; }
+
+    /* ── Tab bar ─────────────────────────────────────────────── */
+    .manual-tab-bar { display:flex; background:#fff; border-bottom:2px solid #e0d9ce; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+    .mtab { flex:1; padding:14px 8px; text-align:center; font-size:.9rem; font-weight:700; color:#666; cursor:pointer; border-bottom:3px solid transparent; transition:all .2s; user-select:none; }
+    .mtab:hover { color:#213b69; background:#f7f4ef; }
+    .mtab.active { color:#213b69; border-bottom-color:#213b69; background:#f0ecf5; }
+    .mtab.r2.active { color:#841d31; border-bottom-color:#841d31; background:#f9f0f2; }
+    .mtab .tab-icon { display:block; font-size:1.3rem; margin-bottom:2px; }
+
+    /* ── Tab panes ───────────────────────────────────────────── */
+    .tab-pane { display:none; }
+    .tab-pane.active { display:block; }
+
+    /* ── Anchor nav ──────────────────────────────────────────── */
+    .anchor-nav { display:flex; gap:6px; flex-wrap:wrap; padding:10px 16px; background:#fff; border-bottom:1px solid #e0d9ce; }
+    .anchor-link { font-size:.75rem; padding:4px 10px; border-radius:14px; background:#f0ecf5; color:#213b69; text-decoration:none; font-weight:600; transition:background .15s; }
+    .anchor-link:hover { background:#213b69; color:#fff; }
+    .anchor-link.hl { background:#213b69; color:#fff; }
+    .r2-nav .anchor-link { color:#841d31; background:#fdf0f2; }
+    .r2-nav .anchor-link:hover, .r2-nav .anchor-link.hl { background:#841d31; color:#fff; }
+
+    /* ── Section title ───────────────────────────────────────── */
+    .section-title { font-size:1.05rem; font-weight:800; color:#213b69; margin:28px 16px 0; padding-bottom:6px; border-bottom:2px solid #213b69; display:flex; align-items:center; gap:8px; }
+    .section-title.r2 { color:#841d31; border-bottom-color:#841d31; }
+
+    /* ── Step cards ──────────────────────────────────────────── */
+    .steps-wrap { padding:12px 16px 20px; display:flex; flex-direction:column; gap:12px; }
+    .step-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(33,59,105,.09); overflow:hidden; border:1px solid #e8e2d9; }
+    .step-header { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; user-select:none; transition:background .15s; }
+    .step-header:hover { background:#f7f4ef; }
+    .step-num { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#213b69,#1a2f56); color:#fff; font-size:.85rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .step-num.r2 { background:linear-gradient(135deg,#841d31,#5e1522); }
+    .step-title-wrap { flex:1; min-width:0; }
+    .step-title { font-size:.95rem; font-weight:700; color:#1a1a2e; margin:0 0 2px; }
+    .step-subtitle { font-size:.75rem; color:#888; margin:0; }
+    .step-toggle { font-size:1rem; color:#aaa; transition:transform .2s; flex-shrink:0; }
+    .step-card.collapsed .step-toggle { transform:rotate(-90deg); }
+    .step-body { padding:0 16px 18px; border-top:1px solid #f0ece6; }
+    .step-card.collapsed .step-body { display:none; }
+
+    /* ── Instruction list ────────────────────────────────────── */
+    .inst-list { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+    .inst-item { display:flex; gap:10px; align-items:flex-start; }
+    .inst-num { width:22px; height:22px; border-radius:50%; background:#e8e2f8; color:#213b69; font-size:.72rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+    .inst-num.r2 { background:#fde0e5; color:#841d31; }
+    .inst-content { flex:1; }
+    .inst-main { font-size:.88rem; color:#222; font-weight:600; margin:0 0 2px; }
+    .inst-note { font-size:.78rem; color:#666; margin:0; }
+    .inst-action { display:inline-flex; align-items:center; gap:4px; background:#213b69; color:#fff; font-size:.74rem; font-weight:700; padding:3px 10px; border-radius:8px; margin-top:4px; }
+    .inst-action.r2 { background:#841d31; }
+
+    /* ── Callouts ─────────────────────────────────────────────── */
+    .callout { border-radius:10px; padding:10px 14px; margin:12px 0 0; font-size:.82rem; display:flex; gap:8px; align-items:flex-start; }
+    .callout.info { background:#eaf0fc; border-left:3px solid #213b69; color:#1a2f56; }
+    .callout.warn { background:#fff7e6; border-left:3px solid #e8920a; color:#7a4e0a; }
+    .callout.success { background:#eaf7f0; border-left:3px solid #1ca75c; color:#145c35; }
+    .callout.danger { background:#fdf0f2; border-left:3px solid #841d31; color:#5e1522; }
+    .callout .c-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+    .callout p { margin:0; line-height:1.5; }
+    .callout strong { font-weight:800; }
+
+    /* ── Mockup frames ────────────────────────────────────────── */
+    .mockup-wrap { margin:14px 0 0; }
+    .mockup-label { font-size:.72rem; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .mockup-frame { background:#f2f2f7; border-radius:14px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.15); border:1px solid #ddd; position:relative; }
+    .mockup-chrome { background:#e8e8ed; padding:8px 12px; display:flex; align-items:center; gap:6px; }
+    .mc-dots { display:flex; gap:5px; }
+    .mc-dot { width:10px; height:10px; border-radius:50%; }
+    .mc-dot.red { background:#ff5f57; } .mc-dot.yel { background:#febc2e; } .mc-dot.grn { background:#28c840; }
+    .mc-bar { flex:1; background:#fff; border-radius:6px; padding:3px 10px; font-size:.65rem; color:#999; font-family:monospace; }
+    .mockup-viewport { background:#fff; }
+
+    /* ── Mock UI ─────────────────────────────────────────────── */
+    .mock-nav { background:#213b69; padding:8px 12px; display:flex; align-items:center; gap:8px; }
+    .mock-nav.r2bg { background:#841d31; }
+    .mock-nav-btn { background:rgba(255,255,255,.15); color:#fff; font-size:.62rem; font-weight:700; padding:3px 8px; border-radius:5px; }
+    .mock-nav-logo { margin-left:auto; background:rgba(255,255,255,.2); color:#fff; font-size:.6rem; font-weight:800; padding:2px 8px; border-radius:4px; letter-spacing:.08em; }
+    .mock-section-header { padding:12px 12px 8px; background:#f9f6f2; }
+    .mock-section-header h4 { margin:0 0 2px; font-size:.8rem; color:#213b69; font-weight:800; }
+    .mock-section-header p { margin:0; font-size:.65rem; color:#888; }
+    .mock-card { background:#fff; border:1px solid #e8e2d9; border-radius:10px; padding:12px; margin:8px; }
+    .mock-card h5 { margin:0 0 6px; font-size:.78rem; color:#213b69; }
+    .mock-label { font-size:.65rem; color:#888; font-weight:700; margin:0 0 3px; }
+    .mock-select, .mock-input { width:100%; box-sizing:border-box; border:1.5px solid #ccc; border-radius:6px; padding:5px 8px; font-size:.68rem; color:#333; background:#fff; margin-bottom:8px; }
+    .mock-btn { display:block; width:100%; text-align:center; background:linear-gradient(135deg,#213b69,#1a2f56); color:#fff; font-size:.72rem; font-weight:800; padding:8px; border-radius:8px; margin-top:4px; }
+    .mock-btn.r2 { background:linear-gradient(135deg,#841d31,#5e1522); }
+    .mock-subject-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:8px; }
+    .mock-subj-btn { background:linear-gradient(135deg,#f0ecf5,#e8e2f8); border:1px solid #d0c8e0; border-radius:8px; padding:8px 4px; text-align:center; font-size:.62rem; font-weight:700; color:#213b69; }
+    .mock-subj-btn .sb-icon { display:block; font-size:1rem; margin-bottom:2px; }
+    .mock-q-card { padding:10px; }
+    .mock-q-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .mock-q-label { font-size:.62rem; font-weight:700; background:#213b69; color:#fff; padding:2px 8px; border-radius:10px; }
+    .mock-q-counter { font-size:.62rem; color:#aaa; }
+    .mock-q-stem { font-size:.72rem; color:#222; font-weight:600; line-height:1.4; margin-bottom:10px; background:#f7f4ef; border-radius:8px; padding:8px; }
+    .mock-answer-reveal { background:#eaf7f0; border:1px solid #a3dbbe; border-radius:8px; padding:6px 10px; margin-bottom:8px; }
+    .mock-ar-label { font-size:.58rem; font-weight:800; color:#1ca75c; margin-bottom:2px; }
+    .mock-ar-text { font-size:.7rem; color:#145c35; font-weight:700; }
+    .mock-checkbox-row { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+    .mock-cb { width:14px; height:14px; border:2px solid #213b69; border-radius:3px; background:#fff; flex-shrink:0; }
+    .mock-timer-bar { background:#213b69; padding:8px 12px; display:flex; align-items:center; gap:12px; }
+    .mock-timer-num { font-size:1rem; font-weight:800; color:#fff; font-variant-numeric:tabular-nums; }
+    .mock-timer-label { font-size:.6rem; color:rgba(255,255,255,.6); }
+    .mock-timer-score { margin-left:auto; text-align:right; }
+    .mock-r2-q { padding:10px; font-size:.75rem; color:#111; font-weight:700; line-height:1.4; background:#f9f6f2; }
+    .mock-r2-opts { padding:8px 10px; display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .mock-r2-opt { background:#f7f4ef; border:1.5px solid #e0d9ce; border-radius:8px; padding:6px 8px; font-size:.65rem; font-weight:700; color:#333; }
+    .mock-r2-opt.selected { background:#213b69; color:#fff; border-color:#213b69; }
+
+    /* ── Annotations ─────────────────────────────────────────── */
+    .mock-highlight { position:relative; outline:2px dashed #e8920a; outline-offset:2px; border-radius:4px; }
+    .mock-highlight::after { content:attr(data-ann); position:absolute; top:-10px; right:-10px; width:20px; height:20px; border-radius:50%; background:#e8920a; color:#fff; font-size:.6rem; font-weight:800; display:flex; align-items:center; justify-content:center; z-index:2; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+    .annotation-legend { background:#fff9f0; border:1px solid #fce4b8; border-radius:10px; padding:10px 12px; margin-top:10px; }
+    .ann-title { font-size:.72rem; font-weight:800; color:#7a4e0a; margin:0 0 6px; }
+    .ann-item { display:flex; gap:8px; align-items:flex-start; margin-bottom:5px; font-size:.78rem; }
+    .ann-item:last-child { margin-bottom:0; }
+    .ann-num { width:18px; height:18px; border-radius:50%; background:#e8920a; color:#fff; font-size:.58rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .ann-text { color:#555; line-height:1.45; }
+    .ann-text strong { color:#222; }
+
+    /* ── Checklist ────────────────────────────────────────────── */
+    .checklist { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    .cl-item { display:flex; align-items:flex-start; gap:10px; background:#fff; border:1px solid #e8e2d9; border-radius:10px; padding:10px 12px; }
+    .cl-box { width:20px; height:20px; border:2px solid #213b69; border-radius:5px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:.8rem; color:#213b69; }
+    .cl-text { font-size:.85rem; color:#222; line-height:1.5; }
+    .cl-text small { display:block; font-size:.75rem; color:#888; margin-top:2px; }
+
+    /* ── Score table ─────────────────────────────────────────── */
+    .score-table { width:100%; border-collapse:collapse; font-size:.82rem; margin-top:10px; }
+    .score-table th, .score-table td { padding:8px 10px; text-align:left; border-bottom:1px solid #e8e2d9; }
+    .score-table th { background:#f0ecf5; font-weight:800; color:#213b69; }
+    .score-table.r2 th { background:#fdf0f2; color:#841d31; }
+    .score-table td:first-child { font-weight:700; }
+
+    .section-divider { height:1px; background:#e0d9ce; margin:0 16px; }
+
+    @media(max-width:480px) {
+      .mock-subject-grid { grid-template-columns:repeat(2,1fr); }
+      .mock-r2-opts { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-shell" style="padding:0;">
+
+  <nav class="top-nav">
+    <a href="../index.html" class="btn-nav">🏠 Home</a>
+    <img src="../whbc-name.png" class="site-logo" alt="WHBC">
+  </nav>
+
+  <!-- Hero -->
+  <div class="manual-hero">
+    <h1>⚖️ 裁判操作手册</h1>
+    <h1 style="font-size:clamp(.95rem,3vw,1.3rem);font-weight:500;opacity:.8;margin-top:4px;">Judge's Operations Manual</h1>
+    <p class="sub">WHBC Definition Contest · 适用版本 v2</p>
+    <div class="badge-row">
+      <span class="badge">👩‍⚖️ 面向裁判</span>
+      <span class="badge">🌐 中英双语</span>
+      <span class="badge">📱 移动端适用</span>
+      <a href="answer-card.html" target="_blank" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:4px 14px;font-size:.78rem;letter-spacing:.04em;color:#fff;text-decoration:none;">🖨️ 打印答题卡</a>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="manual-tab-bar">
+    <div class="mtab active" id="tab-r1" onclick="switchTab('r1')">
+      <span class="tab-icon">🎯</span>
+      Round 1
+      <span style="display:block;font-size:.68rem;font-weight:500;opacity:.7;">口答题 Oral Round</span>
+    </div>
+    <div class="mtab r2" id="tab-r2" onclick="switchTab('r2')">
+      <span class="tab-icon">⚡</span>
+      Round 2
+      <span style="display:block;font-size:.68rem;font-weight:500;opacity:.7;">抢答题 Speed Round</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════ ROUND 1 ══════════════════ -->
+  <div class="tab-pane active" id="pane-r1">
+
+    <nav class="anchor-nav" id="anav-r1">
+      <a class="anchor-link" href="#r1-overview">概览</a>
+      <a class="anchor-link" href="#r1-setup">开始设置</a>
+      <a class="anchor-link" href="#r1-question">答题流程</a>
+      <a class="anchor-link" href="#r1-submit">提交记录</a>
+      <a class="anchor-link" href="#r1-json">JSON 文件</a>
+      <a class="anchor-link" href="#r1-notes">注意事项</a>
+    </nav>
+
+    <!-- Overview -->
+    <div id="r1-overview" class="section-title">📋 概览 <span style="font-size:.8rem;font-weight:500;color:#888;">Overview</span></div>
+    <div class="steps-wrap" style="padding-bottom:4px;">
+      <div class="step-card">
+        <div class="step-body" style="padding-top:14px;">
+          <p style="font-size:.88rem;color:#333;margin:0 0 10px;line-height:1.6;">
+            <strong>Round 1</strong> 是一对一书面答题环节。学生看裁判设备上的题目，将答案手写到纸质答题卡上，裁判核对答题卡与系统答案，判定正确/错误后提交记录。
+          </p>
+          <p style="font-size:.8rem;color:#666;margin:0 0 12px;line-height:1.6;">
+            Round 1 is a one-on-one written round. The student views the question on the judge's device and writes their answer on a paper answer card. The judge checks the card against the system answer, marks correct/incorrect, and submits.
+          </p>
+          <table class="score-table">
+            <tr><th>项目</th><th>说明</th></tr>
+            <tr><td>题型</td><td>Fill-in-Blank（填空）/ MCQ（仅 CHI 科目）</td></tr>
+            <tr><td>答题方式</td><td>学生看裁判设备，手写到纸质答题卡</td></tr>
+            <tr><td>每人次</td><td>1 题，提交后自动返回科目选择</td></tr>
+            <tr><td>记录方式</td><td>Supabase 上传 + 本地 JSON 文件下载</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Setup -->
+    <div id="r1-setup" class="section-title">⚙️ Step 1 — 开始设置 <span style="font-size:.8rem;font-weight:500;color:#888;">Setup</span></div>
+    <div class="steps-wrap">
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-title-wrap">
+            <p class="step-title">选择班级</p>
+            <p class="step-subtitle">Select your class</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num">1</span>
+              <div class="inst-content">
+                <p class="inst-main">首页点击 <strong>「Round 1」</strong>，进入班级选择页</p>
+                <p class="inst-note">Tap Round 1 on the homepage to reach the class selection page</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">2</span>
+              <div class="inst-content">
+                <p class="inst-main">在下拉列表中选择<strong>你负责的班级</strong>，点击进入</p>
+                <p class="inst-note">Select your assigned class from the dropdown and tap Enter</p>
+              </div>
+            </li>
+          </ul>
+          <div class="callout info">
+            <span class="c-icon">💾</span>
+            <p>班级选择会被<strong>自动记忆</strong>，同一会话内无需重复选择。<br>
+            <span style="opacity:.75;">Your class is saved for the session — no need to reselect each time.</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-title-wrap">
+            <p class="step-title">选择科目</p>
+            <p class="step-subtitle">Select the subject for the current student</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num">1</span>
+              <div class="inst-content">
+                <p class="inst-main">确认当前学生的<strong>报名科目</strong>，点击对应科目卡片</p>
+                <p class="inst-note">Confirm the student's registered subject and tap the corresponding card</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">2</span>
+              <div class="inst-content">
+                <p class="inst-main">括号内数字为该科目的<strong>题库题目数量</strong>（供参考）</p>
+                <p class="inst-note">The number in brackets is the question count in the bank</p>
+              </div>
+            </li>
+          </ul>
+          <div class="mockup-wrap">
+            <div class="mockup-label">界面示意 / UI Preview</div>
+            <div class="mockup-frame">
+              <div class="mockup-chrome">
+                <div class="mc-dots"><span class="mc-dot red"></span><span class="mc-dot yel"></span><span class="mc-dot grn"></span></div>
+                <div class="mc-bar">…/round-one.html?class=PA3</div>
+              </div>
+              <div class="mockup-viewport" style="padding:0;">
+                <div class="mock-nav"><div class="mock-nav-btn">← Back</div><div class="mock-nav-logo">WHBC</div></div>
+                <div class="mock-section-header"><h4>🎯 Round One</h4><p>Class: <strong>PA3</strong> — Select a subject</p></div>
+                <div class="mock-subject-grid">
+                  <div class="mock-subj-btn mock-highlight" data-ann="①"><span class="sb-icon">💻</span>CS<br><span style="opacity:.5;font-size:.55rem;">(42)</span></div>
+                  <div class="mock-subj-btn"><span class="sb-icon">🧬</span>BIO<br><span style="opacity:.5;font-size:.55rem;">(38)</span></div>
+                  <div class="mock-subj-btn"><span class="sb-icon">📈</span>BUS<br><span style="opacity:.5;font-size:.55rem;">(55)</span></div>
+                  <div class="mock-subj-btn"><span class="sb-icon">🧪</span>CHE<br><span style="opacity:.5;font-size:.55rem;">(30)</span></div>
+                  <div class="mock-subj-btn"><span class="sb-icon">📐</span>MATH<br><span style="opacity:.5;font-size:.55rem;">(61)</span></div>
+                  <div class="mock-subj-btn"><span class="sb-icon">📜</span>CHI<br><span style="opacity:.5;font-size:.55rem;">(28)</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="annotation-legend">
+              <p class="ann-title">📍 图注 Annotations</p>
+              <div class="ann-item"><span class="ann-num">①</span><span class="ann-text"><strong>科目卡片</strong> — 根据学生报名科目点击，进入该科目答题页</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Question flow -->
+    <div id="r1-question" class="section-title">❓ Step 2 — 答题流程 <span style="font-size:.8rem;font-weight:500;color:#888;">Question Flow</span></div>
+    <div class="steps-wrap">
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-title-wrap">
+            <p class="step-title">将设备屏幕展示给学生，学生手写答案</p>
+            <p class="step-subtitle">Show the screen to the student; student writes their answer</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num">1</span>
+              <div class="inst-content">
+                <p class="inst-main">进入题目页后，系统自动随机抽取题目</p>
+                <p class="inst-note">The system auto-draws a random question upon entering</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">2</span>
+              <div class="inst-content">
+                <p class="inst-main">将设备屏幕面向学生，让学生<strong>直接阅读题干</strong></p>
+                <p class="inst-note">Turn the device screen toward the student so they can read the question directly</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">3</span>
+              <div class="inst-content">
+                <p class="inst-main">学生将答案<strong>手写到纸质答题卡</strong>对应的序号格内</p>
+                <p class="inst-note">The student writes their answer in the corresponding numbered box on the paper answer card</p>
+                <span class="inst-action">🖊️ 手写 → 答题卡</span>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">4</span>
+              <div class="inst-content">
+                <p class="inst-main">如果题目附有图片，学生同样从屏幕上查看</p>
+                <p class="inst-note">If the question has an image, the student views it on screen</p>
+              </div>
+            </li>
+          </ul>
+          <div class="callout warn">
+            <span class="c-icon">⚠️</span>
+            <p><strong>答案区域默认隐藏。</strong>在学生写完答案之前，<strong>不要</strong>点击「Reveal Answer」按钮，以免学生看到答案。<br>
+            <span style="opacity:.8;">The answer is hidden by default. Do NOT tap "Reveal Answer" while the student is still writing.</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-title-wrap">
+            <p class="step-title">核对答案，判定正确/错误</p>
+            <p class="step-subtitle">Check the answer card against the system answer</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num">1</span>
+              <div class="inst-content">
+                <p class="inst-main">学生写完后，点击 <strong>「🔍 Reveal Answer」</strong> 显示标准答案</p>
+                <p class="inst-note">Once the student finishes writing, tap "Reveal Answer" to show the correct answer</p>
+                <span class="inst-action">🔍 Reveal Answer</span>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">2</span>
+              <div class="inst-content">
+                <p class="inst-main">对照答题卡上学生的书写与屏幕上的标准答案</p>
+                <p class="inst-note">Compare the student's handwritten answer on the card with the system's correct answer</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">3</span>
+              <div class="inst-content">
+                <p class="inst-main">如有异议，可点击 <strong>「↺ New Question」</strong> 重新抽题（不提交记录）</p>
+                <p class="inst-note">If there's an issue, tap "New Question" to redraw — no record is created</p>
+              </div>
+            </li>
+          </ul>
+          <div class="mockup-wrap">
+            <div class="mockup-label">界面示意 / UI Preview</div>
+            <div class="mockup-frame">
+              <div class="mockup-chrome">
+                <div class="mc-dots"><span class="mc-dot red"></span><span class="mc-dot yel"></span><span class="mc-dot grn"></span></div>
+                <div class="mc-bar">…/subject.html?subject=CS&class=PA3</div>
+              </div>
+              <div class="mockup-viewport" style="padding:0;">
+                <div class="mock-nav"><div class="mock-nav-btn">← Back</div><div class="mock-nav-logo">WHBC</div></div>
+                <div style="padding:6px 8px;display:flex;gap:6px;">
+                  <span style="background:#e8e2f8;color:#213b69;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:10px;">Class: PA3</span>
+                  <span style="background:#e8e2f8;color:#213b69;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:10px;">Subject: CS</span>
+                </div>
+                <div class="mock-q-card">
+                  <div class="mock-q-header">
+                    <div class="mock-q-label">Fill-in-Blank</div>
+                    <div class="mock-q-counter">Q7 / 42</div>
+                  </div>
+                  <div class="mock-q-stem mock-highlight" data-ann="①">What does "RAM" stand for in computer science?</div>
+                  <div class="mock-answer-reveal mock-highlight" data-ann="②">
+                    <div class="mock-ar-label">✅ ANSWER</div>
+                    <div class="mock-ar-text">Random Access Memory</div>
+                  </div>
+                  <div style="display:flex;gap:6px;margin-bottom:8px;">
+                    <span style="background:#f0ecf5;color:#213b69;font-size:.6rem;font-weight:700;padding:4px 8px;border-radius:7px;opacity:.4;">🔍 Reveal Answer</span>
+                    <span style="background:#f0ecf5;color:#213b69;font-size:.6rem;font-weight:700;padding:4px 8px;border-radius:7px;">↺ New Question</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="annotation-legend">
+              <p class="ann-title">📍 图注 Annotations</p>
+              <div class="ann-item"><span class="ann-num">①</span><span class="ann-text"><strong>题干</strong> — 将屏幕面向学生，让学生直接阅读并手写答案到答题卡</span></div>
+              <div class="ann-item"><span class="ann-num">②</span><span class="ann-text"><strong>标准答案</strong> — 学生写完后点击 Reveal Answer 显示，对照答题卡判定</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Submit -->
+    <div id="r1-submit" class="section-title">✅ Step 3 — 提交记录 <span style="font-size:.8rem;font-weight:500;color:#888;">Submit</span></div>
+    <div class="steps-wrap">
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">5</div>
+          <div class="step-title-wrap">
+            <p class="step-title">勾选正确/错误，点击提交</p>
+            <p class="step-subtitle">Mark correct or incorrect, then submit</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num">1</span>
+              <div class="inst-content">
+                <p class="inst-main">答对 → 勾选 <strong>「✔ Mark as Correct」</strong></p>
+                <p class="inst-note">Correct → tick the "Mark as Correct" checkbox</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">2</span>
+              <div class="inst-content">
+                <p class="inst-main">答错 → 保持<strong>不勾选</strong>即可</p>
+                <p class="inst-note">Incorrect → leave the checkbox unchecked</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num">3</span>
+              <div class="inst-content">
+                <p class="inst-main">点击 <strong>「Submit &amp; Next →」</strong> 提交，自动返回科目选择页</p>
+                <p class="inst-note">Tap "Submit & Next →" — you'll be returned to the subject grid</p>
+                <span class="inst-action">Submit &amp; Next →</span>
+              </div>
+            </li>
+          </ul>
+          <div class="mockup-wrap">
+            <div class="mockup-label">界面示意 / UI Preview</div>
+            <div class="mockup-frame">
+              <div class="mockup-chrome">
+                <div class="mc-dots"><span class="mc-dot red"></span><span class="mc-dot yel"></span><span class="mc-dot grn"></span></div>
+                <div class="mc-bar">…/subject.html</div>
+              </div>
+              <div class="mockup-viewport" style="padding:0;">
+                <div class="mock-q-card" style="padding-top:10px;">
+                  <div class="mock-answer-reveal" style="margin-bottom:8px;">
+                    <div class="mock-ar-label">✅ ANSWER</div>
+                    <div class="mock-ar-text">Random Access Memory</div>
+                  </div>
+                  <div class="mock-checkbox-row mock-highlight" data-ann="①">
+                    <div class="mock-cb" style="background:#213b69;border-color:#213b69;">✓</div>
+                    <span style="font-size:.65rem;color:#444;"><strong>Mark as Correct</strong> — tick if the student answered correctly</span>
+                  </div>
+                  <div class="mock-btn mock-highlight" data-ann="②" style="font-size:.72rem;padding:9px;">Submit &amp; Next →</div>
+                </div>
+              </div>
+            </div>
+            <div class="annotation-legend">
+              <p class="ann-title">📍 图注 Annotations</p>
+              <div class="ann-item"><span class="ann-num">①</span><span class="ann-text"><strong>Mark as Correct</strong> — 对照答题卡核对后勾选，答错留空</span></div>
+              <div class="ann-item"><span class="ann-num">②</span><span class="ann-text"><strong>提交按钮</strong> — 点击后立即返回科目页；浏览器同步下载一份 <strong>JSON 备份文件</strong>（请勿关闭弹窗）</span></div>
+            </div>
+          </div>
+          <div class="callout success">
+            <span class="c-icon">📥</span>
+            <p>每次提交后，浏览器会自动<strong>下载一份 JSON 文件</strong>到设备本地，文件名格式为：<br>
+            <code style="background:#d4f0e2;padding:2px 6px;border-radius:4px;font-size:.8rem;">R1_班级_序号_科目.json</code><br>
+            <strong>请勿删除，赛后统一上交给 Gregg 老师。</strong><br>
+            <span style="opacity:.8;">A JSON file is auto-downloaded after each submission. Keep all files — they must be submitted to Gregg after the event.</span></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- JSON files -->
+    <div id="r1-json" class="section-title">📁 赛后交档 <span style="font-size:.8rem;font-weight:500;color:#888;">Post-Event File Submission</span></div>
+    <div class="steps-wrap">
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num" style="background:linear-gradient(135deg,#1ca75c,#15864a);">✓</div>
+          <div class="step-title-wrap">
+            <p class="step-title">赛后 Checklist — 文件整理与上交</p>
+            <p class="step-subtitle">Post-event checklist: organize and submit your JSON files</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="checklist">
+            <li class="cl-item">
+              <div class="cl-box">1</div>
+              <div class="cl-text">
+                确认下载文件夹中所有 <code style="background:#f0ecf5;padding:1px 5px;border-radius:4px;">R1_*.json</code>（Round 1）和 <code style="background:#fdf0f2;padding:1px 5px;border-radius:4px;">R2_*.json</code>（Round 2）文件均已存在
+                <small>Check that all Round 1 and Round 2 JSON files are present in your Downloads folder</small>
+              </div>
+            </li>
+            <li class="cl-item">
+              <div class="cl-box">2</div>
+              <div class="cl-text">
+                新建一个文件夹，命名为<strong>你的姓名</strong>（例：<code style="background:#f0ecf5;padding:1px 5px;border-radius:4px;">陈老师</code>）
+                <small>Create a new folder named after yourself, e.g. "Ms. Chen"</small>
+              </div>
+            </li>
+            <li class="cl-item">
+              <div class="cl-box">3</div>
+              <div class="cl-text">
+                将所有 JSON 文件放入该文件夹
+                <small>Move all JSON files into your named folder</small>
+              </div>
+            </li>
+            <li class="cl-item">
+              <div class="cl-box">4</div>
+              <div class="cl-text">
+                将文件夹<strong>发送到 QQ 群</strong>（由 Gregg 老师指定的群）
+                <small>Send the folder to the designated QQ group</small>
+              </div>
+            </li>
+            <li class="cl-item">
+              <div class="cl-box">5</div>
+              <div class="cl-text">
+                同时将本次使用的<strong>纸质答题卡</strong>交还给组委会
+                <small>Also return the paper answer cards to the organizing committee</small>
+              </div>
+            </li>
+          </ul>
+          <div class="callout danger" style="margin-top:12px;">
+            <span class="c-icon">🚨</span>
+            <p><strong>重要：</strong>JSON 文件是成绩的唯一本地备份。若 Supabase 上传失败，这些文件是恢复数据的唯一途径。<strong>请当天上交，不要拖延。</strong><br>
+            <span style="opacity:.8;">JSON files are the only local backup. If Supabase upload fails, these are the sole recovery source. Submit the same day.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Notes -->
+    <div id="r1-notes" class="section-title">⚠️ 注意事项 <span style="font-size:.8rem;font-weight:500;color:#888;">Notes</span></div>
+    <div class="steps-wrap">
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num" style="background:linear-gradient(135deg,#e8920a,#c47005);">!</div>
+          <div class="step-title-wrap">
+            <p class="step-title">常见问题与处理方式</p>
+            <p class="step-subtitle">Common issues and how to handle them</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <div class="callout warn">
+            <span class="c-icon">📶</span>
+            <p><strong>断网：</strong>系统自动切换至本地题库，答题与提交仍可进行，但 Supabase 上传会失败——JSON 文件此时尤为重要，请务必保留。<br>
+            <span style="opacity:.8;">If offline, the app falls back to the local question bank. Keep your JSON files — they're the only record.</span></p>
+          </div>
+          <div class="callout warn" style="margin-top:8px;">
+            <span class="c-icon">🚫</span>
+            <p><strong>不要刷新页面：</strong>刷新会重置当前题目和会话状态。如误刷新，重新选班级→选科目即可继续。<br>
+            <span style="opacity:.8;">Don't refresh — it resets the question. If refreshed, just reselect class → subject.</span></p>
+          </div>
+          <div class="callout info" style="margin-top:8px;">
+            <span class="c-icon">🔄</span>
+            <p><strong>题目重复：</strong>系统尽量避免重复，但题库较小时可能出现。可点击「↺ New Question」跳过，不计入记录。<br>
+            <span style="opacity:.8;">The system avoids repeats, but may repeat on small pools. Tap "New Question" to skip — no record is created.</span></p>
+          </div>
+          <div class="callout info" style="margin-top:8px;">
+            <span class="c-icon">📥</span>
+            <p><strong>下载弹窗：</strong>部分手机浏览器在下载 JSON 时会弹出确认窗，请点击「允许」或「保存」，确保文件成功下载。<br>
+            <span style="opacity:.8;">Some mobile browsers prompt you to confirm downloads — tap Allow/Save to ensure the file is saved.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:40px;"></div>
+  </div><!-- /pane-r1 -->
+
+
+  <!-- ══════════════════ ROUND 2 ══════════════════ -->
+  <div class="tab-pane" id="pane-r2">
+
+    <nav class="anchor-nav r2-nav" id="anav-r2">
+      <a class="anchor-link" href="#r2-overview">概览</a>
+      <a class="anchor-link" href="#r2-setup">开始设置</a>
+      <a class="anchor-link" href="#r2-game">答题流程</a>
+      <a class="anchor-link" href="#r2-submit">下载与提交</a>
+      <a class="anchor-link" href="#r2-notes">注意事项</a>
+    </nav>
+
+    <!-- Overview -->
+    <div id="r2-overview" class="section-title r2">📋 概览 <span style="font-size:.8rem;font-weight:500;color:#888;">Overview</span></div>
+    <div class="steps-wrap" style="padding-bottom:4px;">
+      <div class="step-card">
+        <div class="step-body" style="padding-top:14px;">
+          <p style="font-size:.88rem;color:#333;margin:0 0 10px;line-height:1.6;">
+            <strong>Round 2</strong> 是 60 秒限时选择题环节。裁判与学生<strong>共同看屏幕</strong>，学生读完题目后说出 A/B/C/D，裁判等学生报答案后再点击对应选项，系统自动判断并进入下一题。
+          </p>
+          <p style="font-size:.8rem;color:#666;margin:0 0 12px;line-height:1.6;">
+            Round 2 is a 60-second timed MCQ round. The judge and student view the screen together. After the student reads the question and calls out A/B/C/D, the judge taps the corresponding option and the system auto-scores and advances.
+          </p>
+          <table class="score-table r2">
+            <tr><th>项目</th><th>说明</th></tr>
+            <tr><td>题型</td><td>MCQ 四选一 (A/B/C/D)</td></tr>
+            <tr><td>时间</td><td>60 秒自动倒计时</td></tr>
+            <tr><td>计分</td><td>答对 +10 分，答错 0 分（不扣分）</td></tr>
+            <tr><td>操作分工</td><td>学生读题并报答案，裁判点击选项</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Setup -->
+    <div id="r2-setup" class="section-title r2">⚙️ Step 1 — 开始设置 <span style="font-size:.8rem;font-weight:500;color:#888;">Setup</span></div>
+    <div class="steps-wrap">
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num r2">1</div>
+          <div class="step-title-wrap">
+            <p class="step-title">填写班级和裁判姓名</p>
+            <p class="step-subtitle">Enter class and judge name</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num r2">1</span>
+              <div class="inst-content">
+                <p class="inst-main">首页点击 <strong>「Round 2」</strong>，进入入口页</p>
+                <p class="inst-note">Tap Round 2 on the homepage</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">2</span>
+              <div class="inst-content">
+                <p class="inst-main">选择<strong>班级</strong>，填入<strong>裁判姓名</strong></p>
+                <p class="inst-note">Select your class and enter your name</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">3</span>
+              <div class="inst-content">
+                <p class="inst-main">点击 <strong>「⚡ Start Round Two」</strong> 进入答题页</p>
+                <p class="inst-note">Tap "Start Round Two" — the timer has NOT started yet</p>
+                <span class="inst-action r2">⚡ Start Round Two</span>
+              </div>
+            </li>
+          </ul>
+          <div class="mockup-wrap">
+            <div class="mockup-label">界面示意 / UI Preview</div>
+            <div class="mockup-frame">
+              <div class="mockup-chrome">
+                <div class="mc-dots"><span class="mc-dot red"></span><span class="mc-dot yel"></span><span class="mc-dot grn"></span></div>
+                <div class="mc-bar">…/round-two-entry.html</div>
+              </div>
+              <div class="mockup-viewport" style="padding:0;">
+                <div class="mock-nav r2bg"><div class="mock-nav-btn">← Back</div><div class="mock-nav-logo">WHBC</div></div>
+                <div class="mock-section-header"><h4 style="color:#841d31;">⚡ Round Two</h4><p>60-second multiple choice challenge</p></div>
+                <div class="mock-card">
+                  <h5 style="color:#841d31;">Session Setup</h5>
+                  <p class="mock-label">CLASS</p>
+                  <div class="mock-select mock-highlight" data-ann="①">— Select a class —</div>
+                  <p class="mock-label">JUDGE NAME</p>
+                  <div class="mock-input mock-highlight" data-ann="②" style="color:#999;">Enter judge name</div>
+                  <div class="mock-btn r2 mock-highlight" data-ann="③">⚡ Start Round Two</div>
+                </div>
+              </div>
+            </div>
+            <div class="annotation-legend">
+              <p class="ann-title">📍 图注 Annotations</p>
+              <div class="ann-item"><span class="ann-num">①</span><span class="ann-text"><strong>班级</strong> — 选择你负责的班级</span></div>
+              <div class="ann-item"><span class="ann-num">②</span><span class="ann-text"><strong>裁判姓名</strong> — 每条记录都会附带此信息</span></div>
+              <div class="ann-item"><span class="ann-num">③</span><span class="ann-text"><strong>进入按钮</strong> — 点击后进入答题页，计时器<strong>尚未</strong>开始</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Game flow -->
+    <div id="r2-game" class="section-title r2">⚡ Step 2 — 答题流程 <span style="font-size:.8rem;font-weight:500;color:#888;">Game Flow</span></div>
+    <div class="steps-wrap">
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num r2">2</div>
+          <div class="step-title-wrap">
+            <p class="step-title">学生就位后，启动计时器</p>
+            <p class="step-subtitle">Once student is ready, start the timer</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num r2">1</span>
+              <div class="inst-content">
+                <p class="inst-main">裁判与学生并排/对坐，<strong>两人均可看到屏幕</strong></p>
+                <p class="inst-note">Judge and student are seated together — both can see the screen</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">2</span>
+              <div class="inst-content">
+                <p class="inst-main">确认学生准备好后，点击 <strong>「▶ Start」</strong> 启动 60 秒倒计时</p>
+                <p class="inst-note">Confirm the student is ready, then tap "Start" to begin the 60-second countdown</p>
+                <span class="inst-action r2">▶ Start</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num r2">3</div>
+          <div class="step-title-wrap">
+            <p class="step-title">学生读题并报答案，裁判点击选项</p>
+            <p class="step-subtitle">Student reads and calls answer; judge taps the option</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num r2">1</span>
+              <div class="inst-content">
+                <p class="inst-main">学生<strong>自行阅读</strong>屏幕上的题目和选项，无需裁判朗读</p>
+                <p class="inst-note">The student reads the question and options directly from the screen — no reading aloud by the judge required</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">2</span>
+              <div class="inst-content">
+                <p class="inst-main">学生决定后，<strong>口头报出答案</strong>（"A" / "B" / "C" / "D"）</p>
+                <p class="inst-note">When the student decides, they call out their answer verbally</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">3</span>
+              <div class="inst-content">
+                <p class="inst-main">裁判<strong>稍等一下</strong>，确认听清答案后再点击对应选项</p>
+                <p class="inst-note">The judge waits a moment to confirm the answer, then taps the corresponding option</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">4</span>
+              <div class="inst-content">
+                <p class="inst-main">系统自动判断：答对变绿 ✅，答错变红 ❌，自动进入下一题</p>
+                <p class="inst-note">The system auto-scores: correct = green ✅, wrong = red ❌, next question loads automatically</p>
+              </div>
+            </li>
+          </ul>
+
+          <div class="mockup-wrap">
+            <div class="mockup-label">界面示意 / UI Preview</div>
+            <div class="mockup-frame">
+              <div class="mockup-chrome">
+                <div class="mc-dots"><span class="mc-dot red"></span><span class="mc-dot yel"></span><span class="mc-dot grn"></span></div>
+                <div class="mc-bar">…/round-two-v2.html?class=PA3&name=陈老师</div>
+              </div>
+              <div class="mockup-viewport" style="padding:0;">
+                <div class="mock-timer-bar">
+                  <div>
+                    <div class="mock-timer-num mock-highlight" data-ann="①">0:38</div>
+                    <div class="mock-timer-label">Time Remaining</div>
+                  </div>
+                  <div style="margin-left:16px;">
+                    <div style="font-size:.6rem;color:rgba(255,255,255,.6);">Score</div>
+                    <div style="font-size:.85rem;font-weight:800;color:#fff;">20</div>
+                  </div>
+                  <div style="margin-left:auto;font-size:.6rem;font-weight:800;color:rgba(255,255,255,.6);">WHBC</div>
+                </div>
+                <div class="mock-r2-q mock-highlight" data-ann="②">
+                  Which data structure uses LIFO (Last-In, First-Out) order?
+                </div>
+                <div class="mock-r2-opts">
+                  <div class="mock-r2-opt">A. Queue</div>
+                  <div class="mock-r2-opt selected mock-highlight" data-ann="③">B. Stack</div>
+                  <div class="mock-r2-opt">C. Linked List</div>
+                  <div class="mock-r2-opt">D. Hash Map</div>
+                </div>
+              </div>
+            </div>
+            <div class="annotation-legend">
+              <p class="ann-title">📍 图注 Annotations</p>
+              <div class="ann-item"><span class="ann-num">①</span><span class="ann-text"><strong>倒计时</strong> — 剩余时间；低于 10 秒时变红闪烁</span></div>
+              <div class="ann-item"><span class="ann-num">②</span><span class="ann-text"><strong>题目区</strong> — 学生自行阅读，无需裁判朗读</span></div>
+              <div class="ann-item"><span class="ann-num">③</span><span class="ann-text"><strong>选项</strong> — 学生说出答案后，裁判<strong>稍等确认</strong>再点击，防止误操作</span></div>
+            </div>
+          </div>
+
+          <div class="callout danger">
+            <span class="c-icon">⛔</span>
+            <p><strong>点选不可撤销：</strong>裁判点击选项后系统立即判断并进入下一题，<strong>无法撤回</strong>。如误点，请在纸上记录，赛后向 Gregg 老师申报更正。<br>
+            <span style="opacity:.8;">Tapping an option is irreversible — the system immediately scores and moves on. Note any mistakes on paper and report after the event.</span></p>
+          </div>
+
+          <div class="callout warn" style="margin-top:8px;">
+            <span class="c-icon">⏱️</span>
+            <p><strong>计时无法暂停：</strong>一旦点击 Start，60 秒不可暂停。如遇突发情况，先完成本轮，赛后向组委会说明。<br>
+            <span style="opacity:.8;">The timer cannot be paused once started. If an incident occurs, finish the round and report to the committee afterward.</span></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Submit -->
+    <div id="r2-submit" class="section-title r2">📥 Step 3 — 下载结果与提交 <span style="font-size:.8rem;font-weight:500;color:#888;">Download Result & Submit</span></div>
+    <div class="steps-wrap">
+
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num r2">4</div>
+          <div class="step-title-wrap">
+            <p class="step-title">时间结束后提交，迎接下一位学生</p>
+            <p class="step-subtitle">Submit when time ends, then start the next student</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <ul class="inst-list">
+            <li class="inst-item">
+              <span class="inst-num r2">1</span>
+              <div class="inst-content">
+                <p class="inst-main">60 秒结束后，系统自动停止并<strong>弹出结果弹窗</strong>，显示本轮得分</p>
+                <p class="inst-note">When 60s expires, the system stops and a result pop-up appears showing the round score</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">2</span>
+              <div class="inst-content">
+                <p class="inst-main">告知学生得分</p>
+                <p class="inst-note">Announce the student's score</p>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">3</span>
+              <div class="inst-content">
+                <p class="inst-main">点击弹窗中的 <strong>「📥 Download Result」</strong>，下载本局 JSON 文件到本地</p>
+                <p class="inst-note">Tap "Download Result" in the pop-up to save the JSON file to your device</p>
+                <span class="inst-action r2">📥 Download Result</span>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">4</span>
+              <div class="inst-content">
+                <p class="inst-main">下载完成后，点击 <strong>「Next Round」</strong> 返回入口页，准备下一位学生</p>
+                <p class="inst-note">After downloading, tap "Next Round" to return to the entry page for the next student</p>
+                <span class="inst-action r2">Next Round →</span>
+              </div>
+            </li>
+            <li class="inst-item">
+              <span class="inst-num r2">5</span>
+              <div class="inst-content">
+                <p class="inst-main">班级和裁判姓名已预填，直接点击「⚡ Start Round Two」开始下一位</p>
+                <p class="inst-note">Class and judge name are pre-filled — just tap "Start Round Two" for the next student</p>
+              </div>
+            </li>
+          </ul>
+          <div class="callout success">
+            <span class="c-icon">📥</span>
+            <p>每局结束后弹窗会提供 <strong>JSON 文件下载</strong>，同时记录上传至 Supabase 数据库。<br>
+            <strong>请务必先点击「Download Result」再点击「Next Round」</strong>，否则本局文件将无法补救。<br>
+            <span style="opacity:.8;">Always tap "Download Result" before "Next Round" — once you leave the pop-up, the file cannot be recovered.</span></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Notes -->
+    <div id="r2-notes" class="section-title r2">⚠️ 注意事项 <span style="font-size:.8rem;font-weight:500;color:#888;">Notes</span></div>
+    <div class="steps-wrap">
+      <div class="step-card">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num" style="background:linear-gradient(135deg,#e8920a,#c47005);">!</div>
+          <div class="step-title-wrap">
+            <p class="step-title">常见问题与处理方式</p>
+            <p class="step-subtitle">Common issues and how to handle them</p>
+          </div>
+          <span class="step-toggle">▾</span>
+        </div>
+        <div class="step-body">
+          <div class="callout warn">
+            <span class="c-icon">📶</span>
+            <p><strong>断网：</strong>断网时 Supabase 上传会失败，但 JSON 文件仍会正常下载到本地——JSON 文件此时是唯一备份，请务必保留。<br>
+            <span style="opacity:.8;">If offline, Supabase upload fails but the JSON file will still download locally — keep it as the backup.</span></p>
+          </div>
+          <div class="callout info" style="margin-top:8px;">
+            <span class="c-icon">🙈</span>
+            <p><strong>防止抢跑：</strong>进入答题页后先让学生准备好，再点击 Start。学生看到屏幕时计时才正式开始，确保公平。<br>
+            <span style="opacity:.8;">Let the student get ready before tapping Start — the timer begins only when you tap, ensuring fairness.</span></p>
+          </div>
+          <div class="callout info" style="margin-top:8px;">
+            <span class="c-icon">👂</span>
+            <p><strong>听清再点：</strong>学生报答案后，裁判需<strong>稍停确认</strong>再点击，避免因未听清而误操作。若学生改口，以<strong>最终报出的答案</strong>为准。<br>
+            <span style="opacity:.8;">Wait a moment after the student calls their answer before tapping. If the student changes their answer, take the final answer.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:40px;"></div>
+  </div><!-- /pane-r2 -->
+
+</div>
+
+<script>
+  function switchTab(tab) {
+    ['r1','r2'].forEach(t => {
+      document.getElementById('pane-' + t).classList.toggle('active', t === tab);
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleStep(header) {
+    header.closest('.step-card').classList.toggle('collapsed');
+  }
+
+  // Anchor nav highlight on scroll
+  ['r1','r2'].forEach(round => {
+    const nav     = document.getElementById('anav-' + round);
+    if (!nav) return;
+    const links   = nav.querySelectorAll('.anchor-link');
+    const targets = Array.from(links)
+      .map(l => document.querySelector(l.getAttribute('href')))
+      .filter(Boolean);
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting)
+          links.forEach(l => l.classList.toggle('hl', l.getAttribute('href') === '#' + e.target.id));
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    targets.forEach(t => io.observe(t));
+  });
+</script>
+</body>
+</html>
